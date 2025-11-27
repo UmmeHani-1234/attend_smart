@@ -1021,11 +1021,8 @@ const StudentDashboard = () => {
 
 
                 </motion.div>
-              </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                   <motion.div 
                     whileHover={{ y: -2 }}
                     className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-3 shadow-sm border border-white/20 backdrop-blur-sm"
@@ -1105,9 +1102,7 @@ const StudentDashboard = () => {
                 </motion.div>
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1170,9 +1165,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1232,12 +1225,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1297,12 +1288,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1365,9 +1354,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1427,12 +1414,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1492,12 +1477,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1560,9 +1543,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1622,12 +1603,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1687,12 +1666,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1755,9 +1732,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1817,12 +1792,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1882,12 +1855,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -1947,12 +1918,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2015,9 +1984,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2077,12 +2044,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2142,12 +2107,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2210,9 +2173,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2272,12 +2233,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2337,12 +2296,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2405,9 +2362,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2467,12 +2422,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2532,12 +2485,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2600,9 +2551,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2665,9 +2614,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2727,12 +2674,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2792,12 +2737,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2860,9 +2803,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2922,12 +2863,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -2987,12 +2926,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3055,9 +2992,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3117,12 +3052,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3182,12 +3115,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3250,9 +3181,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3312,12 +3241,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3377,12 +3304,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3442,12 +3367,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3510,9 +3433,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3572,12 +3493,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3637,12 +3556,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3705,9 +3622,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3767,12 +3682,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3832,12 +3745,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3900,9 +3811,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -3962,12 +3871,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4027,12 +3934,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4095,9 +4000,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4160,9 +4063,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4222,12 +4123,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4287,12 +4186,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4355,9 +4252,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4417,12 +4312,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4482,12 +4375,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4550,9 +4441,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4612,12 +4501,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4677,12 +4564,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4745,9 +4630,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4807,12 +4690,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4872,12 +4753,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -4937,12 +4816,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5005,9 +4882,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5067,12 +4942,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5132,12 +5005,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5200,9 +5071,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5262,12 +5131,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5327,12 +5194,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5395,9 +5260,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5457,12 +5320,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5522,12 +5383,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5590,9 +5449,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5655,9 +5512,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5717,12 +5572,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5782,12 +5635,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5850,9 +5701,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5912,12 +5761,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -5977,12 +5824,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6045,9 +5890,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6107,12 +5950,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6172,12 +6013,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6240,9 +6079,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6302,12 +6139,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6367,12 +6202,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6432,12 +6265,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6500,9 +6331,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6562,12 +6391,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6627,12 +6454,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6695,9 +6520,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6757,12 +6580,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6822,12 +6643,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6890,9 +6709,7 @@ const StudentDashboard = () => {
 
               </div>
 
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -6952,12 +6769,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                 <motion.div 
                   whileHover={{ y: -2 }}
                 >
@@ -7017,12 +6832,10 @@ const StudentDashboard = () => {
                   </div>
                   <div className="text-[10px] text-white/90">Last 7 days</div>
                 </motion.div>
-
-              </div>
 
               </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
                     className="bg-gradient-to-br from-red-500 to-rose-600 rounded-lg p-3 shadow-sm border border-white/20 backdrop-blur-sm"
                   >
                     <div className="flex items-center justify-between mb-2">

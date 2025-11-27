@@ -1,0 +1,944 @@
+import React, { useState } from 'react';
+import { Users, School, Utensils, TrendingUp, AlertTriangle, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, Building, Activity, User, Book, Target, Award } from 'lucide-react';
+import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { motion, AnimatePresence } from 'framer-motion';
+import UltraModernHeader from '../UltraModernHeader';
+
+const GovernmentDashboard = ({ onLogout }) => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
+  const [reportPeriod, setReportPeriod] = useState('monthly'); // weekly, monthly, yearly
+
+  // Sample data for the dashboard
+  const districtData = {
+    name: "Central District",
+    totalStudents: 12547,
+    totalSchools: 42,
+    mealsPerStudent: 1,
+    totalMeals: 12547,
+    attendanceRate: 92.5,
+    schoolsNeedingSupport: 8,
+    averageClassSize: 30
+  };
+
+  // Sample attendance trend data
+  const attendanceTrendData = [
+    { month: 'Jan', attendance: 89.2, schools: 38 },
+    { month: 'Feb', attendance: 90.5, schools: 39 },
+    { month: 'Mar', attendance: 91.8, schools: 40 },
+    { month: 'Apr', attendance: 92.1, schools: 40 },
+    { month: 'May', attendance: 92.5, schools: 42 },
+    { month: 'Jun', attendance: 92.3, schools: 41 },
+  ];
+
+  // Sample alerts data
+  const alerts = [
+    { id: 1, type: 'safety', message: 'Unauthorized entry detected at Riverside High', time: '10 mins ago', severity: 'high', status: 'new' },
+    { id: 2, type: 'performance', message: 'Lincoln Elementary showing significant improvement', time: '25 mins ago', severity: 'positive', status: 'new' },
+    { id: 3, type: 'resource', message: 'Budget allocation for Jefferson Middle School', time: '1 hour ago', severity: 'medium', status: 'acknowledged' },
+  ];
+
+  // Sample schools data
+  const schools = [
+    { id: 1, name: 'Riverside High School', students: 1250, attendance: 94.2, performance: 'A', alerts: 2 },
+    { id: 2, name: 'Lincoln Elementary', students: 850, attendance: 96.8, performance: 'A+', alerts: 0 },
+    { id: 3, name: 'Jefferson Middle School', students: 920, attendance: 89.5, performance: 'B', alerts: 3 },
+    { id: 4, name: 'Washington High School', students: 1100, attendance: 91.7, performance: 'B+', alerts: 1 },
+  ];
+
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-50 border-red-200 text-red-800';
+      case 'high': return 'bg-orange-50 border-orange-200 text-orange-800';
+      case 'medium': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
+      case 'positive': return 'bg-green-50 border-green-200 text-green-800';
+      default: return 'bg-gray-50 border-gray-200 text-gray-800';
+    }
+  };
+
+  const getSeverityColorSolid = (severity) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-500 text-white';
+      case 'high': return 'bg-orange-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-white';
+      case 'positive': return 'bg-green-500 text-white';
+      default: return 'bg-gray-500 text-white';
+    }
+  };
+
+  const getAlertIcon = (type) => {
+    switch (type) {
+      case 'safety': return <Shield className="w-5 h-5" />;
+      case 'performance': return <TrendingUp className="w-5 h-5" />;
+      case 'resource': return <Utensils className="w-5 h-5" />;
+      default: return <Bell className="w-5 h-5" />;
+    }
+  };
+
+  const summaryStats = [
+    { label: 'Total Students', value: districtData.totalStudents.toLocaleString(), icon: Users, color: 'from-blue-500 to-blue-600', change: '+150' },
+    { label: 'Total Schools', value: districtData.totalSchools, icon: School, color: 'from-green-500 to-emerald-600', change: '+2' },
+    { label: 'Daily Meals', value: districtData.totalMeals.toLocaleString(), icon: Utensils, color: 'from-amber-500 to-orange-600', change: '+150' },
+    { label: 'Attendance Rate', value: `${districtData.attendanceRate}%`, icon: TrendingUp, color: 'from-purple-500 to-purple-600', change: '+0.8%' },
+  ];
+
+  return (
+    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+      {/* Sidebar */}
+      <motion.div 
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-56 bg-white shadow-lg flex flex-col"
+      >
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md">
+                GD
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                  Smart Attendance
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 truncate">Government</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 p-3 pt-0 space-y-0.5">
+          {[
+            { id: 'home', icon: Home, label: 'Dashboard Home' },
+            { id: 'schools', icon: School, label: 'Schools' },
+            { id: 'reports', icon: FileText, label: 'Reports' },
+            { id: 'alerts', icon: Bell, label: 'Alerts' },
+            { id: 'settings', icon: Settings, label: 'Settings' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                activeTab === tab.id
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                  : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              <span className="font-medium text-sm">{tab.label}</span>
+              {tab.id === 'alerts' && (
+                <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  3
+                </span>
+              )}
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-3 border-t border-gray-100 space-y-1">
+          <button 
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-all"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="font-medium text-sm">Logout</span>
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        {/* Ultra Modern Header */}
+        <UltraModernHeader 
+          dashboardTitle="Government Official Dashboard"
+          userType="Government"
+          userName="Government Official"
+          userRole="Education Oversight"
+          onLogout={onLogout}
+        />
+
+        {/* Dashboard Content */}
+        <div className="p-8">
+          {/* Home Tab */}
+          {activeTab === 'home' && (
+            <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-3xl p-8 mb-8 shadow-xl backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                {/* Animated background elements */}
+                <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                  <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full mix-blend-overlay"></div>
+                  <div className="absolute bottom-10 right-10 w-48 h-48 bg-white rounded-full mix-blend-overlay"></div>
+                </div>
+                <div className="relative z-10">
+                  <h2 className="text-4xl font-bold text-white mb-2">
+                    Good Morning, Official! 👋
+                  </h2>
+                  <p className="text-blue-100 text-lg mb-6">
+                    Monitor educational statistics and policy implementation across districts
+                  </p>
+                  <div className="flex items-center gap-4 text-white">
+                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm border border-white/20">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span className="text-sm">{districtData.totalSchools} active schools</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm border border-white/20">
+                      <div className="w-2 h-2 bg-blue-300 rounded-full"></div>
+                      <span className="text-sm">{alerts.filter(a => a.status === 'new').length} new alerts</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {summaryStats.map((stat, index) => {
+                  const IconComponent = stat.icon;
+                  return (
+                    <motion.div 
+                      key={index}
+                      whileHover={{ y: -5 }}
+                      className={`bg-gradient-to-br ${stat.color} rounded-2xl p-6 shadow-lg border border-white/20 backdrop-blur-sm`}
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
+                          <IconComponent className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-3xl font-bold text-white">{stat.value}</div>
+                          <div className="text-xs text-white/80">{stat.label}</div>
+                        </div>
+                      </div>
+                      <div className="text-sm text-white/90 font-medium">+{stat.change} from last period</div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Charts and Recent Activity */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                {/* Attendance Trends Chart */}
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border border-blue-200/30 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-bold text-white">Attendance Trends</h2>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setReportPeriod('weekly')}
+                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'weekly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                      >
+                        Weekly
+                      </button>
+                      <button 
+                        onClick={() => setReportPeriod('monthly')}
+                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'monthly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                      >
+                        Monthly
+                      </button>
+                      <button 
+                        onClick={() => setReportPeriod('yearly')}
+                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'yearly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                      >
+                        Yearly
+                      </button>
+                    </div>
+                  </div>
+                  <div className="h-64 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsLineChart data={attendanceTrendData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <XAxis 
+                          dataKey="month" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.9)', 
+                            borderRadius: '12px',
+                            border: 'none',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                          }} 
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="attendance" 
+                          stroke="#fff" 
+                          strokeWidth={4}
+                          dot={{ r: 8, fill: '#fff', strokeWidth: 2, stroke: '#3b82f6' }}
+                          activeDot={{ r: 10, fill: '#fff', strokeWidth: 2, stroke: '#2563eb' }}
+                        />
+                      </RechartsLineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Recent Alerts */}
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-lg border border-gray-200/30 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-bold text-gray-900">Recent Alerts</h2>
+                    <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-4">
+                    {alerts.slice(0, 3).map((alert) => (
+                      <motion.div
+                        key={alert.id}
+                        whileHover={{ x: 5 }}
+                        className={`p-4 rounded-xl border ${getSeverityColor(alert.severity)} transition-all duration-300`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg ${getSeverityColorSolid(alert.severity)}`}>
+                            {getAlertIcon(alert.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 mb-1">{alert.message}</p>
+                            <p className="text-sm text-gray-500">{alert.time}</p>
+                          </div>
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                            {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Schools Overview */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="p-6 border-b border-gray-100">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <h3 className="text-xl font-bold text-gray-900">Schools Overview</h3>
+                    <div className="flex flex-wrap gap-3">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Search schools..."
+                          className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                        />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      </div>
+                      <select 
+                        value={selectedDistrict}
+                        onChange={(e) => setSelectedDistrict(e.target.value)}
+                        className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="All Districts">All Districts</option>
+                        <option value="Central">Central District</option>
+                        <option value="North">North District</option>
+                        <option value="South">South District</option>
+                      </select>
+                      <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
+                        <Plus className="w-4 h-4" />
+                        Add School
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">School Name</th>
+                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Students</th>
+                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
+                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Performance</th>
+                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Alerts</th>
+                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {schools.map((school) => (
+                        <tr key={school.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="py-4 px-6 font-medium text-gray-900">{school.name}</td>
+                          <td className="py-4 px-6 text-gray-600">{school.students.toLocaleString()}</td>
+                          <td className="py-4 px-6">
+                            <span className="font-medium text-gray-900">{school.attendance}%</span>
+                          </td>
+                          <td className="py-4 px-6">
+                            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                              {school.performance}
+                            </span>
+                          </td>
+                          <td className="py-4 px-6">
+                            <span className="font-medium text-gray-900">{school.alerts}</span>
+                          </td>
+                          <td className="py-4 px-6">
+                            <div className="flex items-center gap-2">
+                              <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors">
+                                <Edit className="w-4 h-4" />
+                              </button>
+                              <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Schools Tab */}
+          {activeTab === 'schools' && (
+            <div>
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">School Management</h2>
+                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                  <Plus className="w-4 h-4" />
+                  Add School
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* School Statistics */}
+                <div className="lg:col-span-1 space-y-6">
+                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-6">District Statistics</h3>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                        <span className="text-gray-600">Total Schools</span>
+                        <span className="font-bold text-gray-900">{districtData.totalSchools}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                        <span className="text-gray-600">Total Students</span>
+                        <span className="font-bold text-gray-900">{districtData.totalStudents.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                        <span className="text-gray-600">Average Class Size</span>
+                        <span className="font-bold text-gray-900">{districtData.averageClassSize}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                        <span className="text-gray-600">Schools Needing Support</span>
+                        <span className="font-bold text-red-600">{districtData.schoolsNeedingSupport}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Performance Distribution */}
+                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-6">Performance Distribution</h3>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <RechartsPieChart>
+                          <Pie
+                            data={[
+                              { name: 'A+ Grade', value: 15, color: '#10B981' },
+                              { name: 'A Grade', value: 20, color: '#3B82F6' },
+                              { name: 'B Grade', value: 12, color: '#8B5CF6' },
+                              { name: 'C Grade', value: 5, color: '#F59E0B' },
+                              { name: 'Needs Improvement', value: 3, color: '#EF4444' },
+                            ]}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={80}
+                            paddingAngle={2}
+                            dataKey="value"
+                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          >
+                            {[
+                              { name: 'A+ Grade', value: 15, color: '#10B981' },
+                              { name: 'A Grade', value: 20, color: '#3B82F6' },
+                              { name: 'B Grade', value: 12, color: '#8B5CF6' },
+                              { name: 'C Grade', value: 5, color: '#F59E0B' },
+                              { name: 'Needs Improvement', value: 3, color: '#EF4444' },
+                            ].map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                          <Legend />
+                        </RechartsPieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Schools List */}
+                <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-6">All Schools</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-3 px-4 font-medium text-gray-500">School</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-500">Students</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-500">Attendance</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-500">Performance</th>
+                          <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {schools.map((school) => (
+                          <tr key={school.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-4 px-4">
+                              <div className="font-medium text-gray-900">{school.name}</div>
+                            </td>
+                            <td className="py-4 px-4 text-gray-600">{school.students.toLocaleString()}</td>
+                            <td className="py-4 px-4 text-gray-600">{school.attendance}%</td>
+                            <td className="py-4 px-4">
+                              <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                {school.performance}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2">
+                                <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors">
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Reports Tab */}
+          {activeTab === 'reports' && (
+            <div>
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
+                <div className="flex gap-3">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all">
+                    <Filter className="w-4 h-4" />
+                    Filter
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
+                    <Download className="w-4 h-4" />
+                    Export Report
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Attendance Analytics */}
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border-2 border-blue-300/50 backdrop-blur-sm">
+                  <h3 className="text-lg font-bold text-white mb-6">Attendance Analytics</h3>
+                  <div className="h-80 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsBarChart data={attendanceTrendData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <XAxis 
+                          dataKey="month" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.9)', 
+                            borderRadius: '12px',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                            backdropFilter: 'blur(10px)'
+                          }}
+                          labelStyle={{ color: '#1e40af' }}
+                        />
+                        <Legend />
+                        <Bar 
+                          dataKey="attendance" 
+                          name="Attendance Rate (%)" 
+                          fill="rgba(255,255,255,0.9)" 
+                          radius={[4, 4, 0, 0]} 
+                          barSize={24}
+                        />
+                      </RechartsBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* School Performance */}
+                <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl p-6 shadow-lg border-2 border-green-300/50 backdrop-blur-sm">
+                  <h3 className="text-lg font-bold text-white mb-6">School Performance</h3>
+                  <div className="h-80 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsLineChart data={attendanceTrendData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <XAxis 
+                          dataKey="month" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        />
+                        <Tooltip 
+                          formatter={(value) => [`${value}`, 'Active Schools']}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.9)', 
+                            borderRadius: '12px',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                            backdropFilter: 'blur(10px)'
+                          }}
+                          labelStyle={{ color: '#047857' }}
+                        />
+                        <Legend />
+                        <Line 
+                          type="monotone" 
+                          dataKey="schools" 
+                          name="Active Schools" 
+                          stroke="rgba(255,255,255,0.9)" 
+                          strokeWidth={3}
+                          dot={{ r: 6, fill: 'rgba(255,255,255,0.9)', strokeWidth: 2, stroke: '#047857' }}
+                          activeDot={{ r: 8, fill: 'rgba(255,255,255,0.9)', strokeWidth: 2, stroke: '#047857' }}
+                        />
+                      </RechartsLineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detailed Reports */}
+              <div className="mt-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-6">Detailed Reports</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { title: 'Monthly Attendance Report', description: 'Comprehensive attendance analysis', icon: FileText },
+                    { title: 'School Performance Index', description: 'Performance metrics across schools', icon: Target },
+                    { title: 'Resource Allocation Report', description: 'Budget and resource distribution', icon: Utensils },
+                    { title: 'Policy Impact Analysis', description: 'Effectiveness of educational policies', icon: Award },
+                  ].map((report, index) => {
+                    const IconComponent = report.icon;
+                    return (
+                      <div key={index} className="p-4 border border-gray-200 rounded-xl hover:border-blue-300 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <IconComponent className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <h4 className="font-medium text-gray-900">{report.title}</h4>
+                        </div>
+                        <p className="text-sm text-gray-500">{report.description}</p>
+                        <button className="mt-3 text-blue-600 text-sm font-medium hover:text-blue-700">
+                          Generate Report
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Alerts Tab */}
+          {activeTab === 'alerts' && (
+            <div>
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Alert Management</h2>
+                <div className="flex gap-3">
+                  <select className="px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Statuses</option>
+                    <option>New</option>
+                    <option>Acknowledged</option>
+                    <option>Resolved</option>
+                  </select>
+                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all">
+                    <RefreshCw className="w-4 h-4" />
+                    Refresh
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">Critical Alerts</h3>
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <AlertTriangle className="w-6 h-6" />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold mb-2">12</div>
+                  <div className="text-red-100">Require immediate attention</div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">High Priority</h3>
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Bell className="w-6 h-6" />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold mb-2">24</div>
+                  <div className="text-amber-100">Should be addressed soon</div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">Medium Priority</h3>
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <Bell className="w-6 h-6" />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold mb-2">36</div>
+                  <div className="text-blue-100">Monitor regularly</div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="p-6 border-b border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-900">All Alerts</h3>
+                </div>
+                <div className="divide-y divide-gray-100">
+                  {alerts.map((alert) => (
+                    <div key={alert.id} className="p-6 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-3 rounded-xl ${getSeverityColorSolid(alert.severity)}`}>
+                          {getAlertIcon(alert.type)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-3 mb-2">
+                            <h4 className="font-medium text-gray-900">{alert.message}</h4>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                              {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
+                            </span>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColorSolid(alert.severity)} text-white`}>
+                              {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-500 mb-3">{alert.time}</p>
+                          <div className="flex gap-2">
+                            <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors">
+                              Acknowledge
+                            </button>
+                            <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                              Snooze
+                            </button>
+                            <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                              Details
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">System Settings</h2>
+                  <p className="text-gray-600 text-sm mt-1">Manage your account preferences and system settings</p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-sm font-medium">
+                    <RefreshCw className="w-3 h-3" />
+                    Refresh
+                  </button>
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md text-sm font-medium">
+                    <Settings className="w-3 h-3" />
+                    Reset
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                {/* Settings Navigation */}
+                <div className="lg:col-span-1">
+                  <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-1.5 sticky top-4">
+                    <div className="p-3 border-b border-gray-200">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-1.5 text-sm">
+                        <Settings className="w-4 h-4 text-blue-500" />
+                        Settings
+                      </h3>
+                    </div>
+                    {[
+                      { id: 'profile', icon: User, label: 'Profile' },
+                      { id: 'notifications', icon: Bell, label: 'Notifications' },
+                      { id: 'security', icon: Shield, label: 'Security' },
+                      { id: 'appearance', icon: Settings, label: 'Appearance' },
+                    ].map((tab) => {
+                      const IconComponent = tab.icon;
+                      return (
+                        <button
+                          key={tab.id}
+                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all ${
+                            activeTab === tab.id
+                              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-sm'
+                              : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600 text-sm'
+                          }`}
+                        >
+                          <IconComponent className="w-4 h-4" />
+                          <span className="font-medium text-sm">{tab.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                {/* Settings Content */}
+                <div className="lg:col-span-3">
+                  <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-4">
+                    <div className="mb-4 pb-3 border-b border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                            <User className="w-4 h-4 text-blue-500" />
+                            Profile Information
+                          </h2>
+                          <p className="text-gray-600 text-sm mt-1">Update your personal and professional details</p>
+                        </div>
+                        <div className="flex gap-1">
+                          <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                      <div className="flex flex-col items-center md:col-span-2">
+                        <div className="relative mb-3 group">
+                          <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md transform transition-all group-hover:scale-105">
+                            GO
+                          </div>
+                          <button className="absolute bottom-1 right-1 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-all shadow-md transform hover:scale-110 flex items-center justify-center">
+                            <Edit className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-all hover:underline text-sm">
+                          <Camera className="w-3 h-3" />
+                          Change Picture
+                        </button>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <label className="block text-xs font-medium text-gray-700">Full Name</label>
+                        <div className="relative">
+                          <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input 
+                            type="text" 
+                            defaultValue="Government Official"
+                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <label className="block text-xs font-medium text-gray-700">Email Address</label>
+                        <div className="relative">
+                          <Mail className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input 
+                            type="email" 
+                            defaultValue="official@education.gov"
+                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <label className="block text-xs font-medium text-gray-700">Department</label>
+                        <div className="relative">
+                          <Building className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input 
+                            type="text" 
+                            defaultValue="Education Oversight"
+                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1.5">
+                        <label className="block text-xs font-medium text-gray-700">District</label>
+                        <div className="relative">
+                          <MapPin className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <input 
+                            type="text" 
+                            defaultValue="Central District"
+                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                      <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <X className="w-3 h-3" />
+                        Cancel
+                      </button>
+                      <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <Save className="w-3 h-3" />
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Additional Settings Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                  <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg p-4 shadow-md border border-purple-200/30 backdrop-blur-sm text-white">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-1.5 bg-white/20 rounded-md">
+                        <Shield className="w-4 h-4" />
+                      </div>
+                      <h3 className="font-bold text-sm">Security Settings</h3>
+                    </div>
+                    <p className="text-white/90 mb-3 text-xs">Manage your account security and authentication preferences</p>
+                    <button className="px-3 py-1.5 bg-white text-purple-600 rounded-md hover:bg-gray-100 transition-all font-medium text-xs flex items-center gap-1">
+                      <Shield className="w-3 h-3" />
+                      Configure
+                    </button>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg p-4 shadow-md border border-amber-200/30 backdrop-blur-sm text-white">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-1.5 bg-white/20 rounded-md">
+                        <Bell className="w-4 h-4" />
+                      </div>
+                      <h3 className="font-bold text-sm">Notifications</h3>
+                    </div>
+                    <p className="text-white/90 mb-3 text-xs">Customize how and when you receive alerts and updates</p>
+                    <button className="px-3 py-1.5 bg-white text-amber-600 rounded-md hover:bg-gray-100 transition-all font-medium text-xs flex items-center gap-1">
+                      <Bell className="w-3 h-3" />
+                      Manage
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GovernmentDashboard;

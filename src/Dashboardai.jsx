@@ -209,7 +209,7 @@ const Dashboardai = () => {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats[selectedRole].map((stat, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all border border-gray-100">
+              <div key={idx} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all border-2 border-blue-200/30">
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-lg`}>
                     <stat.icon className="w-6 h-6 text-white" />
@@ -231,7 +231,7 @@ const Dashboardai = () => {
             {/* Left Column - Charts */}
             <div className="lg:col-span-2 space-y-6">
               {/* Attendance Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-blue-200/30">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-gray-900">Attendance</h3>
                   <span className="text-2xl font-bold text-gray-900">19/20</span>
@@ -240,7 +240,7 @@ const Dashboardai = () => {
               </div>
 
               {/* Homework Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-green-200/30">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-gray-900">Homework</h3>
                   <span className="text-2xl font-bold text-gray-900">53/56</span>
@@ -249,7 +249,7 @@ const Dashboardai = () => {
               </div>
 
               {/* Rating Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-purple-200/30">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-gray-900">Rating</h3>
                   <span className="text-2xl font-bold text-gray-900">89/100</span>
@@ -260,7 +260,7 @@ const Dashboardai = () => {
               </div>
 
               {/* Timetable */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-amber-200/30">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-blue-500" />
@@ -316,7 +316,7 @@ const Dashboardai = () => {
               </div>
 
               {/* Upcoming Events */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-blue-200/30">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Upcoming events</h3>
                 <div className="space-y-3">
                   {upcomingEvents.slice(0, 3).map((event, idx) => (
@@ -339,7 +339,7 @@ const Dashboardai = () => {
 
             {/* Right Column - Tasks */}
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-green-200/30">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-bold text-gray-900">Homework progress</h3>
                   <button className="flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, User, Lock, School } from 'lucide-react';
+import { Eye, EyeOff, User, Lock, School, Mail, Key } from 'lucide-react';
 import AttendSmartLogo from './AttendSmartLogo';
 
 const LoginPage = ({ onLogin }) => {
@@ -52,16 +52,16 @@ const LoginPage = ({ onLogin }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-0">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full h-full flex items-center justify-center"
+        className="w-full max-w-md"
       >
-        <div className="bg-white rounded-none shadow-none w-full h-full flex flex-col md:flex-row">
-          {/* Left side - Branding */}
-          <div className="w-full md:w-1/2 bg-gradient-to-r from-blue-600 to-indigo-700 p-8 md:p-12 flex flex-col justify-center">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -71,274 +71,250 @@ const LoginPage = ({ onLogin }) => {
                 damping: 20,
                 delay: 0.2
               }}
-              className="w-24 h-24 mx-auto mb-6"
+              className="w-16 h-16 mx-auto mb-4"
             >
-              <AttendSmartLogo size="xl" className="drop-shadow-lg" />
+              <AttendSmartLogo size="lg" className="drop-shadow-md" />
             </motion.div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">AttendSmart</h1>
-            <p className="text-blue-100 text-lg md:text-xl text-center mb-8">Smart Attendance Management System</p>
-            <div className="hidden md:block mt-8">
-              <div className="bg-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                <h3 className="text-white text-xl font-semibold mb-3">Features</h3>
-                <ul className="space-y-2 text-blue-100">
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                    Real-time attendance tracking
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                    Automated alerts and notifications
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                    Detailed analytics and reports
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-                    Multi-role access control
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <h1 className="text-2xl font-bold text-white mb-1">AttendSmart</h1>
+            <p className="text-blue-100 text-sm">Smart Attendance System</p>
           </div>
           
-          {/* Right side - Login Form */}
-          <div className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8">
-            <div className="w-full max-w-md">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
-                <p className="text-gray-600">{isSignUp ? 'Sign up for a new account' : 'Sign in to your account to continue'}</p>
-                <button 
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="mt-2 text-blue-600 hover:text-blue-500 text-sm font-medium"
+          {/* Form */}
+          <div className="p-6">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-center mb-6"
+            >
+              <h2 className="text-xl font-bold text-gray-900 mb-1">{isSignUp ? 'Create Account' : 'Welcome Back'}</h2>
+              <p className="text-gray-600 text-sm">{isSignUp ? 'Sign up for a new account' : 'Sign in to your account'}</p>
+            </motion.div>
+            
+            <motion.button 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="w-full mb-4 py-2 text-blue-600 hover:text-blue-700 text-sm font-medium bg-blue-50 hover:bg-blue-100 rounded-lg transition-all"
+            >
+              {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
+            </motion.button>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-red-50 border border-red-200 text-red-700 p-2 rounded-lg text-xs flex items-center gap-2"
                 >
-                  {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
-                </button>
+                  <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {error}
+                </motion.div>
+              )}
+              
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Login As
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { id: 'student', label: 'Student' },
+                    { id: 'teacher', label: 'Teacher' },
+                    { id: 'admin', label: 'Admin' },
+                    { id: 'government', label: 'Government' }
+                  ].map((type) => (
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      key={type.id}
+                      type="button"
+                      onClick={() => setUserType(type.id)}
+                      className={`py-2 px-1 rounded-lg text-xs border transition-all ${
+                        userType === type.id
+                          ? 'bg-blue-500 text-white border-transparent'
+                          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      {type.label}
+                    </motion.button>
+                  ))}
+                </div>
               </div>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="bg-red-50 text-red-700 p-3 rounded-lg text-sm"
+              <div>
+                <label htmlFor="username" className="block text-xs font-medium text-gray-700 mb-1">
+                  Username or Email
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-4 w-4 text-gray-400" />
+                  </div>
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="block w-full pl-8 pr-3 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Username or email"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-4 w-4 text-gray-400" />
+                  </div>
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="block w-full pl-8 pr-8 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   >
-                    {error}
-                  </motion.div>
-                )}
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Login As
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { id: 'student', label: 'Student', icon: User },
-                      { id: 'teacher', label: 'Teacher', icon: User },
-                      { id: 'admin', label: 'Admin', icon: User },
-                      { id: 'government', label: 'Government', icon: User }
-                    ].map((type) => {
-                      const IconComponent = type.icon;
-                      return (
-                        <button
-                          key={type.id}
-                          type="button"
-                          onClick={() => setUserType(type.id)}
-                          className={`flex items-center justify-center gap-2 py-3 px-3 rounded-lg border transition-all ${
-                            userType === type.id
-                              ? 'bg-blue-500 text-white border-blue-500'
-                              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          <IconComponent className="w-4 h-4" />
-                          <span className="text-sm">{type.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
                 </div>
-                
+              </div>
+              
+              {isSignUp && (
                 <div>
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                    Username or Email
+                  <label htmlFor="confirmPassword" className="block text-xs font-medium text-gray-700 mb-1">
+                    Confirm Password
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <User className="h-5 w-5 text-gray-400" />
+                      <Lock className="h-4 w-4 text-gray-400" />
                     </div>
                     <input
-                      id="username"
-                      name="username"
-                      type="text"
-                      autoComplete="username"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
                       required
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      placeholder="Enter your username or email"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      id="password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="current-password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      placeholder="Enter your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="block w-full pl-8 pr-8 py-2.5 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent text-sm"
+                      placeholder="Confirm password"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
                       ) : (
-                        <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                        <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
                       )}
                     </button>
                   </div>
                 </div>
-                
-                {isSignUp && (
-                  <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                      Confirm Password
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Lock className="h-5 w-5 text-gray-400" />
-                      </div>
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type={showConfirmPassword ? "text" : "password"}
-                        required
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                        placeholder="Confirm your password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                        ) : (
-                          <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                )}
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                      Remember me
-                    </label>
-                  </div>
-                  
-                  <div className="text-sm">
-                    <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                      Forgot password?
-                    </a>
-                  </div>
+              )}
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-3 w-3 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-xs text-gray-700">
+                    Remember me
+                  </label>
                 </div>
                 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
+                <div className="text-xs">
+                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                    Forgot password?
+                  </a>
+                </div>
+              </div>
+              
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                ) : null}
+                {isLoading ? (isSignUp ? 'Creating...' : 'Signing in...') : (isSignUp ? 'Sign up' : 'Sign in')}
+              </motion.button>
+            </form>
+            
+            <div className="mt-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-2 bg-white text-gray-500">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+              
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <motion.button 
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleGoogleLogin}
                   disabled={isLoading}
-                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="w-full inline-flex justify-center items-center py-2 px-3 border border-gray-200 rounded-lg shadow-sm bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? (
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  ) : null}
-                  {isLoading ? (isSignUp ? 'Creating account...' : 'Signing in...') : (isSignUp ? 'Sign up' : 'Sign in')}
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
+                  </svg>
+                  <span className="ml-2">{isLoading ? 'Signing in...' : 'Google'}</span>
                 </motion.button>
-              </form>
-              
-              <div className="mt-6">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
                 
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  <button 
-                    onClick={handleGoogleLogin}
-                    disabled={isLoading}
-                    className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
-                    </svg>
-                    <span className="ml-2">{isLoading ? 'Signing in...' : 'Google'}</span>
-                  </button>
-                  
-                  <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                    </svg>
-                    <span className="ml-2">Facebook</span>
-                  </button>
-                </div>
+                <motion.button 
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full inline-flex justify-center items-center py-2 px-3 border border-gray-200 rounded-lg shadow-sm bg-white text-xs font-medium text-gray-700 hover:bg-gray-50 transition-all"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                  <span className="ml-2">Facebook</span>
+                </motion.button>
               </div>
-              
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                    Sign up
-                  </a>
-                </p>
-              </div>
-              
-              <div className="mt-6 text-center">
-                <p className="text-xs text-gray-600">
-                  By signing in or signing up, you agree to our{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                    Terms of Service
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                    Privacy Policy
-                  </a>
-                </p>
-                <p className="text-xs text-gray-500 mt-2">Secure attendance management for educational institutions</p>
-              </div>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                By signing in, you agree to our{' '}
+                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                  Terms
+                </a>
+              </p>
             </div>
           </div>
         </div>
