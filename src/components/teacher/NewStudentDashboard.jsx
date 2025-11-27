@@ -729,24 +729,11 @@ const NewStudentDashboard = () => {
                     <tbody>
                       {recentGrades.map((grade, index) => (
                         <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-2 px-2 font-medium text-gray-900 flex items-center gap-1">
-                            <BookOpen className="w-3 h-3 text-gray-500" />
-                            {grade.subject}
-                          </td>
-                          <td className="py-2 px-2 text-gray-600 flex items-center gap-1">
-                            <FileText className="w-3 h-3 text-gray-500" />
-                            {grade.assignment}
-                          </td>
-                          <td className="py-2 px-2 text-gray-600 flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-gray-500" />
-                            {grade.date}
-                          </td>
-                          <td className="py-2 px-2 text-gray-600 flex items-center gap-1">
-                            <Target className="w-3 h-3 text-gray-500" />
-                            {grade.score}
-                          </td>
-                          <td className="py-2 px-2 flex items-center gap-1">
-                            <Award className="w-3 h-3 text-gray-500" />
+                          <td className="py-2 px-2 font-medium text-gray-900">{grade.subject}</td>
+                          <td className="py-2 px-2 text-gray-600">{grade.assignment}</td>
+                          <td className="py-2 px-2 text-gray-600">{grade.date}</td>
+                          <td className="py-2 px-2 text-gray-600">{grade.score}</td>
+                          <td className="py-2 px-2">
                             <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
                               grade.grade.startsWith('A') ? 'bg-green-100 text-green-800' : 
                               grade.grade.startsWith('B') ? 'bg-blue-100 text-blue-800' : 
@@ -756,14 +743,8 @@ const NewStudentDashboard = () => {
                               {grade.grade}
                             </span>
                           </td>
-                          <td className="py-2 px-2 text-gray-600 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3 text-gray-500" />
-                            {Math.round(Math.random() * 20 + 75)}/{grade.score.split('/')[1]}
-                          </td>
-                          <td className="py-2 px-2 text-gray-600 flex items-center gap-1">
-                            <Star className="w-3 h-3 text-gray-500" />
-                            {Math.floor(Math.random() * 5) + 1}/{Math.floor(Math.random() * 10) + 15}
-                          </td>
+                          <td className="py-2 px-2 text-gray-600">{Math.round(Math.random() * 20 + 75)}/{grade.score.split('/')[1]}</td>
+                          <td className="py-2 px-2 text-gray-600">{Math.floor(Math.random() * 5) + 1}/{Math.floor(Math.random() * 10) + 15}</td>
                         </tr>
                       ))}
                     </tbody>
