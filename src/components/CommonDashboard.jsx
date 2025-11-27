@@ -38,19 +38,21 @@ const CommonDashboard = ({ onLogout, userType }) => {
         return <StudentDashboard />;
       case 'admin':
         return (
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+          <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
             {/* Ultra Modern Header */}
-            <UltraModernHeader 
-              dashboardTitle="School Admin Dashboard"
-              userType="Admin"
-              userName="Admin User"
-              userRole="School Administrator"
-              onLogout={onLogout}
-            />
+            <div className="flex-shrink-0 w-full">
+              <UltraModernHeader 
+                dashboardTitle="School Admin Dashboard"
+                userType="Admin"
+                userName="Admin User"
+                userRole="School Administrator"
+                onLogout={onLogout}
+              />
+            </div>
             
             {/* Main Content */}
-            <div className="flex items-center justify-center min-h-[80vh] px-8">
-              <div className="max-w-4xl w-full">
+            <div className="flex-1 overflow-y-auto overscroll-contain p-8">
+              <div className="max-w-4xl w-full mx-auto">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold text-slate-800 mb-2">
                     School Admin Dashboard
@@ -93,19 +95,21 @@ const CommonDashboard = ({ onLogout, userType }) => {
         );
       case 'government':
         return (
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+          <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
             {/* Ultra Modern Header */}
-            <UltraModernHeader 
-              dashboardTitle="Government Official Dashboard"
-              userType="Government"
-              userName="Government Official"
-              userRole="Education Oversight"
-              onLogout={onLogout}
-            />
+            <div className="flex-shrink-0 w-full">
+              <UltraModernHeader 
+                dashboardTitle="Government Official Dashboard"
+                userType="Government"
+                userName="Government Official"
+                userRole="Education Oversight"
+                onLogout={onLogout}
+              />
+            </div>
             
             {/* Main Content */}
-            <div className="flex items-center justify-center min-h-[80vh] px-8">
-              <div className="max-w-4xl w-full">
+            <div className="flex-1 overflow-y-auto overscroll-contain p-8">
+              <div className="max-w-4xl w-full mx-auto">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold text-slate-800 mb-2">
                     Government Official Dashboard
@@ -148,22 +152,24 @@ const CommonDashboard = ({ onLogout, userType }) => {
         );
       default:
         return (
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+          <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
             {/* Ultra Modern Header */}
-            <UltraModernHeader 
-              dashboardTitle="Smart Attendance System"
-              userType="User"
-              userName="Dashboard User"
-              userRole="System User"
-              onLogout={onLogout}
-              showMenuButton={true}
-              isMenuOpen={currentView !== 'home'}
-              onMenuToggle={() => setCurrentView('home')}
-            />
+            <div className="flex-shrink-0 w-full">
+              <UltraModernHeader 
+                dashboardTitle="Smart Attendance System"
+                userType="User"
+                userName="Dashboard User"
+                userRole="System User"
+                onLogout={onLogout}
+                showMenuButton={true}
+                isMenuOpen={currentView !== 'home'}
+                onMenuToggle={() => setCurrentView('home')}
+              />
+            </div>
             
             {/* Main Content */}
-            <div className="flex items-center justify-center min-h-[80vh] px-8">
-              <div className="max-w-6xl w-full">
+            <div className="flex-1 overflow-y-auto overscroll-contain p-8">
+              <div className="max-w-6xl w-full mx-auto">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-bold text-slate-800 mb-2">
                     Welcome to Smart Attendance System
@@ -269,7 +275,7 @@ const CommonDashboard = ({ onLogout, userType }) => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen max-h-screen overflow-hidden">
       {currentView !== 'home' && (
         <div className="fixed top-4 left-4 z-50">
           <button

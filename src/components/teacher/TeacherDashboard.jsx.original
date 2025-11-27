@@ -1,0 +1,2926 @@
+import React, { useState, useEffect, useReducer } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Users, User, UserCheck, UserX, Bell, AlertTriangle, Download, Calendar, Clock, Activity, Shield, MapPin, TrendingUp, FileText, Settings, LogOut, Menu, X, Home, BookOpen, ClipboardList, MessageSquare, Search, ChevronDown, CheckCircle2, Eye, Edit, Printer, Filter, Plus, Save, XCircle, RefreshCw, PieChart, Palette } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadialBarChart, RadialBar, AreaChart, Area, ComposedChart } from 'recharts';
+import { motion, AnimatePresence } from 'framer-motion';
+import AttendSmartLogo from '../AttendSmartLogo';
+import UltraModernHeader from '../UltraModernHeader';
+import ClassroomCard from '../ClassroomCard';
+import LanguageSelector from '../LanguageSelector';
+import ParticleBackground from '../ParticleBackground';
+
+// Custom CSS for animations
+const customStyles = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: translateY(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  
+  .animate-bounce {
+    animation: bounce 1s infinite;
+  }
+  
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .delay-150 {
+    animation-delay: 0.15s;
+  }
+  
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .delay-250 {
+    animation-delay: 0.25s;
+  }
+  
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+`;
+
+// Inject custom styles
+const styleSheet = document.createElement("style");
+styleSheet.innerText = customStyles;
+document.head.appendChild(styleSheet);
+
+const TeacherDashboard = () => {
+  const { t, i18n } = useTranslation();
+  const [activeTab, setActiveTab] = useState('home');
+  const [selectedClass, setSelectedClass] = useState('Class 10-A');
+  const [showManualOverrideModal, setShowManualOverrideModal] = useState(false);
+  const [selectedStudentForOverride, setSelectedStudentForOverride] = useState(null);
+  const [manualOverrideNote, setManualOverrideNote] = useState('');
+  const [manualOverrideStatus, setManualOverrideStatus] = useState('');
+  const [showStudentDetailDrawer, setShowStudentDetailDrawer] = useState(false);
+  const [selectedStudentDetails, setSelectedStudentDetails] = useState(null);
+  const [teacherAvatar, setTeacherAvatar] = useState('https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher');
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+  const [newStudentData, setNewStudentData] = useState({
+    name: '',
+    roll: '',
+    status: 'present'
+  });
+  
+  // Force re-render when language changes
+  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
+  
+  // Add effect to handle language changes
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      // Force re-render when language changes
+      forceUpdate();
+    };
+    
+    i18n.on('languageChanged', handleLanguageChange);
+    
+    return () => {
+      i18n.off('languageChanged', handleLanguageChange);
+    };
+  }, [i18n]);
+  
+  // Settings state
+  const [notificationSettings, setNotificationSettings] = useState({
+    email: true,
+    sms: true,
+    push: true,
+    absenteeism: true,
+    safety: true,
+    weekly: false,
+    daily: false
+  });
+  
+  const [securitySettings, setSecuritySettings] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    twoFactor: false
+  });
+  
+  const [themeSettings, setThemeSettings] = useState({
+    theme: 'Light',
+    language: 'English'
+  });
+  
+  const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
+  
+  // Class management state
+  const [showAddClassModal, setShowAddClassModal] = useState(false);
+  const [newClassData, setNewClassData] = useState({
+    name: '',
+    subject: '',
+    academicYear: ''
+  });
+  const [classes, setClasses] = useState([
+    { id: 1, name: 'Class 10-A', subject: 'Mathematics', academicYear: '2024-25', studentCount: 30 },
+    { id: 2, name: 'Class 11-B', subject: 'Science', academicYear: '2024-25', studentCount: 28 },
+    { id: 3, name: 'Class 12-C', subject: 'English', academicYear: '2024-25', studentCount: 32 }
+  ]);
+  
+  // Search state
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Date range state
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  
+  // Popup state
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+
+  // Teacher-specific data for one school
+  const [teacherProfile, setTeacherProfile] = useState({
+    name: 'Dr. James Wilson',
+    email: 'james.wilson@greenwood.edu',
+    subject: 'Mathematics',
+    school: 'Greenwood High School',
+    phone: '+1 (555) 123-4567',
+    department: 'Mathematics'
+  });
+
+  const teacherData = {
+    name: teacherProfile.name,
+    subject: teacherProfile.subject,
+    classes: classes.map(c => c.name),
+    school: teacherProfile.school
+  };
+
+
+
+  const [classWiseAttendance, setClassWiseAttendance] = useState([
+    { id: 1, name: 'Rahul Sharma', class: 'Class 10-A', roll: 15, status: 'present', method: 'RFID', lastUpdated: '2024-04-15 09:15:22' },
+    { id: 2, name: 'Priya Patel', class: 'Class 10-A', roll: 22, status: 'present', method: 'Face Recognition', lastUpdated: '2024-04-15 09:14:45' },
+    { id: 3, name: 'Amit Kumar', class: 'Class 10-A', roll: 5, status: 'absent', method: 'Pending', lastUpdated: 'N/A' },
+    { id: 4, name: 'Sneha Singh', class: 'Class 11-B', roll: 30, status: 'present', method: 'RFID', lastUpdated: '2024-04-15 09:08:37' },
+    { id: 5, name: 'Vikram Reddy', class: 'Class 11-B', roll: 38, status: 'absent', method: 'Pending', lastUpdated: 'N/A' },
+    { id: 6, name: 'Anjali Mehta', class: 'Class 12-C', roll: 8, status: 'present', method: 'Face Recognition', lastUpdated: '2024-04-15 09:12:18' },
+  ]);
+
+  // Calculate attendance counts for Class 10-A only with search filtering
+  const filteredStudents = classWiseAttendance.filter(student => 
+    student.class === 'Class 10-A' && 
+    (student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+     student.roll.toString().includes(searchTerm))
+  );
+  
+  const class10AStudents = filteredStudents;
+  const presentCount = class10AStudents.filter(student => student.status === 'present').length;
+  const absentCount = class10AStudents.filter(student => student.status === 'absent').length;
+  const lateCount = class10AStudents.filter(student => student.status === 'late').length;
+  
+  // Generate mock weekly attendance data based on current attendance
+  const generateWeeklyAttendanceData = (presentCount, absentCount, lateCount) => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return days.map((day, index) => {
+      // For demo purposes, we'll generate some variation
+      const basePresent = presentCount;
+      const baseAbsent = absentCount;
+      const variation = Math.floor(Math.random() * 5) - 2; // -2 to +2 variation
+      
+      return {
+        day,
+        present: Math.max(0, basePresent + variation),
+        absent: Math.max(0, baseAbsent - variation),
+        late: Math.max(0, lateCount + Math.floor(Math.random() * 3) - 1)
+      };
+    });
+  };
+  
+  const attendanceData = generateWeeklyAttendanceData(presentCount, absentCount, lateCount);
+  
+  const summaryStats = [
+    { label: t('dashboard.total_students'), value: class10AStudents.length, icon: Users, color: 'from-blue-500 to-blue-600' },
+    { label: t('dashboard.present_today'), value: presentCount, icon: UserCheck, color: 'from-green-500 to-green-600' },
+    { label: t('dashboard.absent_today'), value: absentCount, icon: UserX, color: 'from-red-500 to-red-600' },
+    { label: t('dashboard.late_today'), value: lateCount, icon: Clock, color: 'from-yellow-500 to-yellow-600' },
+  ];
+
+  const alerts = [
+    { id: 1, type: 'absenteeism', message: '3 students absent for 2+ consecutive days', time: '10 mins ago', severity: 'high', status: 'new' },
+    { id: 2, type: 'safety', message: 'Unauthorized entry detected at main gate', time: '25 mins ago', severity: 'critical', status: 'new' },
+    { id: 3, type: 'device', message: 'RFID reader malfunction - Gate 2', time: '1 hour ago', severity: 'medium', status: 'acknowledged' },
+    { id: 4, type: 'unauthorized', message: 'Unrecognized face detected - Main entrance', time: '2 hours ago', severity: 'high', status: 'resolved' },
+  ];
+
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-50 border-red-200 text-red-800';
+      case 'high': return 'bg-orange-50 border-orange-200 text-orange-800';
+      case 'medium': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
+      default: return 'bg-gray-50 border-gray-200 text-gray-800';
+    }
+  };
+
+  const getSeverityColorSolid = (severity) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-500 text-white';
+      case 'high': return 'bg-orange-500 text-white';
+      case 'medium': return 'bg-yellow-500 text-white';
+      default: return 'bg-gray-500 text-white';
+    }
+  };
+
+  const getSeverityGlow = (severity) => {
+    switch (severity) {
+      case 'critical': return 'shadow-lg shadow-red-500/30';
+      case 'high': return 'shadow-lg shadow-orange-500/30';
+      case 'medium': return 'shadow-lg shadow-yellow-500/30';
+      default: return 'shadow-lg shadow-gray-500/30';
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'present': return 'bg-green-100 text-green-800';
+      case 'absent': return 'bg-red-100 text-red-800';
+      case 'late': return 'bg-yellow-100 text-yellow-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getAlertIcon = (type) => {
+    switch (type) {
+      case 'absenteeism': return <UserX className="w-5 h-5" />;
+      case 'safety': return <Shield className="w-5 h-5" />;
+      case 'device': return <Activity className="w-5 h-5" />;
+      case 'unauthorized': return <AlertTriangle className="w-5 h-5" />;
+      default: return <Bell className="w-5 h-5" />;
+    }
+  };
+
+  const getStatusGlow = (status) => {
+    switch (status) {
+      case 'new': return 'animate-pulse ring-2 ring-red-500/30 shadow-lg shadow-red-500/20';
+      case 'acknowledged': return 'ring-1 ring-yellow-500/30';
+      case 'resolved': return 'opacity-70';
+      default: return '';
+    }
+  };
+
+  const getSeverityAnimation = (severity) => {
+    switch (severity) {
+      case 'critical': return 'animate-bounce';
+      case 'high': return 'animate-pulse';
+      default: return '';
+    }
+  };
+
+  const formatDateTime = (dateTimeString) => {
+    if (dateTimeString === 'N/A' || !dateTimeString) return 'N/A';
+    
+    const date = new Date(dateTimeString);
+    const now = new Date();
+    
+    // If it's today, show time only
+    if (date.toDateString() === now.toDateString()) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
+    // If it's this year, show month and day
+    if (date.getFullYear() === now.getFullYear()) {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+    
+    // Otherwise, show full date
+    return date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
+  };
+
+  const getStudentAvatar = (studentName) => {
+    // Generate a consistent avatar based on student name
+    const seed = studentName.replace(/\s+/g, '').toLowerCase();
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`;
+  };
+
+  const handleManualOverride = (student) => {
+    setSelectedStudentForOverride(student);
+    setShowManualOverrideModal(true);
+  };
+
+  const saveManualOverride = () => {
+    // In a real app, this would make an API call to update the attendance
+    console.log(`Updating attendance for ${selectedStudentForOverride.name} to ${manualOverrideStatus} with note: ${manualOverrideNote}`);
+    
+    // Update the student's attendance status in the state
+    setClassWiseAttendance(prev => 
+      prev.map(student => 
+        student.id === selectedStudentForOverride.id 
+          ? { 
+              ...student, 
+              status: manualOverrideStatus,
+              method: 'Manual Override',
+              lastUpdated: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            } 
+          : student
+      )
+    );
+    
+    // Reset form and close modal
+    setManualOverrideStatus('');
+    setManualOverrideNote('');
+    setShowManualOverrideModal(false);
+    
+    // Show success message with popup
+    setPopupMessage(`Attendance for ${selectedStudentForOverride.name} updated to ${manualOverrideStatus} successfully!`);
+    setShowPopup(true);
+  };
+
+  const openStudentDetails = (student) => {
+    setSelectedStudentDetails(student);
+    setShowStudentDetailDrawer(true);
+  };
+
+  const exportReport = (format) => {
+    // In a real app, this would generate and download the report
+    alert(`Exporting attendance report in ${format} format for Class 10-A${searchTerm ? ` (filtered by: ${searchTerm})` : ''}`);
+  };
+
+  const downloadPresentStudentsCSV = () => {
+    // Filter present students from Class 10-A only with search filter
+    const presentStudents = classWiseAttendance.filter(student => 
+      student.class === 'Class 10-A' && 
+      student.status === 'present' &&
+      (student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+       student.roll.toString().includes(searchTerm))
+    );
+    
+    // Create CSV content
+    let csvContent = 'Name,Roll Number,Class,Status,Method,Last Updated\n';
+    presentStudents.forEach(student => {
+      csvContent += `${student.name},${student.roll},${student.class},${student.status},${student.method},${student.lastUpdated}\n`;
+    });
+    
+    // Create blob and download
+    const fileName = searchTerm 
+      ? `present_students_Class_10-A_search-${searchTerm.replace(/[^a-zA-Z0-9]/g, '_')}.csv`
+      : `present_students_Class_10-A.csv`;
+      
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleAddStudentChange = (field, value) => {
+    setNewStudentData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+  
+  // Handle profile changes
+  const handleProfileChange = (field, value) => {
+    setTeacherProfile(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+  
+  // Handle notification settings changes
+  const handleNotificationChange = (id) => {
+    setNotificationSettings(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+  
+  // Handle security settings changes
+  const handleSecurityChange = (field, value) => {
+    setSecuritySettings(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+  
+  // Handle theme settings changes
+  const handleThemeChange = (field, value) => {
+    setThemeSettings(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+  
+  // Save profile changes
+  const saveProfileChanges = () => {
+    console.log('Saving profile changes:', teacherProfile);
+    // In a real app, this would make an API call
+    setPopupMessage('Profile information updated successfully!');
+    setShowPopup(true);
+  };
+  
+  // Save notification preferences
+  const saveNotificationPreferences = () => {
+    console.log('Saving notification preferences:', notificationSettings);
+    // In a real app, this would make an API call
+    setPopupMessage('Notification preferences updated successfully!');
+    setShowPopup(true);
+  };
+  
+  // Update password
+  const updatePassword = () => {
+    if (securitySettings.newPassword !== securitySettings.confirmPassword) {
+      setPopupMessage('New password and confirmation do not match!');
+      setShowPopup(true);
+      return;
+    }
+    if (securitySettings.newPassword.length < 6) {
+      setPopupMessage('Password must be at least 6 characters long!');
+      setShowPopup(true);
+      return;
+    }
+    console.log('Updating password');
+    // In a real app, this would make an API call
+    setPopupMessage('Password updated successfully!');
+    setShowPopup(true);
+    // Reset form
+    setSecuritySettings(prev => ({
+      ...prev,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    }));
+  };
+  
+  // Save theme preferences
+  const saveThemePreferences = () => {
+    console.log('Saving theme preferences:', themeSettings);
+    // In a real app, this would make an API call
+    setPopupMessage('Theme preferences updated successfully!');
+    setShowPopup(true);
+  };
+
+  const handleAddStudent = () => {
+    // In a real app, this would make an API call to add the student
+    console.log('Adding new student:', newStudentData);
+    
+    // Add new student to the attendance list
+    const newStudent = {
+      id: classWiseAttendance.length + 1,
+      name: newStudentData.name,
+      class: selectedClass,
+      roll: newStudentData.roll,
+      status: newStudentData.status,
+      method: 'Manual Entry',
+      lastUpdated: new Date().toISOString().slice(0, 19).replace('T', ' ')
+    };
+    
+    setClassWiseAttendance(prev => [...prev, newStudent]);
+    
+    // Reset form and close modal
+    setNewStudentData({
+      name: '',
+      roll: '',
+      status: 'present'
+    });
+    setShowAddStudentModal(false);
+    
+    // Show success message with popup
+    setPopupMessage(`Student ${newStudentData.name} added successfully with status: ${newStudentData.status}!`);
+    setShowPopup(true);
+  };
+
+  const handleAddClassChange = (field, value) => {
+    setNewClassData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleAddClass = () => {
+    // Validate input
+    if (!newClassData.name || !newClassData.subject || !newClassData.academicYear) {
+      setPopupMessage('Please fill in all fields');
+      setShowPopup(true);
+      return;
+    }
+    
+    // In a real app, this would make an API call to add the class
+    console.log('Adding new class:', newClassData);
+    
+    // Add new class to the classes list
+    const newClass = {
+      id: classes.length + 1,
+      name: newClassData.name,
+      subject: newClassData.subject,
+      academicYear: newClassData.academicYear,
+      studentCount: 0
+    };
+    
+    setClasses(prev => [...prev, newClass]);
+    
+    // Reset form and close modal
+    setNewClassData({
+      name: '',
+      subject: '',
+      academicYear: ''
+    });
+    setShowAddClassModal(false);
+    
+    // Show success message with popup
+    setPopupMessage(`Class ${newClassData.name} added successfully!`);
+    setShowPopup(true);
+  };
+
+  return (
+    <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50" style={{ overscrollBehavior: 'contain' }}>
+      {/* Sidebar - replacing the floating navigation */}
+      <motion.div 
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-56 bg-white shadow-lg flex flex-col"
+      >
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md">
+                TD
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                  Smart Attendance
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 truncate">Teacher</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 p-3 pt-0 space-y-0.5">
+          {[
+            { id: 'home', icon: Home, label: 'Dashboard Home' },
+            { id: 'classes', icon: BookOpen, label: 'Classes' },
+            { id: 'attendance', icon: UserCheck, label: 'Attendance' },
+            { id: 'reports', icon: FileText, label: 'Reports' },
+            { id: 'alerts', icon: Bell, label: 'Alerts' },
+            { id: 'settings', icon: Settings, label: 'Settings' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                activeTab === tab.id
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
+                  : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
+              }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              <span className="font-medium text-sm">{tab.label}</span>
+              {tab.id === 'alerts' && (
+                <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  3
+                </span>
+              )}
+            </button>
+          ))}
+        </nav>
+
+        <div className="p-3 border-t border-gray-100 space-y-1">
+          <button 
+            onClick={() => console.log('Logout clicked')}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-all"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="font-medium text-sm">Logout</span>
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto" style={{ overscrollBehavior: 'contain' }}>
+        <ParticleBackground />
+        {/* Main Content */}
+        <div className="overflow-auto relative z-10">
+          {/* Ultra Modern Header */}
+          <UltraModernHeader 
+            dashboardTitle="Teacher Dashboard"
+            userType="Teacher"
+            userName={teacherData.name}
+            userRole={`${teacherData.subject} Teacher`}
+            onLogout={() => console.log('Logout clicked')}
+          />
+
+          {/* Dashboard Content */}
+          <div className="p-8">
+            {/* Home Tab */}
+            {activeTab === 'home' && (
+              <div>
+                {/* Welcome Banner */}
+                <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-xl p-2 mb-2 shadow-md backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                  {/* Animated background elements */}
+                  <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                    <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full mix-blend-overlay"></div>
+                    <div className="absolute bottom-10 right-10 w-48 h-48 bg-white rounded-full mix-blend-overlay"></div>
+                  </div>
+                  <div className="relative z-10">
+                    <h2 className="text-lg font-bold text-white mb-2">
+                      {t('dashboard.welcome')}, {teacherData.name.split(' ')[1]}! 👋
+                    </h2>
+                    <p className="text-blue-100 text-sm mb-2">
+                      You have {classes.length} classes today and {alerts.filter(a => a.status === 'new').length} new alerts
+                    </p>
+                    <div className="flex items-center gap-3 text-white">
+                      <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 backdrop-blur-sm border border-white/20">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="text-xs">{classWiseAttendance.filter(s => s.status === 'present').length} students present</span>
+                      </div>
+                      <div className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 backdrop-blur-sm border border-white/20">
+                        <div className="w-2 h-2 bg-blue-300 rounded-full"></div>
+                        <span className="text-xs">{alerts.filter(a => a.status === 'new').length} new alerts</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-3">
+                  {summaryStats.map((stat, index) => {
+                    const IconComponent = stat.icon;
+                    
+                    return (
+                      <motion.div 
+                        key={index}
+                        whileHover={{ y: -3 }}
+                        className={`bg-gradient-to-br ${stat.color} rounded-lg p-3 shadow-md border border-white/20 backdrop-blur-sm`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
+                            <IconComponent className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xl font-bold text-white">{stat.value}</div>
+                            <div className="text-xs text-white/80">{stat.label}</div>
+                          </div>
+                        </div>
+                        <div className="text-xs text-white/90 font-medium">+2.5% from last month</div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+
+
+                {/* Charts and Recent Activity */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">
+                  {/* Attendance Chart */}
+                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-md border border-blue-200/30 backdrop-blur-sm" style={{boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1)'}}>
+                    <h3 className="text-base font-bold text-white mb-2">{t('charts.weekly_attendance')}</h3>
+                    <div className="h-32 bg-white/20 rounded-lg p-3 backdrop-blur-sm border border-white/30">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={attendanceData}>
+                          <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="rgba(255,255,255,0.2)" />
+                          <XAxis 
+                            dataKey="day" 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: 'bold' }}
+                          />
+                          <YAxis 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: 'bold' }}
+                            domain={[0, 'dataMax + 5']}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'rgba(255,255,255,0.95)', 
+                              borderRadius: '16px',
+                              border: '1px solid rgba(255,255,255,0.4)',
+                              boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
+                              backdropFilter: 'blur(15px)',
+                              padding: '12px'
+                            }}
+                            labelStyle={{ color: '#1e40af', fontWeight: 'bold' }}
+                            itemStyle={{ fontWeight: '600' }}
+                            formatter={(value) => [`${value} students`, '']}
+                          />
+                          <Legend 
+                            verticalAlign="top" 
+                            height={40}
+                            formatter={(value) => <span className="font-bold text-white">{value}</span>}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="present" 
+                            name={t('charts.present')} 
+                            stroke="rgba(255,255,255,1)" 
+                            strokeWidth={4}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="absent" 
+                            name={t('charts.absent')} 
+                            stroke="rgba(255,255,255,0.7)" 
+                            strokeWidth={4}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="late" 
+                            name={t('charts.late')} 
+                            stroke="rgba(255,255,255,0.5)" 
+                            strokeWidth={4}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Recent Activity */}
+                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-md border border-blue-200/30 backdrop-blur-sm" style={{boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1)'}}>
+                    <h3 className="text-base font-bold text-white mb-2">{t('dashboard.recent_activity')}</h3>
+                    <div className="h-32 bg-white/20 rounded-lg p-3 backdrop-blur-sm border border-white/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                              Rahul Sharma
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 truncate">Marked present at 9:15 AM</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                              Priya Patel
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 truncate">Marked present at 9:14 AM</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                          <User className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                              Sneha Singh
+                            </span>
+                          </div>
+                          <p className="text-xs text-gray-500 truncate">Marked present at 9:08 AM</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Alerts */}
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-md border border-blue-200/30 backdrop-blur-sm" style={{boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1)'}}>
+                  <h3 className="text-base font-bold text-white mb-2">{t('dashboard.alerts')}</h3>
+                  <div className="h-32 bg-white/20 rounded-lg p-3 backdrop-blur-sm border border-white/30">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                        <AlertTriangle className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                            3 students absent for 2+ consecutive days
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 truncate">10 mins ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                        <Shield className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                            Unauthorized entry detected at main gate
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 truncate">25 mins ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                        <Activity className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                            RFID reader malfunction - Gate 2
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 truncate">1 hour ago</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                        <AlertTriangle className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                            Unrecognized face detected - Main entrance
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 truncate">2 hours ago</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Classes Tab */}
+            {activeTab === 'classes' && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold">{t('dashboard.classes')}</h2>
+                  <button 
+                    onClick={() => setShowAddClassModal(true)}
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    {t('dashboard.add_class')}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {classes.map((classroom) => (
+                    <ClassroomCard 
+                      key={classroom.id}
+                      name={classroom.name}
+                      subject={classroom.subject}
+                      academicYear={classroom.academicYear}
+                      studentCount={classroom.studentCount}
+                      onAddStudent={() => {
+                        setSelectedClass(classroom.name);
+                        setShowAddStudentModal(true);
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Attendance Tab */}
+            {activeTab === 'attendance' && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold">{t('dashboard.attendance')}</h2>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => exportReport('PDF')}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      {t('dashboard.export_pdf')}
+                    </button>
+                    <button 
+                      onClick={() => exportReport('CSV')}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      {t('dashboard.export_csv')}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="relative w-full">
+                    <input 
+                      type="text" 
+                      value={searchTerm} 
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder={t('dashboard.search_students')}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <Search className="absolute top-1/2 right-3 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
+                  <div className="relative">
+                    <input 
+                      type="date" 
+                      value={fromDate} 
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="relative">
+                    <input 
+                      type="date" 
+                      value={toDate} 
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        <th className="text-left px-4 py-2">{t('dashboard.student_name')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.roll_number')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.status')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.method')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.last_updated')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.actions')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {class10AStudents.map((student) => (
+                        <tr key={student.id}>
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                                <img src={getStudentAvatar(student.name)} alt={`${student.name}'s avatar`} className="w-8 h-8 rounded-full" />
+                              </div>
+                              <span className="font-medium">{student.name}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">{student.roll}</td>
+                          <td className="px-4 py-2">
+                            <div className={`px-2 py-1 rounded-full text-xs ${getStatusColor(student.status)}`}>
+                              {student.status}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">{student.method}</td>
+                          <td className="px-4 py-2">{formatDateTime(student.lastUpdated)}</td>
+                          <td className="px-4 py-2">
+                            <button 
+                              onClick={() => handleManualOverride(student)}
+                              className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-2 py-1 rounded-lg shadow-md hover:shadow-lg transition-all"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button 
+                              onClick={() => openStudentDetails(student)}
+                              className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-2 py-1 rounded-lg shadow-md hover:shadow-lg transition-all ml-2"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Reports Tab */}
+            {activeTab === 'reports' && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold">{t('dashboard.reports')}</h2>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => exportReport('PDF')}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      {t('dashboard.export_pdf')}
+                    </button>
+                    <button 
+                      onClick={() => exportReport('CSV')}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Download className="w-4 h-4 mr-1" />
+                      {t('dashboard.export_csv')}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="relative w-full">
+                    <input 
+                      type="text" 
+                      value={searchTerm} 
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder={t('dashboard.search_students')}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <Search className="absolute top-1/2 right-3 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
+                  <div className="relative">
+                    <input 
+                      type="date" 
+                      value={fromDate} 
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div className="relative">
+                    <input 
+                      type="date" 
+                      value={toDate} 
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        <th className="text-left px-4 py-2">{t('dashboard.student_name')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.roll_number')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.status')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.method')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.last_updated')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {class10AStudents.map((student) => (
+                        <tr key={student.id}>
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                                <img src={getStudentAvatar(student.name)} alt={`${student.name}'s avatar`} className="w-8 h-8 rounded-full" />
+                              </div>
+                              <span className="font-medium">{student.name}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">{student.roll}</td>
+                          <td className="px-4 py-2">
+                            <div className={`px-2 py-1 rounded-full text-xs ${getStatusColor(student.status)}`}>
+                              {student.status}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">{student.method}</td>
+                          <td className="px-4 py-2">{formatDateTime(student.lastUpdated)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Alerts Tab */}
+            {activeTab === 'alerts' && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold">{t('dashboard.alerts')}</h2>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        <th className="text-left px-4 py-2">{t('dashboard.alert_type')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.message')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.time')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.severity')}</th>
+                        <th className="text-left px-4 py-2">{t('dashboard.status')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {alerts.map((alert) => (
+                        <tr key={alert.id}>
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+                                {getAlertIcon(alert.type)}
+                              </div>
+                              <span className="font-medium">{alert.type}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">{alert.message}</td>
+                          <td className="px-4 py-2">{alert.time}</td>
+                          <td className="px-4 py-2">
+                            <div className={`px-2 py-1 rounded-full text-xs ${getSeverityColorSolid(alert.severity)}`}>
+                              {alert.severity}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">
+                            <div className={`px-2 py-1 rounded-full text-xs ${getStatusColor(alert.status)}`}>
+                              {alert.status}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === 'settings' && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold">{t('dashboard.settings')}</h2>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">{t('dashboard.profile')}</h3>
+                    <button 
+                      onClick={saveProfileChanges}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Save className="w-4 h-4 mr-1" />
+                      {t('dashboard.save')}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.name')}</label>
+                      <input 
+                        type="text" 
+                        value={teacherProfile.name} 
+                        onChange={(e) => handleProfileChange('name', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.email')}</label>
+                      <input 
+                        type="email" 
+                        value={teacherProfile.email} 
+                        onChange={(e) => handleProfileChange('email', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.phone')}</label>
+                      <input 
+                        type="tel" 
+                        value={teacherProfile.phone} 
+                        onChange={(e) => handleProfileChange('phone', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.department')}</label>
+                      <input 
+                        type="text" 
+                        value={teacherProfile.department} 
+                        onChange={(e) => handleProfileChange('department', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">{t('dashboard.notifications')}</h3>
+                    <button 
+                      onClick={saveNotificationPreferences}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Save className="w-4 h-4 mr-1" />
+                      {t('dashboard.save')}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="email" 
+                        checked={notificationSettings.email} 
+                        onChange={() => handleNotificationChange('email')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="email">{t('dashboard.email')}</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="sms" 
+                        checked={notificationSettings.sms} 
+                        onChange={() => handleNotificationChange('sms')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="sms">{t('dashboard.sms')}</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="push" 
+                        checked={notificationSettings.push} 
+                        onChange={() => handleNotificationChange('push')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="push">{t('dashboard.push')}</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="absenteeism" 
+                        checked={notificationSettings.absenteeism} 
+                        onChange={() => handleNotificationChange('absenteeism')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="absenteeism">{t('dashboard.absenteeism')}</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="safety" 
+                        checked={notificationSettings.safety} 
+                        onChange={() => handleNotificationChange('safety')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="safety">{t('dashboard.safety')}</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="weekly" 
+                        checked={notificationSettings.weekly} 
+                        onChange={() => handleNotificationChange('weekly')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="weekly">{t('dashboard.weekly')}</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="daily" 
+                        checked={notificationSettings.daily} 
+                        onChange={() => handleNotificationChange('daily')}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="daily">{t('dashboard.daily')}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">{t('dashboard.security')}</h3>
+                    <button 
+                      onClick={updatePassword}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Save className="w-4 h-4 mr-1" />
+                      {t('dashboard.save')}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.current_password')}</label>
+                      <input 
+                        type="password" 
+                        value={securitySettings.currentPassword} 
+                        onChange={(e) => handleSecurityChange('currentPassword', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.new_password')}</label>
+                      <input 
+                        type="password" 
+                        value={securitySettings.newPassword} 
+                        onChange={(e) => handleSecurityChange('newPassword', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.confirm_password')}</label>
+                      <input 
+                        type="password" 
+                        value={securitySettings.confirmPassword} 
+                        onChange={(e) => handleSecurityChange('confirmPassword', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="checkbox" 
+                        id="twoFactor" 
+                        checked={securitySettings.twoFactor} 
+                        onChange={() => handleSecurityChange('twoFactor', !securitySettings.twoFactor)}
+                        className="w-4 h-4"
+                      />
+                      <label className="text-sm font-medium" htmlFor="twoFactor">{t('dashboard.two_factor')}</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-md p-4 mt-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold">{t('dashboard.theme')}</h3>
+                    <button 
+                      onClick={saveThemePreferences}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
+                    >
+                      <Save className="w-4 h-4 mr-1" />
+                      {t('dashboard.save')}
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.theme')}</label>
+                      <select 
+                        value={themeSettings.theme} 
+                        onChange={(e) => handleThemeChange('theme', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Light">{t('dashboard.light')}</option>
+                        <option value="Dark">{t('dashboard.dark')}</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-sm font-medium">{t('dashboard.language')}</label>
+                      <select 
+                        value={themeSettings.language} 
+                        onChange={(e) => handleThemeChange('language', e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="English">{t('dashboard.english')}</option>
+                        <option value="Spanish">{t('dashboard.spanish')}</option>
+                        <option value="French">{t('dashboard.french')}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TeacherDashboard;
+
+                          dot={{ r: 8, fill: 'rgba(255,255,255,1)', strokeWidth: 2, stroke: '#fff', strokeOpacity: 0.8 }}
+                          activeDot={{ r: 10, fill: 'rgba(255,255,255,1)', strokeWidth: 2, stroke: '#fff' }}
+                          animationDuration={1000}
+                          animationEasing="ease-out"
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="absent" 
+                          name={t('charts.absent')} 
+                          stroke="rgba(255,255,255,0.8)" 
+                          strokeWidth={4}
+                          strokeDasharray="8 4"
+                          dot={{ r: 8, fill: 'rgba(255,255,255,0.8)', strokeWidth: 2, stroke: '#fff', strokeOpacity: 0.8 }}
+                          activeDot={{ r: 10, fill: 'rgba(255,255,255,0.8)', strokeWidth: 2, stroke: '#fff' }}
+                          animationDuration={1000}
+                          animationEasing="ease-out"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Critical Alerts - Positioned at the top */}
+                <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-2 shadow-md border-2 border-red-300/50 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-red-400 rounded-full opacity-20 -translate-y-16 translate-x-16"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-red-400 rounded-full opacity-20 translate-y-12 -translate-x-12"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5" />
+                        {t('alerts.critical_alerts')}
+                      </h3>
+                      <button 
+                        onClick={() => setActiveTab('alerts')}
+                        className="text-white text-sm font-medium hover:text-white bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg border border-white/30 backdrop-blur-sm transition-all"
+                      >
+                        {t('alerts.view_all')}
+                      </button>
+                    </div>
+                    <div className="space-y-4">
+                      {alerts
+                        .filter(alert => alert.severity === 'critical' || alert.status === 'new')
+                        .slice(0, 2)
+                        .map((alert) => (
+                          <div 
+                            key={alert.id} 
+                            className={`flex items-start gap-2 p-4 bg-white/20 rounded-xl border border-white/30 backdrop-blur-sm transition-all ${getStatusGlow(alert.status)} ${getSeverityAnimation(alert.severity)}`}
+                          >
+                            <div className={`p-2 rounded-lg ${getSeverityColorSolid(alert.severity)} flex-shrink-0`} aria-label={`${alert.severity} severity alert`}>
+                              {getAlertIcon(alert.type)}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-white">{alert.message}</h4>
+                              <div className="flex flex-wrap items-center gap-2 mt-2">
+                                <span className="text-white/80 text-sm">
+                                  <Clock className="inline w-4 h-4 mr-1" />
+                                  {alert.time}
+                                </span>
+                                <span className={`text-xs px-2 py-1 rounded-full ${getSeverityColor(alert.severity)}`} aria-label={`Severity: ${alert.severity}`}>
+                                  {getAlertIcon(alert.type)}
+                                  <span className="ml-1">{alert.severity}</span>
+                                </span>
+                                <span className={`text-xs px-2 py-1 rounded-full ${{
+                                  'new': 'bg-red-100 text-red-800',
+                                  'acknowledged': 'bg-yellow-100 text-yellow-800',
+                                  'resolved': 'bg-green-100 text-green-800'
+                                }[alert.status]}`} aria-label={`Status: ${alert.status}`}>
+                                  {alert.status}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Attendance */}
+              <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-2 shadow-md border-2 border-purple-300/50 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-bold text-white">Recent Attendance</h3>
+                  <button 
+                    onClick={() => setActiveTab('attendance')}
+                    className="text-white text-sm font-medium hover:text-white bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg border border-white/30 backdrop-blur-sm transition-all"
+                  >
+                    View All
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {filteredStudents.slice(0, 3).map((student) => (
+                    <div key={student.id} className="flex items-center justify-between p-4 bg-white/20 rounded-xl hover:bg-white/30 transition-all border border-white/30 backdrop-blur-sm">
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={getStudentAvatar(student.name)} 
+                          alt={student.name} 
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                        <div>
+                          <h4 className="font-medium text-white">{student.name}</h4>
+                          <p className="text-white/80 text-sm">{student.class} • Roll {student.roll}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(student.status)}`}>
+                          {student.status}
+                        </span>
+                        <button 
+                          onClick={() => openStudentDetails(student)}
+                          className="p-2 text-white/80 hover:text-white hover:bg-white/20 rounded-lg transition-colors"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Classes Tab */}
+          {activeTab === 'classes' && (
+            <div>
+              <div className="flex justify-between items-center mb-2 p-4 bg-white rounded-2xl shadow-sm border-2 border-blue-200/30">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-blue-500" />
+                    Class Management
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-1">Manage your classes and student enrollment</p>
+                </div>
+                <button 
+                  onClick={() => setShowAddClassModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add New Class
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-between">
+                {classes.map((classItem) => (
+                  <ClassroomCard 
+                    key={classItem.id}
+                    title={classItem.subject}
+                    subtitle={`${classItem.name} • ${classItem.academicYear}`}
+                    teacher={teacherData.name}
+                    theme={classItem.subject.toLowerCase().includes('math') ? 'blue' : 
+                           classItem.subject.toLowerCase().includes('science') ? 'green' : 
+                           classItem.subject.toLowerCase().includes('english') ? 'teal' : 
+                           classItem.subject.toLowerCase().includes('history') ? 'amber' : 
+                           classItem.subject.toLowerCase().includes('art') ? 'rose' : 
+                           classItem.subject.toLowerCase().includes('music') ? 'cyan' : 
+                           classItem.subject.toLowerCase().includes('pe') ? 'indigo' : 'purple'}
+                    onClick={() => console.log(`${classItem.name} clicked`)}
+                    onMenuClick={() => console.log(`${classItem.name} menu clicked`)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Attendance Tab */}
+          {activeTab === 'attendance' && (
+            <div>
+              <div className="flex justify-between items-center mb-2 p-4 bg-white rounded-2xl shadow-sm border-2 border-blue-200/30">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <UserCheck className="w-5 h-5 text-blue-500" />
+                    Attendance Management
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-1">Manage and track student attendance records</p>
+                </div>
+                <div className="flex gap-3">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-gray-700 rounded-xl hover:from-blue-100 hover:to-blue-200 transition-all shadow-sm hover:shadow-md">
+                    <Filter className="w-4 h-4" />
+                    Filter
+                  </button>
+                  <button 
+                    onClick={downloadPresentStudentsCSV}
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 text-gray-700 rounded-xl hover:from-green-100 hover:to-green-200 transition-all shadow-sm hover:shadow-md"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download Present Students (CSV)
+                  </button>
+                  <button 
+                    onClick={() => exportReport('PDF')}
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 text-gray-700 rounded-xl hover:from-purple-100 hover:to-purple-200 transition-all shadow-sm hover:shadow-md"
+                  >
+                    <Download className="w-4 h-4" />
+                    Export Report
+                  </button>
+                </div>
+              </div>
+
+              {/* Attendance Filters */}
+              <div className="bg-white rounded-2xl p-3 shadow-sm border border-blue-100 mb-2" style={{boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.1), 0 2px 4px -1px rgba(59, 130, 246, 0.06)'}}>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-blue-500" />
+                      Class
+                    </label>
+                    <select 
+                      value={selectedClass}
+                      onChange={(e) => setSelectedClass(e.target.value)}
+                      className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      {teacherData.classes.map((classItem) => (
+                        <option key={classItem} value={classItem} className="bg-white">{classItem}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-green-500" />
+                      From Date
+                    </label>
+                    <input 
+                      type="date" 
+                      value={fromDate}
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="w-full px-4 py-2 bg-gradient-to-r from-green-50 to-green-100 border border-green-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-purple-500" />
+                      To Date
+                    </label>
+                    <input 
+                      type="date" 
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full px-4 py-2 bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <UserCheck className="w-4 h-4 text-amber-500" />
+                      Status
+                    </label>
+                    <select className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm transition-all duration-300 hover:bg-white/80 appearance-none bg-no-repeat bg-[right_0.5rem_center] bg-[length:1.5em_1.5em]">
+                      <option className="bg-white text-gray-700">All Statuses</option>
+                      <option className="bg-white text-gray-700">Present</option>
+                      <option className="bg-white text-gray-700">Absent</option>
+                      <option className="bg-white text-gray-700">Late</option>
+                    </select>
+                  </div>
+                  <div className="flex items-end">
+                    <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-xl hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover flex items-center justify-center gap-2">
+                      <Filter className="w-4 h-4" />
+                      Apply Filters
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Add New Student Form */}
+              <div className="bg-white rounded-2xl p-3 shadow-sm border border-green-100 mb-2" style={{boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.1), 0 2px 4px -1px rgba(16, 185, 129, 0.06)'}}>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <Plus className="w-5 h-5 text-blue-500" />
+                  Add New Student for Attendance - {selectedClass}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-2 mb-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <User className="w-4 h-4 text-blue-500" />
+                      Student Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter student name"
+                      value={newStudentData.name}
+                      onChange={(e) => handleAddStudentChange('name', e.target.value)}
+                      className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all duration-300 hover:bg-white/80"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <ClipboardList className="w-4 h-4 text-green-500" />
+                      Roll Number
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="Enter roll number"
+                      value={newStudentData.roll}
+                      onChange={(e) => handleAddStudentChange('roll', e.target.value)}
+                      className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition-all duration-300 hover:bg-white/80"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-purple-500" />
+                      Class
+                    </label>
+                    <select 
+                      value={selectedClass}
+                      disabled
+                      className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition-all duration-300 hover:bg-white/80 appearance-none bg-no-repeat bg-[right_0.5rem_center] bg-[length:1.5em_1.5em]"
+                    >
+                      {teacherData.classes.map((classItem) => (
+                        <option key={classItem} value={classItem} className="bg-white">{classItem}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                      <UserCheck className="w-4 h-4 text-amber-500" />
+                      Status
+                    </label>
+                    <select 
+                      value={newStudentData.status}
+                      onChange={(e) => handleAddStudentChange('status', e.target.value)}
+                      className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm transition-all duration-300 hover:bg-white/80 appearance-none bg-no-repeat bg-[right_0.5rem_center] bg-[length:1.5em_1.5em]"
+                    >
+                      <option value="present" className="bg-white text-gray-700">Present</option>
+                      <option value="absent" className="bg-white text-gray-700">Absent</option>
+                      <option value="late" className="bg-white text-gray-700">Late</option>
+                      <option value="proxy" className="bg-white text-gray-700">Proxy</option>
+                    </select>
+                  </div>
+                  <div className="flex items-end">
+                    <button 
+                      onClick={handleAddStudent}
+                      className="w-full px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-xl hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover flex items-center justify-center gap-2"
+                    >
+                      <Save className="w-4 h-4" />
+                      Add Student
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Attendance Table */}
+              <div className="bg-white rounded-xl p-2 shadow-md border border-gray-100">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Student</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Class</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Roll No</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Status</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Method</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Last Updated</th>
+                        <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {classWiseAttendance
+                        .filter(student => 
+                          student.class === selectedClass &&
+                          (student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                           student.roll.toString().includes(searchTerm))
+                        )
+                        .map((student) => (
+                        <tr key={student.id} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="py-4 px-4 font-medium text-gray-900">
+                            <div className="flex items-center gap-3">
+                              <img 
+                                src={getStudentAvatar(student.name)} 
+                                alt={student.name} 
+                                className="w-8 h-8 rounded-full object-cover"
+                              />
+                              <span>{student.name}</span>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4 text-gray-600">{student.class}</td>
+                          <td className="py-4 px-4 text-gray-600">{student.roll}</td>
+                          <td className="py-4 px-4">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(student.status)}`}>
+                              {student.status}
+                            </span>
+                          </td>
+                          <td className="py-4 px-4 text-gray-600">{student.method}</td>
+                          <td className="py-4 px-4 text-gray-500">{formatDateTime(student.lastUpdated)}</td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center gap-2">
+                              <button 
+                                onClick={() => openStudentDetails(student)}
+                                className="p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-colors"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => handleManualOverride(student)}
+                                className="p-2 text-gray-500 hover:text-orange-600 hover:bg-gray-100 rounded-lg transition-colors"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Reports Tab */}
+          {activeTab === 'reports' && (
+            <div>
+              <div className="flex justify-between items-center mb-2 p-4 bg-white rounded-2xl shadow-sm border-2 border-purple-200/30">
+                <h2 className="text-lg font-bold text-gray-900">Attendance Reports</h2>
+                <div className="flex gap-3">
+                  <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-xl hover:from-gray-500 hover:to-gray-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-gray-300/50 hover:border-gray-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-gray-500/30 glow-on-hover">
+                    <Printer className="w-4 h-4" />
+                    Print Report
+                  </button>
+                  <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-400 to-pink-500 text-white rounded-xl hover:from-purple-500 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-purple-300/50 hover:border-purple-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-purple-500/30 glow-on-hover">
+                    <Download className="w-4 h-4" />
+                    Export Report
+                  </button>
+                </div>
+              </div>
+
+              {/* Report Filters */}
+              <div className="bg-white rounded-2xl p-3 shadow-sm border border-blue-100 mb-2" style={{boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.1), 0 2px 4px -1px rgba(59, 130, 246, 0.06)'}}>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                    <select className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all duration-300 hover:bg-white/80 appearance-none bg-no-repeat bg-[right_0.5rem_center] bg-[length:1.5em_1.5em]">
+                      <option>All Classes</option>
+                      <option>Class 10-A</option>
+                      <option>Class 10-B</option>
+                      <option>Class 9-A</option>
+                      <option>Class 9-B</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input 
+                      type="date" 
+                      value={fromDate}
+                      onChange={(e) => setFromDate(e.target.value)}
+                      className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-green-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition-all duration-300 hover:bg-white/80"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input 
+                      type="date" 
+                      value={toDate}
+                      onChange={(e) => setToDate(e.target.value)}
+                      className="w-full px-4 py-3 bg-white/70 backdrop-blur-sm border border-purple-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition-all duration-300 hover:bg-white/80"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-xl hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover">
+                      Generate Report
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Analytics Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">
+                {/* Attendance Rate Chart */}
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-2 shadow-md border border-blue-200/30 backdrop-blur-sm" style={{boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.2), 0 2px 4px -1px rgba(59, 130, 246, 0.1)'}}>
+                  <h3 className="text-lg font-bold text-white mb-3">Class-wise Attendance Rate</h3>
+                  <div className="h-32 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={[
+                        { class: '10-A', rate: 93 },
+                        { class: '10-B', rate: 87 },
+                        { class: '9-A', rate: 95 },
+                        { class: '9-B', rate: 89 },
+                      ]}>
+                        <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="rgba(255,255,255,0.2)" />
+                        <XAxis 
+                          dataKey="class" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: 'bold' }}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 12, fontWeight: 'bold' }}
+                          domain={[80, 100]}
+                        />
+                        <Tooltip 
+                          formatter={(value) => [`${value}%`, 'Attendance Rate']}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.95)', 
+                            borderRadius: '16px',
+                            border: '1px solid rgba(255,255,255,0.4)',
+                            boxShadow: '0 15px 35px rgba(0,0,0,0.15)',
+                            backdropFilter: 'blur(15px)',
+                            padding: '12px'
+                          }}
+                          labelStyle={{ color: '#1e40af', fontWeight: 'bold' }}
+                          itemStyle={{ fontWeight: '600' }}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="rate" 
+                          name="Attendance Rate" 
+                          stroke="rgba(255,255,255,1)" 
+                          fill="rgba(255,255,255,0.4)" 
+                          fillOpacity={0.5}
+                          strokeWidth={4}
+                          animationDuration={1000}
+                          animationEasing="ease-out"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Attendance Distribution */}
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-2 shadow-md border border-purple-200/30 backdrop-blur-sm" style={{boxShadow: '0 4px 6px -1px rgba(139, 92, 246, 0.2), 0 2px 4px -1px rgba(139, 92, 246, 0.1)'}}>
+                  <h3 className="text-lg font-bold text-white mb-3">Attendance Distribution</h3>
+                  <div className="h-32 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadialBarChart 
+                        innerRadius="20%" 
+                        outerRadius="90%" 
+                        barSize={20} 
+                        data={[
+                          { name: 'Present', value: 87, fill: 'rgba(255,255,255,0.9)' },
+                          { name: 'Absent', value: 10, fill: 'rgba(255,255,255,0.7)' },
+                          { name: 'Late', value: 3, fill: 'rgba(255,255,255,0.5)' },
+                        ]}
+                        startAngle={180} 
+                        endAngle={0}
+                      >
+                        <RadialBar 
+                          minAngle={15} 
+                          label={{ fill: 'rgba(255,255,255,0.9)', fontSize: 12 }} 
+                          background 
+                          dataKey="value" 
+                        />
+                        <Tooltip 
+                          formatter={(value) => [`${value}%`, 'Percentage']}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.9)', 
+                            borderRadius: '12px',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                            backdropFilter: 'blur(10px)'
+                          }}
+                          labelStyle={{ color: '#4f46e5' }}
+                        />
+                        <Legend 
+                          layout="vertical"
+                          verticalAlign="middle"
+                          align="right"
+                          formatter={(value, entry, index) => (
+                            <span className="text-white text-sm ml-2">{value}</span>
+                          )}
+                        />
+                      </RadialBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+
+              {/* Monthly Trends */}
+              <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-2 shadow-md border border-amber-200/30 backdrop-blur-sm" style={{boxShadow: '0 4px 6px -1px rgba(245, 158, 11, 0.2), 0 2px 4px -1px rgba(245, 158, 11, 0.1)'}}>
+                <h3 className="text-lg font-bold text-white mb-3">Monthly Attendance Trends</h3>
+                <div className="h-32 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={[
+                      { month: 'Jan', attendance: 92, target: 90 },
+                      { month: 'Feb', attendance: 89, target: 90 },
+                      { month: 'Mar', attendance: 93, target: 90 },
+                      { month: 'Apr', attendance: 91, target: 90 },
+                      { month: 'May', attendance: 94, target: 90 },
+                      { month: 'Jun', attendance: 90, target: 90 },
+                    ]}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                      <XAxis 
+                        dataKey="month" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                      />
+                      <YAxis 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                        domain={[85, 100]}
+                      />
+                      <Tooltip 
+                        formatter={(value) => [`${value}%`, 'Attendance Rate']}
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255,255,255,0.9)', 
+                          borderRadius: '12px',
+                          border: '1px solid rgba(255,255,255,0.3)',
+                          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                          backdropFilter: 'blur(10px)'
+                        }}
+                        labelStyle={{ color: '#d97706' }}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="attendance" 
+                        stroke="rgba(255,255,255,0.9)" 
+                        strokeWidth={4}
+                        dot={{ r: 8, fill: 'rgba(255,255,255,0.9)', strokeWidth: 2, stroke: '#d97706' }}
+                        activeDot={{ r: 10, fill: 'rgba(255,255,255,0.9)', strokeWidth: 2, stroke: '#d97706' }}
+                        name="Actual Attendance"
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="target" 
+                        stroke="rgba(255,255,255,0.7)" 
+                        strokeWidth={2}
+                        strokeDasharray="5 5"
+                        dot={false}
+                        name="Target"
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Alerts Tab */}
+          {activeTab === 'alerts' && (
+            <div>
+              <div className="flex justify-between items-center mb-3 p-4 bg-white rounded-2xl shadow-sm border border-amber-100" style={{boxShadow: '0 4px 6px -1px rgba(245, 158, 11, 0.1), 0 2px 4px -1px rgba(245, 158, 11, 0.06)'}}>
+                <h2 className="text-xl font-bold text-gray-900">Alert Management</h2>
+                <div className="flex gap-3">
+                  <select className="px-4 py-2 bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <option className="bg-white text-gray-700">All Statuses</option>
+                    <option className="bg-white text-gray-700">New</option>
+                    <option className="bg-white text-gray-700">Acknowledged</option>
+                    <option className="bg-white text-gray-700">Resolved</option>
+                  </select>
+                  <select className="px-4 py-2 bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200 text-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option className="bg-white text-gray-700">All Types</option>
+                    <option className="bg-white text-gray-700">Absenteeism</option>
+                    <option className="bg-white text-gray-700">Safety</option>
+                    <option className="bg-white text-gray-700">Device</option>
+                    <option className="bg-white text-gray-700">Unauthorized</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Alerts List */}
+              <div className="grid grid-cols-1 gap-5">
+                {alerts.map((alert) => (
+                  <div 
+                    key={alert.id} 
+                    className={`bg-white rounded-xl p-2 shadow-md border border-gray-100 hover:shadow-xl transition-all ${getSeverityGlow(alert.severity)} ${getStatusGlow(alert.status)}`}
+                  >
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3">
+                      {/* Alert Icon and Content */}
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-2 flex-1">
+                        <div className={`p-3 rounded-xl ${getSeverityColorSolid(alert.severity)} flex-shrink-0`} aria-label={`${alert.severity} severity alert`}>
+                          {getAlertIcon(alert.type)}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex flex-wrap items-center gap-3 mb-3">
+                            <h3 className="text-lg font-semibold text-gray-900">{alert.message}</h3>
+                            <span className={`text-xs px-2.5 py-1 rounded-full ${
+                              alert.status === 'new' ? 'bg-red-100 text-red-800' :
+                              alert.status === 'acknowledged' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-green-100 text-green-800'
+                            }`} aria-label={`Status: ${alert.status}`}>
+                              {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
+                            </span>
+                            <span className={`text-xs px-2.5 py-1 rounded-full ${getSeverityColor(alert.severity)}`} aria-label={`Severity: ${alert.severity}`}>
+                              {getAlertIcon(alert.type)}
+                              <span className="ml-1">{alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}</span>
+                            </span>
+                          </div>
+                          <p className="text-gray-500 text-sm mb-2 flex items-center">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {alert.time}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            <span className="text-xs px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full">
+                              {alert.type.charAt(0).toUpperCase() + alert.type.slice(1)}
+                            </span>
+                            <span className="text-xs px-3 py-1.5 bg-blue-100 text-blue-800 rounded-full">
+                              Affected: Class 10-A, 10-B
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap gap-3">
+                        {alert.status === 'new' && (
+                          <>
+                            <button className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm font-medium flex items-center gap-2 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover">
+                              <CheckCircle2 className="w-4 h-4" />
+                              Acknowledge
+                            </button>
+                            <button className="px-4 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm font-medium flex items-center gap-2 border border-orange-300/50 hover:border-orange-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-orange-500/30 glow-on-hover">
+                              <AlertTriangle className="w-4 h-4" />
+                              Escalate
+                            </button>
+                          </>
+                        )}
+                        {alert.status === 'acknowledged' && (
+                          <button className="px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm font-medium flex items-center gap-2 border border-green-300/50 hover:border-green-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-green-500/30 glow-on-hover">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Resolve
+                          </button>
+                        )}
+                        {alert.status === 'resolved' && (
+                          <button className="px-4 py-2.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm font-medium flex items-center gap-2 border border-gray-300/50 hover:border-gray-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-gray-500/30 glow-on-hover">
+                            <RefreshCw className="w-4 h-4" />
+                            Reopen
+                          </button>
+                        )}
+                        <button className="px-4 py-2.5 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm font-medium flex items-center gap-2 border border-gray-300/50 hover:border-gray-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-gray-500/30 glow-on-hover">
+                          <Eye className="w-4 h-4" />
+                          Details
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div>
+              <div className="mb-2">
+                <h1 className="text-xl font-bold text-gray-900 mb-2">Settings</h1>
+                <p className="text-gray-600">Manage your account preferences and system settings</p>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+                {/* Settings Navigation */}
+                <div className="lg:col-span-1">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 sticky top-3">
+                    <nav className="space-y-2">
+                      {[
+                        { id: 'profile', label: 'Profile', icon: User },
+                        { id: 'notifications', label: 'Notifications', icon: Bell },
+                        { id: 'security', label: 'Security', icon: Shield },
+                        { id: 'appearance', label: 'Appearance', icon: Palette },
+                        { id: 'account', label: 'Account', icon: Settings }
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setActiveSettingsTab(item.id)}
+                          className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${activeSettingsTab === item.id ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600 hover:bg-gray-50'}`}
+                        >
+                          <item.icon className="w-5 h-5" />
+                          <span>{item.label}</span>
+                        </button>
+                      ))}
+                    </nav>
+                  </div>
+                </div>
+                
+                {/* Settings Content */}
+                <div className="lg:col-span-3">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3">
+                    {/* Profile Settings */}
+                    {activeSettingsTab === 'profile' && (
+                      <div>
+                        <div className="mb-3">
+                          <h2 className="text-lg font-bold text-gray-900 mb-2">Profile Information</h2>
+                          <p className="text-gray-600">Update your personal and professional details</p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
+                          <div className="flex flex-col items-center md:col-span-2">
+                            <div className="relative mb-2">
+                              <img 
+                                src={teacherAvatar} 
+                                alt="Teacher Avatar" 
+                                className="w-24 h-24 rounded-2xl object-cover"
+                              />
+                              <button 
+                                onClick={() => setShowAvatarModal(true)}
+                                className="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-colors shadow-lg"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </button>
+                            </div>
+                            <button 
+                              onClick={() => setShowAvatarModal(true)}
+                              className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                            >
+                              <Edit className="w-4 h-4" />
+                              Change Profile Picture
+                            </button>
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input 
+                              type="text" 
+                              value={teacherProfile.name}
+                              onChange={(e) => handleProfileChange('name', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input 
+                              type="email" 
+                              value={teacherProfile.email}
+                              onChange={(e) => handleProfileChange('email', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                            <input 
+                              type="text" 
+                              value={teacherProfile.subject}
+                              onChange={(e) => handleProfileChange('subject', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">School</label>
+                            <input 
+                              type="text" 
+                              value={teacherProfile.school}
+                              onChange={(e) => handleProfileChange('school', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input 
+                              type="tel" 
+                              value={teacherProfile.phone}
+                              onChange={(e) => handleProfileChange('phone', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                            <input 
+                              type="text" 
+                              value={teacherProfile.department}
+                              onChange={(e) => handleProfileChange('department', e.target.value)}
+                              className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-end">
+                          <button 
+                            onClick={saveProfileChanges}
+                            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                          >
+                            <Save className="w-4 h-4" />
+                            Save Changes
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Notification Settings */}
+                    {activeSettingsTab === 'notifications' && (
+                      <div>
+                        <div className="mb-3">
+                          <h2 className="text-lg font-bold text-gray-900 mb-2">Notification Preferences</h2>
+                          <p className="text-gray-600">Choose how you want to be notified</p>
+                        </div>
+                        
+                        <div className="space-y-6">
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Communication Preferences</h3>
+                            <div className="space-y-4">
+                              {[
+                                { id: 'email', label: 'Email Notifications', description: 'Receive email updates about attendance and alerts' },
+                                { id: 'sms', label: 'SMS Notifications', description: 'Receive text messages for critical alerts' },
+                                { id: 'push', label: 'Push Notifications', description: 'Receive mobile notifications when app is open' }
+                              ].map((setting) => (
+                                <div key={setting.id} className="flex items-center justify-between">
+                                  <div>
+                                    <h4 className="font-medium text-gray-900">{setting.label}</h4>
+                                    <p className="text-sm text-gray-500">{setting.description}</p>
+                                  </div>
+                                  <div className="relative inline-block w-12 h-6">
+                                    <input 
+                                      type="checkbox" 
+                                      className="sr-only" 
+                                      id={setting.id} 
+                                      checked={notificationSettings[setting.id]}
+                                      onChange={() => handleNotificationChange(setting.id)}
+                                    />
+                                    <label 
+                                      htmlFor={setting.id} 
+                                      className="block w-12 h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-200 ease-in-out"
+                                    ></label>
+                                    <span className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out transform ${notificationSettings[setting.id] ? 'translate-x-6 bg-blue-500' : 'translate-x-0'}`}></span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Alert Preferences</h3>
+                            <div className="space-y-4">
+                              {[
+                                { id: 'absenteeism', label: 'Absenteeism Alerts', description: 'Get notified when students are absent for multiple days' },
+                                { id: 'safety', label: 'Safety Alerts', description: 'Receive immediate notifications for security concerns' }
+                              ].map((setting) => (
+                                <div key={setting.id} className="flex items-center justify-between">
+                                  <div>
+                                    <h4 className="font-medium text-gray-900">{setting.label}</h4>
+                                    <p className="text-sm text-gray-500">{setting.description}</p>
+                                  </div>
+                                  <div className="relative inline-block w-12 h-6">
+                                    <input 
+                                      type="checkbox" 
+                                      className="sr-only" 
+                                      id={setting.id} 
+                                      checked={notificationSettings[setting.id]}
+                                      onChange={() => handleNotificationChange(setting.id)}
+                                    />
+                                    <label 
+                                      htmlFor={setting.id} 
+                                      className="block w-12 h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-200 ease-in-out"
+                                    ></label>
+                                    <span className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out transform ${notificationSettings[setting.id] ? 'translate-x-6 bg-blue-500' : 'translate-x-0'}`}></span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Report Preferences</h3>
+                            <div className="space-y-4">
+                              {[
+                                { id: 'weekly', label: 'Weekly Reports', description: 'Get weekly attendance summary reports' },
+                                { id: 'daily', label: 'Daily Digest', description: 'Receive daily summary of classroom activities' }
+                              ].map((setting) => (
+                                <div key={setting.id} className="flex items-center justify-between">
+                                  <div>
+                                    <h4 className="font-medium text-gray-900">{setting.label}</h4>
+                                    <p className="text-sm text-gray-500">{setting.description}</p>
+                                  </div>
+                                  <div className="relative inline-block w-12 h-6">
+                                    <input 
+                                      type="checkbox" 
+                                      className="sr-only" 
+                                      id={setting.id} 
+                                      checked={notificationSettings[setting.id]}
+                                      onChange={() => handleNotificationChange(setting.id)}
+                                    />
+                                    <label 
+                                      htmlFor={setting.id} 
+                                      className="block w-12 h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-200 ease-in-out"
+                                    ></label>
+                                    <span className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out transform ${notificationSettings[setting.id] ? 'translate-x-6 bg-blue-500' : 'translate-x-0'}`}></span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-end mt-6">
+                          <button 
+                            onClick={saveNotificationPreferences}
+                            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                          >
+                            <Save className="w-4 h-4" />
+                            Save Preferences
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Security Settings */}
+                    {activeSettingsTab === 'security' && (
+                      <div>
+                        <div className="mb-3">
+                          <h2 className="text-lg font-bold text-gray-900 mb-2">Security Settings</h2>
+                          <p className="text-gray-600">Manage your password and security preferences</p>
+                        </div>
+                        
+                        <div className="space-y-6">
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Change Password</h3>
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                <input 
+                                  type="password" 
+                                  value={securitySettings.currentPassword}
+                                  onChange={(e) => handleSecurityChange('currentPassword', e.target.value)}
+                                  placeholder="Enter current password"
+                                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                <input 
+                                  type="password" 
+                                  value={securitySettings.newPassword}
+                                  onChange={(e) => handleSecurityChange('newPassword', e.target.value)}
+                                  placeholder="Enter new password"
+                                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                <input 
+                                  type="password" 
+                                  value={securitySettings.confirmPassword}
+                                  onChange={(e) => handleSecurityChange('confirmPassword', e.target.value)}
+                                  placeholder="Confirm new password"
+                                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Two-Factor Authentication</h3>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h4 className="font-medium text-gray-900">Enable 2FA</h4>
+                                <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
+                              </div>
+                              <div className="relative inline-block w-12 h-6">
+                                <input 
+                                  type="checkbox" 
+                                  className="sr-only" 
+                                  id="twofactor" 
+                                  checked={securitySettings.twoFactor}
+                                  onChange={(e) => handleSecurityChange('twoFactor', e.target.checked)}
+                                />
+                                <label 
+                                  htmlFor="twofactor" 
+                                  className="block w-12 h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-200 ease-in-out"
+                                ></label>
+                                <span className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out transform ${securitySettings.twoFactor ? 'translate-x-6 bg-blue-500' : 'translate-x-0'}`}></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-end mt-6">
+                          <button 
+                            onClick={updatePassword}
+                            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                          >
+                            <Save className="w-4 h-4" />
+                            Update Password
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Appearance Settings */}
+                    {activeSettingsTab === 'appearance' && (
+                      <div>
+                        <div className="mb-3">
+                          <h2 className="text-lg font-bold text-gray-900 mb-2">Appearance</h2>
+                          <p className="text-gray-600">Customize the look and feel of your dashboard</p>
+                        </div>
+                        
+                        <div className="space-y-6">
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Theme Preferences</h3>
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Theme</label>
+                                <select 
+                                  value={themeSettings.theme}
+                                  onChange={(e) => handleThemeChange('theme', e.target.value)}
+                                  className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                  <option value="light">Light</option>
+                                  <option value="dark">Dark</option>
+                                  <option value="system">System Default</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <LanguageSelector />
+                        </div>
+                        
+                        <div className="flex justify-end mt-6">
+                          <button 
+                            onClick={saveThemePreferences}
+                            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium flex items-center gap-2"
+                          >
+                            <Save className="w-4 h-4" />
+                            Save Preferences
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Account Settings */}
+                    {activeSettingsTab === 'account' && (
+                      <div>
+                        <div className="mb-3">
+                          <h2 className="text-lg font-bold text-gray-900 mb-2">Account Management</h2>
+                          <p className="text-gray-600">Manage your account settings and preferences</p>
+                        </div>
+                        
+                        <div className="space-y-6">
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Account Status</h3>
+                            <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
+                              <div>
+                                <h4 className="font-medium text-gray-900">Active</h4>
+                                <p className="text-sm text-gray-500">Your account is currently active and in good standing</p>
+                              </div>
+                              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-gray-50 rounded-xl p-5">
+                            <h3 className="font-semibold text-gray-900 mb-2">Danger Zone</h3>
+                            <div className="space-y-4">
+                              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                                <div className="flex justify-between items-start">
+                                  <div>
+                                    <h4 className="font-medium text-gray-900">Deactivate Account</h4>
+                                    <p className="text-sm text-gray-500 mt-1">Temporarily disable your account. You can reactivate it at any time.</p>
+                                  </div>
+                                  <button className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-sm font-medium">
+                                    Deactivate
+                                  </button>
+                                </div>
+                              </div>
+                              
+                              <div className="p-4 bg-white rounded-lg border border-gray-200">
+                                <div className="flex justify-between items-start">
+                                  <div>
+                                    <h4 className="font-medium text-gray-900">Delete Account</h4>
+                                    <p className="text-sm text-gray-500 mt-1">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                                  </div>
+                                  <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                                    Delete
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Avatar Selection Modal */}
+      {showAvatarModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl p-5">
+            <div className="flex justify-between items-center mb-5">
+              <h3 className="text-lg font-bold text-gray-900">Select Avatar</h3>
+              <button 
+                onClick={() => setShowAvatarModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-3">
+              {[
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Wilson',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=James',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Professor',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Educator',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Math',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Science',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=History',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Art',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Music',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Sports',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Language',
+              ].map((avatar, index) => (
+                <div 
+                  key={index}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setTeacherAvatar(avatar);
+                    setShowAvatarModal(false);
+                  }}
+                >
+                  <img 
+                    src={avatar} 
+                    alt={`Avatar ${index + 1}`} 
+                    className="w-16 h-16 rounded-full object-cover mx-auto"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-500">Click on any avatar to select it</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Manual Override Modal */}
+      {showManualOverrideModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-3">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xl font-bold text-gray-900">Manual Attendance Override</h3>
+              <button 
+                onClick={() => setShowManualOverrideModal(false)}
+                className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-2 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="mb-3">
+              <p className="text-gray-700 mb-2">
+                Updating attendance for <span className="font-semibold">{selectedStudentForOverride?.name}</span>
+              </p>
+              
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <select
+                  value={manualOverrideStatus}
+                  onChange={(e) => setManualOverrideStatus(e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Status</option>
+                  <option value="present">Present</option>
+                  <option value="absent">Absent</option>
+                  <option value="late">Late</option>
+                  <option value="proxy">Proxy</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Note (Optional)</label>
+                <textarea
+                  value={manualOverrideNote}
+                  onChange={(e) => setManualOverrideNote(e.target.value)}
+                  rows={3}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Add any relevant notes about this attendance override..."
+                ></textarea>
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowManualOverrideModal(false)}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveManualOverride}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all font-medium"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Student Detail Drawer */}
+      {showStudentDetailDrawer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex z-50">
+          <div className="ml-auto bg-white w-full max-w-md h-full overflow-y-auto">
+            <div className="p-5">
+              <div className="flex justify-between items-center mb-5">
+                <h3 className="text-lg font-bold text-gray-900">Student Details</h3>
+                <button 
+                  onClick={() => setShowStudentDetailDrawer(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              
+              {selectedStudentDetails && (
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <img 
+                      src={getStudentAvatar(selectedStudentDetails.name)} 
+                      alt={selectedStudentDetails.name} 
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                    <div>
+                      <h4 className="text-lg font-bold text-gray-900">{selectedStudentDetails.name}</h4>
+                      <p className="text-gray-600">{selectedStudentDetails.class} • Roll #{selectedStudentDetails.roll}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-gray-50 rounded-xl p-4">
+                      <h5 className="font-medium text-gray-900 mb-2">Attendance Summary</h5>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <p className="text-sm text-gray-500">Total Days</p>
+                          <p className="text-lg font-bold text-gray-900">30</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Present</p>
+                          <p className="text-lg font-bold text-green-600">28</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Absent</p>
+                          <p className="text-lg font-bold text-red-600">2</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Attendance Rate</p>
+                          <p className="text-lg font-bold text-blue-600">93.3%</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-gray-50 rounded-xl p-4">
+                      <h5 className="font-medium text-gray-900 mb-2">Recent Attendance</h5>
+                      <div className="space-y-3">
+                        {[
+                          { date: '2024-04-15', status: 'present', method: 'RFID' },
+                          { date: '2024-04-14', status: 'present', method: 'Face Recognition' },
+                          { date: '2024-04-13', status: 'absent', method: 'Manual' },
+                          { date: '2024-04-12', status: 'present', method: 'RFID' },
+                        ].map((record, index) => (
+                          <div key={index} className="flex justify-between items-center">
+                            <div>
+                              <p className="font-medium text-gray-900">{new Date(record.date).toLocaleDateString()}</p>
+                              <p className="text-sm text-gray-500">{record.method}</p>
+                            </div>
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              record.status === 'present' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }`}>
+                              {record.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Student Modal */}
+      {showAddStudentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-3">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xl font-bold text-gray-900">Add New Student</h3>
+              <button 
+                onClick={() => setShowAddStudentModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <XCircle className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Student Name</label>
+                <input
+                  type="text"
+                  value={newStudentData.name}
+                  onChange={(e) => handleAddStudentChange('name', e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter student name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Class</label>
+                <select
+                  value={newStudentData.class}
+                  onChange={(e) => handleAddStudentChange('class', e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {teacherData.classes.map((classItem) => (
+                    <option key={classItem} value={classItem}>{classItem}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number</label>
+                <input
+                  type="number"
+                  value={newStudentData.roll}
+                  onChange={(e) => handleAddStudentChange('roll', e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter roll number"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-8">
+              <button
+                onClick={() => setShowAddStudentModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddStudent}
+                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all"
+              >
+                Add Student
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Add Class Modal */}
+      {showAddClassModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md p-3">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-xl font-bold text-gray-900">Add New Class</h3>
+              <button 
+                onClick={() => setShowAddClassModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <XCircle className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Class Name</label>
+                <input
+                  type="text"
+                  value={newClassData.name}
+                  onChange={(e) => handleAddClassChange('name', e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter class name (e.g., Class 10-A)"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                <input
+                  type="text"
+                  value={newClassData.subject}
+                  onChange={(e) => handleAddClassChange('subject', e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter subject (e.g., Mathematics)"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+                <input
+                  type="text"
+                  value={newClassData.academicYear}
+                  onChange={(e) => handleAddClassChange('academicYear', e.target.value)}
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter academic year (e.g., 2024-25)"
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-8">
+              <button
+                onClick={() => setShowAddClassModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddClass}
+                className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all"
+              >
+                Add Class
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Simple Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-5 max-w-md w-full mx-4 shadow-xl">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-base font-bold text-gray-900">Notification</h3>
+              <button 
+                onClick={() => setShowPopup(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-gray-700 mb-5">{popupMessage}</p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+      
+      <FloatingNavigation 
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onLogout={() => console.log('Logout clicked')}
+      />
+    </div>
+  );
+};
+
+export default TeacherDashboard;

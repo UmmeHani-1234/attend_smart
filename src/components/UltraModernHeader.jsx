@@ -185,20 +185,9 @@ const UltraModernHeader = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent hidden md:block relative"
+                className="text-base font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent hidden md:block relative"
               >
                 {dashboardTitle}
-                {/* Animated underline */}
-                <motion.div
-                  className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: '100%' }}
-                  transition={{ 
-                    duration: 1,
-                    delay: 0.5,
-                    ease: "easeOut"
-                  }}
-                />
               </motion.h1>
               
               {/* Floating search bar with enhanced effects */}
@@ -232,7 +221,7 @@ const UltraModernHeader = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-2xl blur-sm"></div>
                   <div className="relative flex items-center">
-                    <div className="absolute left-3 z-10">
+                    <div className="absolute left-2.5 z-10">
                       <motion.div
                         animate={isSearchFocused ? { 
                           scale: 1.1,
@@ -245,7 +234,7 @@ const UltraModernHeader = ({
                         }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Search className="w-5 h-5 text-blue-500" />
+                        <Search className="w-4 h-4 text-blue-500" />
                       </motion.div>
                     </div>
                     <input
@@ -255,7 +244,7 @@ const UltraModernHeader = ({
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onFocus={handleSearchFocus}
                       onBlur={handleSearchBlur}
-                      className="w-full pl-10 pr-3 py-2 bg-white/80 backdrop-blur-sm border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300/50 transition-all duration-300 shadow-sm placeholder:text-gray-400 text-gray-800 text-sm font-medium"
+                      className="w-full pl-7 pr-2 py-1 bg-white/80 backdrop-blur-sm border border-white/50 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300/50 transition-all duration-300 shadow-sm placeholder:text-gray-400 text-gray-800 text-xs font-medium"
                     />
                     {/* Shimmer effect when focused */}
                     {isSearchFocused && (
@@ -289,7 +278,7 @@ const UltraModernHeader = ({
               <motion.div 
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                className="hidden md:flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-xl px-3 py-2 border border-white/40 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
+                className="hidden md:flex items-center gap-1.5 bg-white/60 backdrop-blur-sm rounded-lg px-2.5 py-1.5 border border-white/40 shadow-sm hover:shadow transition-all duration-300 cursor-pointer group"
               >
                 <motion.div
                   animate={{ 
@@ -302,20 +291,9 @@ const UltraModernHeader = ({
                     repeatType: "reverse"
                   }}
                 >
-                  <Calendar className="w-5 h-5 text-indigo-500" />
+                  <Calendar className="w-3.5 h-3.5 text-indigo-500" />
                 </motion.div>
-                <span className="text-xs font-semibold text-gray-700">{currentDate}</span>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ 
-                    duration: 8,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "easeInOut"
-                  }}
-                  className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                />
+                <span className="text-xs font-medium text-gray-700">{currentDate}</span>
               </motion.div>
               
               {/* Class dropdown */}
@@ -328,7 +306,7 @@ const UltraModernHeader = ({
                   value={selectedClass}
                   onChange={(e) => setSelectedClass(e.target.value)}
                   whileFocus={{ scale: 1.02 }}
-                  className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-xl px-3 py-2 text-xs font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm hover:shadow-md transition-all duration-300 appearance-none cursor-pointer"
+                  className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-md px-2 py-1 text-xs font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm hover:shadow transition-all duration-300 appearance-none cursor-pointer"
                 >
                   {classes.map((classItem) => (
                     <motion.option 
@@ -349,9 +327,9 @@ const UltraModernHeader = ({
                     repeat: Infinity,
                     repeatType: "reverse"
                   }}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
+                  className="absolute right-2.5 top-1/2 transform -translate-y-1/2 pointer-events-none"
                 >
-                  <ChevronDown className="w-4 h-4 text-purple-500" />
+                  <ChevronDown className="w-3.5 h-3.5 text-purple-500" />
                 </motion.div>
               </motion.div>
               
@@ -359,13 +337,13 @@ const UltraModernHeader = ({
               <motion.div 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative p-1.5 rounded-xl bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group"
+                className="relative p-1 rounded-lg bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm hover:shadow transition-all duration-300 cursor-pointer group"
               >
-                <HelpCircle className="w-4 h-4 text-gray-600 group-hover:text-blue-500 transition-colors duration-300" />
+                <HelpCircle className="w-3.5 h-3.5 text-gray-600 group-hover:text-blue-500 transition-colors duration-300" />
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
                 >
                   ?
                 </motion.div>
@@ -383,14 +361,14 @@ const UltraModernHeader = ({
               <motion.div 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative p-1.5 rounded-xl bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+                className="relative p-1 rounded-lg bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm hover:shadow transition-all duration-300 cursor-pointer"
               >
-                <Bell className="w-4 h-4 text-gray-600" />
+                <Bell className="w-3.5 h-3.5 text-gray-600" />
                 <motion.span 
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5, type: "spring", stiffness: 300 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
                 >
                   3
                 </motion.span>
@@ -421,7 +399,7 @@ const UltraModernHeader = ({
                       repeat: Infinity
                     }}
                   />
-                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${getAvatarColor(userName)} flex items-center justify-center text-white font-bold text-base shadow-md border border-white/30 transition-all duration-300 hover:shadow-lg relative z-10`}>
+                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${getAvatarColor(userName)} flex items-center justify-center text-white font-bold text-sm shadow-sm border border-white/30 transition-all duration-300 hover:shadow-md relative z-10`}>
                     {getAvatarInitials(userName)}
                   </div>
                   {/* Online status indicator */}
@@ -447,14 +425,14 @@ const UltraModernHeader = ({
                       
                       <div className="p-5 border-b border-white/30 relative">
                         <div className="flex items-center gap-3">
-                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getAvatarColor(userName)} flex items-center justify-center text-white font-bold text-lg relative`}>
+                          <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${getAvatarColor(userName)} flex items-center justify-center text-white font-bold text-base relative`}>
                             {getAvatarInitials(userName)}
-                            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+                            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></div>
                           </div>
                           <div>
-                            <p className="font-bold text-gray-900 text-sm">{userName}</p>
+                            <p className="font-bold text-gray-900 text-xs">{userName}</p>
                             <p className="text-xs text-gray-600">{userRole}</p>
-                            <p className="text-xs text-gray-500 mt-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 rounded-full px-2 py-0.5 inline-block">
+                            <p className="text-xs text-gray-500 mt-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 rounded-full px-1.5 py-0.5 inline-block">
                               {userType}
                             </p>
                           </div>
@@ -478,7 +456,7 @@ const UltraModernHeader = ({
                         <motion.button 
                           whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
                           whileTap={{ scale: 0.98 }}
-                          className="w-full px-4 py-2 text-left text-gray-700 transition-colors duration-200 flex items-center gap-2 text-sm"
+                          className="w-full px-3 py-1.5 text-left text-gray-700 transition-colors duration-200 flex items-center gap-2 text-xs"
                         >
                           <span>Profile Settings</span>
                         </motion.button>
@@ -487,9 +465,9 @@ const UltraModernHeader = ({
                           whileHover={{ backgroundColor: "rgba(239, 68, 68, 0.1)" }}
                           whileTap={{ scale: 0.98 }}
                           onClick={onLogout}
-                          className="w-full px-4 py-2 text-left text-gray-700 transition-colors duration-200 flex items-center gap-2 text-sm"
+                          className="w-full px-3 py-1.5 text-left text-gray-700 transition-colors duration-200 flex items-center gap-2 text-xs"
                         >
-                          <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                           </svg>
                           <span>Logout</span>
@@ -503,30 +481,6 @@ const UltraModernHeader = ({
           </div>
         </div>
       </motion.div>
-      
-      {/* Enhanced floating animation for the header */}
-      <motion.div
-        animate={{ 
-          y: [0, -3, 0],
-        }}
-        transition={{ 
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-transparent via-blue-300/30 to-transparent"
-      />
-      <motion.div
-        animate={{ 
-          y: [0, -1, 0],
-        }}
-        transition={{ 
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-transparent via-indigo-300/40 to-transparent"
-      />
     </div>
   );
 };

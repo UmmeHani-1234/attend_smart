@@ -83,13 +83,13 @@ const GovernmentDashboard = ({ onLogout }) => {
   ];
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Sidebar */}
       <motion.div 
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-56 bg-white shadow-lg flex flex-col"
+        className="w-56 bg-white shadow-lg flex flex-col h-screen"
       >
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ const GovernmentDashboard = ({ onLogout }) => {
           </div>
         </div>
 
-        <nav className="flex-1 p-3 pt-0 space-y-0.5">
+        <nav className="flex-1 p-3 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
             { id: 'schools', icon: School, label: 'Schools' },
@@ -150,18 +150,20 @@ const GovernmentDashboard = ({ onLogout }) => {
       </motion.div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-screen">
         {/* Ultra Modern Header */}
-        <UltraModernHeader 
-          dashboardTitle="Government Official Dashboard"
-          userType="Government"
-          userName="Government Official"
-          userRole="Education Oversight"
-          onLogout={onLogout}
-        />
+        <div className="flex-shrink-0">
+          <UltraModernHeader 
+            dashboardTitle="Government Official Dashboard"
+            userType="Government"
+            userName="Government Official"
+            userRole="Education Oversight"
+            onLogout={onLogout}
+          />
+        </div>
 
         {/* Dashboard Content */}
-        <div className="p-8">
+        <div className="p-8 flex-grow overflow-y-auto overscroll-contain">
           {/* Home Tab */}
           {activeTab === 'home' && (
             <div>

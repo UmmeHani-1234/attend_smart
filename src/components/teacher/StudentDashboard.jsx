@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, BookOpen, Award, TrendingUp, AlertCircle, Clock, Bell, User, MessageSquare, CheckCircle, FileText, Target, LogOut, Home, Search, ChevronDown, Eye, Download, Printer, Filter, Plus, X, BarChart as BarChartIcon, PieChart as PieChartIcon, LineChart as LineChartIcon, Star } from 'lucide-react';
+import { Calendar, BookOpen, Award, TrendingUp, AlertCircle, Clock, Bell, User, MessageSquare, CheckCircle, FileText, Target, LogOut, Home, Search, ChevronDown, Eye, Download, Printer, Filter, Plus, X, BarChart as BarChartIcon, PieChart as PieChartIcon, LineChart as LineChartIcon, Star, Settings, Edit, RefreshCw } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import AttendSmartLogo from '../AttendSmartLogo';
@@ -13,6 +13,13 @@ const StudentDashboard = () => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [studentAvatar, setStudentAvatar] = useState('https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah');
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: "Sarah Johnson",
+    email: "sarah.johnson@student.school.edu",
+    class: "Class 10-A",
+    rollNumber: "24",
+    school: "Greenwood High School"
+  });
 
   // Sample data for the dashboard
   const studentData = {
@@ -65,11 +72,7 @@ const StudentDashboard = () => {
     average: "91%"
   };
 
-  const achievements = [
-    { id: 1, title: "Perfect Attendance - Week 14", date: "Apr 15, 2024", icon: "🏆" },
-    { id: 2, title: "Top Performer - Mathematics", date: "Apr 10, 2024", icon: "🥇" },
-    { id: 3, title: "Homework Champion - March", date: "Mar 31, 2024", icon: "🎖️" }
-  ];
+
 
   const attendanceData = [
     { day: 'Mon', present: 1, absent: 0 },
@@ -158,7 +161,7 @@ const StudentDashboard = () => {
     if (assignment.includes('Test') || assignment.includes('Exam')) {
       return (
         <svg className="w-5 h-5 text-white transform transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 00-2-2V5a2 2 0 002-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       );
     } else if (assignment.includes('Essay') || assignment.includes('Report')) {
@@ -199,111 +202,104 @@ const StudentDashboard = () => {
           grade.startsWith('B') ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-sm' :
           grade.startsWith('C') ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-sm' :
           'bg-gradient-to-r from-red-400 to-red-600 text-white shadow-sm'
-        } ${isTopGrade ? 'ring-1 ring-green-300 ring-opacity-50' : ''}`}
-        style={{ 
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-          ...(isTopGrade && { animation: 'pulse 2s infinite' })
-        }}>
+        }`}>
           {grade}
         </span>
         {isTopGrade && (
-          <div className="absolute inset-0 bg-green-400 rounded-full opacity-20 animate-ping"></div>
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full flex items-center justify-center">
+            <Star className="w-2 h-2 text-yellow-800 fill-current" />
+          </div>
         )}
       </div>
     );
   };
 
-
-
-  const openAssignmentModal = (assignment) => {
-    setSelectedAssignment(assignment);
-    setShowAssignmentModal(true);
+  const getSubjectBgColor = (color) => {
+    switch (color) {
+      case 'blue': return 'bg-blue-50';
+      case 'green': return 'bg-green-50';
+      case 'purple': return 'bg-purple-50';
+      case 'amber': return 'bg-amber-50';
+      case 'pink': return 'bg-pink-50';
+      default: return 'bg-gray-50';
+    }
   };
 
-  const closeAssignmentModal = () => {
-    setShowAssignmentModal(false);
-    setSelectedAssignment(null);
+  const getSubjectBorderColor = (color) => {
+    switch (color) {
+      case 'blue': return 'border-blue-500';
+      case 'green': return 'border-green-500';
+      case 'purple': return 'border-purple-500';
+      case 'amber': return 'border-amber-500';
+      case 'pink': return 'border-pink-500';
+      default: return 'border-gray-500';
+    }
   };
 
-  const openTestDetailDrawer = (test) => {
-    setSelectedTest(test);
-    setShowTestDetailDrawer(true);
-  };
-
-  const closeTestDetailDrawer = () => {
-    setShowTestDetailDrawer(false);
-    setSelectedTest(null);
-  };
-
-  const submitAssignment = () => {
-    // In a real app, this would make an API call to submit the assignment
-    console.log(`Submitting assignment: ${selectedAssignment.title}`);
-    closeAssignmentModal();
-    alert(`Assignment "${selectedAssignment.title}" submitted successfully!`);
-  };
+  // Summary stats for the dashboard
+  const summaryStats = [
+    { label: 'Attendance', value: `${studentData.attendancePercentage}%`, icon: CheckCircle, color: 'from-green-500 to-emerald-600', change: '+2.1%' },
+    { label: 'Current Grade', value: studentData.currentGrade, icon: Award, color: 'from-blue-500 to-indigo-600', change: '+0.3' },
+    { label: 'GPA', value: studentData.gpa, icon: TrendingUp, color: 'from-purple-500 to-indigo-600', change: '+0.1' },
+    { label: 'Assignments', value: assignments.filter(a => a.status === 'pending').length, icon: FileText, color: 'from-amber-500 to-orange-600', change: '-1' },
+  ];
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Sidebar */}
       <motion.div 
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-56 bg-white shadow-lg flex flex-col"
+        className="w-48 bg-white shadow-lg flex flex-col h-screen"
       >
-        <div className="p-4 border-b border-gray-100">
+        <div className="p-3 border-b border-gray-100">
           <div className="flex items-center gap-2">
             <div className="relative">
               <img 
                 src={studentAvatar} 
                 alt="Student Avatar" 
-                className="w-10 h-10 rounded-lg object-cover shadow-md"
+                className="w-8 h-8 rounded-md object-cover shadow-md cursor-pointer"
+                onClick={() => setShowAvatarModal(true)}
               />
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1">
                 <AttendSmartLogo size="xs" />
-                <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                <span className="text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
                   Smart Attendance
                 </span>
               </div>
-              <p className="text-xs text-gray-500 truncate">Student Dashboard</p>
+              <p className="text-xs text-gray-500 truncate">{studentData.class}</p>
+              <p className="text-xs font-medium text-gray-700 truncate">{studentData.name}</p>
+              <p className="text-xs text-gray-500 truncate">Roll #{studentData.rollNumber}</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-3 pt-0 space-y-0.5">
+        <nav className="flex-1 p-3 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
-            { id: 'assignments', icon: BookOpen, label: 'Assignments' },
-            { id: 'reports', icon: FileText, label: 'Reports' },
-            { id: 'messages', icon: MessageSquare, label: 'Messages' },
-            { id: 'achievements', icon: Award, label: 'Achievements' },
+            { id: 'assignments', icon: FileText, label: 'Assignments' },
+            { id: 'grades', icon: Award, label: 'Grades' },
+            { id: 'notices', icon: AlertCircle, label: 'Important Notices' },
+            { id: 'avatar', icon: User, label: 'Change Avatar' },
+            { id: 'settings', icon: Settings, label: 'Settings' },
           ].map((tab) => (
             <motion.button
               key={tab.id}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
                   : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
               }`}
             >
-              <tab.icon className="w-4 h-4" />
-              <span className="font-medium text-sm">{tab.label}</span>
-              {tab.id === 'assignments' && (
-                <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                  {assignments.filter(a => a.status === 'pending').length}
-                </span>
-              )}
-              {tab.id === 'messages' && (
-                <span className="ml-auto bg-blue-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                  {messages.filter(m => m.unread).length}
-                </span>
-              )}
+              <tab.icon className="w-3.5 h-3.5" />
+              <span className="font-medium text-xs">{tab.label}</span>
             </motion.button>
           ))}
         </nav>
@@ -311,7704 +307,6443 @@ const StudentDashboard = () => {
         <div className="p-3 border-t border-gray-100 space-y-1">
           <button 
             onClick={() => setShowAvatarModal(true)}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-all"
+            className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-all"
           >
-            <User className="w-4 h-4 flex-shrink-0" />
-            <span className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">Change Avatar</span>
+            <User className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="font-medium text-xs whitespace-nowrap overflow-hidden text-ellipsis">Change Avatar</span>
           </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all">
-            <LogOut className="w-4 h-4 flex-shrink-0" />
-            <span className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">Logout</span>
+          <button className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all">
+            <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="font-medium text-xs whitespace-nowrap overflow-hidden text-ellipsis">Logout</span>
           </button>
         </div>
       </motion.div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-screen">
         {/* Ultra Modern Header */}
-        <UltraModernHeader 
-          dashboardTitle="Student Dashboard"
-          userType="Student"
-          userName={studentData.name}
-          userRole="Student"
-          onLogout={() => console.log('Logout clicked')}
-        />
+        <div className="flex-shrink-0">
+          <UltraModernHeader 
+            dashboardTitle="Student Dashboard"
+            userType="Student"
+            userName={studentData.name}
+            userRole={`${studentData.class} - Roll #${studentData.rollNumber}`}
+            onLogout={() => console.log('Logout clicked')}
+          />
+        </div>
 
         {/* Dashboard Content */}
-        <div className="p-3">
+        <div className="p-4 flex-grow overflow-y-auto overscroll-contain">
           {/* Home Tab */}
           {activeTab === 'home' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+            <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-md p-2 mb-2 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg p-3 mb-3 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 {/* Animated background elements */}
                 <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                  <div className="absolute top-3 left-3 w-24 h-24 bg-white rounded-full mix-blend-overlay"></div>
-                  <div className="absolute bottom-3 right-3 w-20 h-20 bg-white rounded-full mix-blend-overlay"></div>
+                  <div className="absolute top-6 left-6 w-48 h-48 bg-white rounded-full mix-blend-overlay"></div>
+                  <div className="absolute bottom-6 right-6 w-32 h-32 bg-white rounded-full mix-blend-overlay"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-white rounded-sm rotate-45 mix-blend-overlay"></div>
                 </div>
-                <div className="relative z-10">
-                  <h2 className="text-base font-bold text-white mb-1">
-                    Good Morning, {studentData.name.split(' ')[0]}! 👋
-                  </h2>
-                  <p className="text-blue-100 text-xs mb-2">
-                    {assignments.filter(a => a.status === 'pending').length} pending assignments, {upcomingTests.length} upcoming tests
-                  </p>
-                  <div className="flex items-center gap-1.5 text-white">
-                    <div className="flex items-center gap-1 bg-white/10 rounded-full px-2 py-0.5 backdrop-blur-sm border border-white/20">
-                      <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                      <span className="text-[9px]">Attendance: {studentData.attendancePercentage}%</span>
-                    </div>
-                    <div className="flex items-center gap-1 bg-white/10 rounded-full px-2 py-0.5 backdrop-blur-sm border border-white/20">
-                      <div className="w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
-                      <span className="text-[9px]">{messages.filter(m => m.unread).length} new messages</span>
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="relative">
+                    <img 
+                      src={studentAvatar} 
+                      alt="Student Avatar" 
+                      className="w-14 h-14 rounded-full object-cover shadow-md border-2 border-white/30 cursor-pointer"
+                      onClick={() => setShowAvatarModal(true)}
+                    />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-white mb-1">
+                      Welcome back, {studentData.name.split(' ')[0]}! 👋
+                    </h2>
+                    <p className="text-blue-100 text-[10px] mb-2">
+                      You have {assignments.filter(a => a.status === 'pending').length} pending assignments and {messages.filter(m => m.unread).length} unread messages
+                    </p>
+                    <div className="flex items-center gap-1.5 text-white">
+                      <div className="flex items-center gap-1 bg-white/10 rounded-full px-2 py-0.5 backdrop-blur-sm border border-white/20">
+                        <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                        <span className="text-[9px]">{studentData.presentDays} days present</span>
+                      </div>
+                      <div className="flex items-center gap-1 bg-white/10 rounded-full px-2 py-0.5 backdrop-blur-sm border border-white/20">
+                        <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                        <span className="text-[9px]">{studentData.attendancePercentage}% attendance</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                  className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-2 shadow-sm border border-white/20 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="w-4 h-4 text-white" />
-                      <span className="text-sm font-medium text-white">Assignments</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">4</span>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1 mb-4">
+                {summaryStats.map((stat, index) => {
+                  const IconComponent = stat.icon;
+                  
+                  return (
+                    <motion.div 
+                      key={index}
+                      whileHover={{ y: -1 }}
+                      className={`bg-gradient-to-br ${stat.color} rounded-lg p-2 shadow-sm border border-white/10 backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden`}
+                    >
+                      {/* Geometric elements */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-full -mt-8 -mr-8"></div>
+                      <div className="absolute bottom-0 left-0 w-12 h-12 bg-white/10 rounded-full -mb-6 -ml-6"></div>
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white/5 rounded-sm rotate-45"></div>
+                      <div className="flex items-center justify-between mb-1 relative z-10">
+                        <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center border border-white/20">
+                          <IconComponent className="w-3 h-3 text-white" />
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-white">{stat.value}</div>
+                          <div className="text-[8px] text-white/70">{stat.label}</div>
+                        </div>
+                      </div>
+                      <div className="text-[8px] text-white/60 font-medium relative z-10">{stat.change} from last month</div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Upcoming Tests and Recent Assignments */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Upcoming Tests */}
+                <div className="bg-white rounded-lg p-3 shadow-xs border border-gray-100">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-[10px] font-bold text-gray-900">Upcoming Tests</h2>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
                   </div>
-                  <p className="text-xs text-white">Total assignments</p>
-                </motion.div>
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                  className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-md p-2 shadow-sm border border-white/20 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <Award className="w-4 h-4 text-white" />
-                      <span className="text-sm font-medium text-white">Achievements</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">3</span>
+                  <div className="space-y-3">
+                    {upcomingTests.slice(0, 3).map((test) => (
+                      <motion.div
+                        key={test.id}
+                        whileHover={{ x: 2 }}
+                        className="p-2 rounded-md border border-gray-200 hover:border-blue-300 transition-all duration-300 cursor-pointer relative overflow-hidden"
+                        onClick={() => {
+                          setSelectedTest(test);
+                          setShowTestDetailDrawer(true);
+                        }}
+                      >
+                        {/* Geometric background elements */}
+                        <div className="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-full -mt-6 -mr-6"></div>
+                        <div className="absolute bottom-0 left-0 w-8 h-8 bg-indigo-500/5 rounded-full -mb-4 -ml-4"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 mb-1.5">
+                                <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(test.subject)}`}>
+                                  {getSubjectIcon(test.subject)}
+                                </div>
+                                <div>
+                                  <h3 className="font-medium text-gray-900 text-[10px]">{test.subject}</h3>
+                                  <p className="text-[10px] text-gray-500">{test.topic}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1.5 text-[9px] text-gray-500">
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="w-2.5 h-2.5" />
+                                  <span>{test.dateDisplay}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <Clock className="w-2.5 h-2.5" />
+                                  <span>{test.time}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <FileText className="w-2.5 h-2.5" />
+                                  <span>{test.duration}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-medium rounded-full">
+                                {test.type}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                  <p className="text-xs text-white">Recent achievements</p>
-                </motion.div>
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                  className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-md p-2 shadow-sm border border-white/20 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <MessageSquare className="w-4 h-4 text-white" />
-                      <span className="text-sm font-medium text-white">Messages</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">3</span>
+                </div>
+
+                {/* Recent Assignments */}
+                <div className="bg-white rounded-lg p-3 shadow-xs border border-gray-100">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-[10px] font-bold text-gray-900">Recent Assignments</h2>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
                   </div>
-                  <p className="text-xs text-white">New messages</p>
-                </motion.div>
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                  className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-md p-2 shadow-sm border border-white/20 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <TrendingUp className="w-4 h-4 text-white" />
-                      <span className="text-sm font-medium text-white">Performance</span>
-                    </div>
-                    <span className="text-sm font-bold text-white">91%</span>
+                  <div className="space-y-3">
+                    {assignments.slice(0, 3).map((assignment) => (
+                      <motion.div
+                        key={assignment.id}
+                        whileHover={{ x: 2 }}
+                        className="p-2 rounded-md border border-gray-200 hover:border-blue-300 transition-all duration-300 cursor-pointer group relative overflow-hidden"
+                        onClick={() => {
+                          setSelectedAssignment(assignment);
+                          setShowAssignmentModal(true);
+                        }}
+                      >
+                        {/* Geometric background elements */}
+                        <div className="absolute top-0 right-0 w-12 h-12 bg-purple-500/5 rounded-full -mt-6 -mr-6"></div>
+                        <div className="absolute bottom-0 left-0 w-8 h-8 bg-indigo-500/5 rounded-full -mb-4 -ml-4"></div>
+                        <div className="relative z-10">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 mb-1.5">
+                                <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(assignment.subject)}`}>
+                                  {getAssignmentIcon(assignment.title)}
+                                </div>
+                                <div>
+                                  <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors text-[10px]">{assignment.subject}</h3>
+                                  <p className="text-[10px] text-gray-500">{assignment.title}</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1.5 text-[9px] text-gray-500">
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="w-2.5 h-2.5" />
+                                  <span>Due: {assignment.dueDisplay}</span>
+                                </div>
+                                <div className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium ${getStatusColor(assignment.status)}`}>
+                                  {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <div className={`w-1.5 h-1.5 rounded-full ${getPriorityColor(assignment.priority)}`}></div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                  <p className="text-xs text-white">Average grade</p>
-                </motion.div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Assignments Tab */}
+          {activeTab === 'assignments' && (
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-sm font-bold text-gray-900">My Assignments</h2>
+              </div>
+
+              {/* Assignment Status Summary */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-3 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  {/* Geometric elements */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mt-8 -mr-8"></div>
+                  <div className="absolute bottom-0 left-0 w-12 h-12 bg-white/15 rounded-full -mb-6 -ml-6"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white/10 rounded-sm rotate-45"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-100 text-[10px]">Total Assignments</p>
+                        <p className="text-lg font-bold mt-1">{assignments.length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <FileText className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg p-3 shadow-sm border border-amber-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  {/* Geometric elements */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mt-8 -mr-8"></div>
+                  <div className="absolute bottom-0 left-0 w-12 h-12 bg-white/15 rounded-full -mb-6 -ml-6"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white/10 rounded-sm rotate-45"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-amber-100 text-[10px]">Pending</p>
+                        <p className="text-lg font-bold mt-1">{assignments.filter(a => a.status === 'pending').length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <Clock className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-3 shadow-sm border border-green-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  {/* Geometric elements */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mt-8 -mr-8"></div>
+                  <div className="absolute bottom-0 left-0 w-12 h-12 bg-white/15 rounded-full -mb-6 -ml-6"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white/10 rounded-sm rotate-45"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-green-100 text-[10px]">Submitted</p>
+                        <p className="text-lg font-bold mt-1">{assignments.filter(a => a.status === 'submitted').length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg p-3 shadow-sm border border-purple-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  {/* Geometric elements */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mt-8 -mr-8"></div>
+                  <div className="absolute bottom-0 left-0 w-12 h-12 bg-white/15 rounded-full -mb-6 -ml-6"></div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white/10 rounded-sm rotate-45"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-purple-100 text-[10px]">Graded</p>
+                        <p className="text-lg font-bold mt-1">{recentGrades.length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                        <Award className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Assignments List */}
+              <div className="bg-white rounded-xl p-4 shadow-xs border border-gray-100">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-2 px-3 font-medium text-gray-500 text-[10px]">Assignment</th>
+                        <th className="text-left py-2 px-3 font-medium text-gray-500 text-[10px]">Subject</th>
+                        <th className="text-left py-2 px-3 font-medium text-gray-500 text-[10px]">Due Date</th>
+                        <th className="text-left py-2 px-3 font-medium text-gray-500 text-[10px]">Status</th>
+                        <th className="text-left py-2 px-3 font-medium text-gray-500 text-[10px]">Priority</th>
+                        <th className="text-left py-2 px-3 font-medium text-gray-500 text-[10px]">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {assignments.map((assignment) => (
+                        <tr key={assignment.id} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-8 h-8 rounded-md flex items-center justify-center ${getSubjectGradient(assignment.subject)}`}>
+                                {getAssignmentIcon(assignment.title)}
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-900 text-[10px]">{assignment.title}</p>
+                                <p className="text-[10px] text-gray-500">{assignment.subject}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-3 text-gray-600 text-[10px]">{assignment.subject}</td>
+                          <td className="py-3 px-3 text-gray-600 text-[10px]">{assignment.dueDisplay}</td>
+                          <td className="py-3 px-3">
+                            <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium ${getStatusColor(assignment.status)}`}>
+                              {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1">
+                              <div className={`w-1.5 h-1.5 rounded-full ${getPriorityColor(assignment.priority)}`}></div>
+                              <span className="text-[10px] text-gray-600 capitalize">{assignment.priority}</span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1">
+                              <button 
+                                className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                                onClick={() => {
+                                  setSelectedAssignment(assignment);
+                                  setShowAssignmentModal(true);
+                                }}
+                              >
+                                <Eye className="w-3 h-3" />
+                              </button>
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                                <Download className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Grades Tab */}
+          {activeTab === 'grades' && (
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <h2 className="text-sm font-bold text-gray-900">My Grades</h2>
+              </div>
+
+              {/* Overall Performance */}
+              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-md p-2 mb-4 shadow-xs backdrop-blur-sm border border-white/20 text-white">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-[10px] font-bold mb-1">Overall Performance</h3>
+                    <p className="text-blue-100 mb-2 text-[10px]">Your academic progress this semester</p>
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <p className="text-[10px] text-blue-200">Current GPA</p>
+                        <p className="text-lg font-bold mt-1">{studentData.gpa}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-blue-200">Attendance</p>
+                        <p className="text-lg font-bold mt-1">{studentData.attendancePercentage}%</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-blue-200">Grade Level</p>
+                        <p className="text-lg font-bold mt-1">{studentData.currentGrade}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <div className="relative w-24 h-24">
+                      <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8" />
+                        <circle 
+                          cx="50" 
+                          cy="50" 
+                          r="45" 
+                          fill="none" 
+                          stroke="white" 
+                          strokeWidth="8" 
+                          strokeDasharray={`${studentData.attendancePercentage} 100`}
+                          strokeDashoffset="25"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-[10px] text-blue-200 mt-2">Attendance</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subject-wise Performance */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {subjectPerformance.map((subject) => (
+                  <div key={subject.subject} className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 relative overflow-hidden">
+                    {/* Geometric elements */}
+                    <div className="absolute top-0 right-0 w-8 h-8 bg-blue-500/5 rounded-full -mt-4 -mr-4"></div>
+                    <div className="absolute bottom-0 left-0 w-6 h-6 bg-indigo-500/5 rounded-full -mb-3 -ml-3"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(subject.subject)}`}>
+                            {getSubjectIcon(subject.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{subject.subject}</h3>
+                          </div>
+                        </div>
+                        <div className="text-[10px] text-gray-500">
+                          {subject.score}%
+                        </div>
+                      </div>
+                      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500" style={{ width: `${subject.score}%` }}></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Recent Grades */}
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Recent Grades</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-1">
-                  {recentGrades.map((grade) => (
-                    <div key={grade.subject} className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-sm font-medium">{grade.subject}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium">{grade.grade}</span>
-                        <span className="text-xs text-gray-500">({grade.score})</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Upcoming Tests */}
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Upcoming Tests</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-1">
-                  {upcomingTests.map((test) => (
-                    <div key={test.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-sm font-medium">{test.topic}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium">{test.dateDisplay}</span>
-                        <span className="text-xs text-gray-500">({test.time})</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Teacher Feedback */}
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Teacher Feedback</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-1">
-                  {teacherFeedback.map((feedback) => (
-                    <div key={feedback.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-sm font-medium">{feedback.teacher}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium">{feedback.feedback}</span>
-                        <span className="text-xs text-gray-500">({feedback.date})</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Weekly Report */}
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Weekly Report</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
-                      <span className="text-sm font-medium">Attendance</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-medium">{weeklyReport.attendance.present} / {weeklyReport.attendance.present + weeklyReport.attendance.absent}</span>
-                      <span className="text-xs text-gray-500">({weeklyReport.attendance.present} present, {weeklyReport.attendance.absent} absent)</span>
-                    </div>
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-purple-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white/5 rounded-sm rotate-45"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-[10px] font-bold">Recent Grades</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm font-medium">Assignments</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-medium">{weeklyReport.assignments.completed} / {weeklyReport.assignments.completed + weeklyReport.assignments.pending}</span>
-                      <span className="text-xs text-gray-500">({weeklyReport.assignments.completed} completed, {weeklyReport.assignments.pending} pending)</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm font-medium">Average Grade</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-medium">{weeklyReport.average}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Attendance Chart */}
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Attendance</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <ResponsiveContainer width="100%" height={150}>
-                  <BarChart data={attendanceData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="present" fill="#8884d8" />
-                    <Bar dataKey="absent" fill="#ff8042" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Subject Performance */}
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium">Subject Performance</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <ResponsiveContainer width="100%" height={150}>
-                  <PieChart>
-                    <Pie
-                      data={subjectPerformance}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="score"
-                    >
-                      {subjectPerformance.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={getSubjectGradient(entry.subject)} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Assignment Modal */}
-              {showAssignmentModal && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-                >
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white rounded-lg p-4 w-full max-w-md"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium">Assignment Details</h3>
-                      <button onClick={closeAssignmentModal} className="text-sm font-medium text-gray-500 hover:text-gray-700">
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Subject</span>
-                        <span className="text-sm font-medium">{selectedAssignment.subject}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Title</span>
-                        <span className="text-sm font-medium">{selectedAssignment.title}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Due Date</span>
-                        <span className="text-sm font-medium">{selectedAssignment.dueDisplay}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Status</span>
-                        <span className={`text-sm font-medium ${getStatusColor(selectedAssignment.status)}`}>{selectedAssignment.status}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Priority</span>
-                        <span className={`text-sm font-medium ${getPriorityColor(selectedAssignment.priority)}`}>{selectedAssignment.priority}</span>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <button onClick={submitAssignment} className="w-full bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-lg hover:bg-blue-600 transition-all">
-                        Submit Assignment
-                      </button>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              )}
-
-              {/* Test Detail Drawer */}
-              {showTestDetailDrawer && (
-                <motion.div 
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="fixed inset-y-0 right-0 bg-white w-full max-w-md shadow-lg"
-                >
-                  <div className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium">Test Details</h3>
-                      <button onClick={closeTestDetailDrawer} className="text-sm font-medium text-gray-500 hover:text-gray-700">
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Subject</span>
-                        <span className="text-sm font-medium">{selectedTest.subject}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Topic</span>
-                        <span className="text-sm font-medium">{selectedTest.topic}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Date</span>
-                        <span className="text-sm font-medium">{selectedTest.dateDisplay}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Time</span>
-                        <span className="text-sm font-medium">{selectedTest.time}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Duration</span>
-                        <span className="text-sm font-medium">{selectedTest.duration}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Type</span>
-                        <span className="text-sm font-medium">{selectedTest.type}</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Avatar Modal */}
-              {showAvatarModal && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-                >
-                  <div className="bg-white rounded-lg p-4 w-full max-w-md">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-sm font-medium">Attendance</h3>
-                      <button onClick={() => setShowAvatarModal(false)} className="text-sm font-medium text-gray-500 hover:text-gray-700">
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-white">{studentData.attendancePercentage}%</div>
-                        <div className="text-xs text-white/80">Attendance</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90 font-medium">+2.5%</div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Recent Grades - Improved compact layout */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-semibold text-gray-900">Recent Grades</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-1.5">
-                  {recentGrades.map((grade, index) => (
-                    <div key={index} className="bg-gray-50 hover:bg-gray-100 rounded-md p-2 shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-sm">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <div className="space-y-2">
+                    {recentGrades.map((grade) => (
+                      <div key={grade.subject} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="p-1.5 rounded-md bg-white/20 flex items-center justify-center border border-white/30">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(grade.subject)}`}>
                             {getSubjectIcon(grade.subject)}
                           </div>
                           <div>
-                            <h3 className="font-medium text-gray-900 text-sm">{grade.subject}</h3>
-                            <p className="text-gray-600 text-xs">{grade.assignment}</p>
+                            <p className="font-medium text-gray-900 text-[10px]">{grade.subject}</p>
+                            <p className="text-[10px] text-gray-500">{grade.assignment}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="text-gray-500 text-xs flex items-center">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {grade.date}
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{grade.score}</span>
                           </div>
-                          <div className="font-medium text-gray-900 text-sm">
-                            {grade.score}
-                          </div>
-                          <div>
-                            {getGradeBadge(grade.grade)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Upcoming Tests */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Upcoming Tests</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-2">
-                  {upcomingTests.map((test) => (
-                    <div key={test.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                          {getSubjectIcon(test.subject)}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{test.topic}</div>
-                          <div className="text-xs text-gray-500">{test.dateDisplay}</div>
-                        </div>
-                      </div>
-                      <div className="text-sm font-bold text-gray-900">{test.time}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Teacher Feedback */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Teacher Feedback</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-2">
-                  {teacherFeedback.map((feedback) => (
-                    <div key={feedback.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                          <User className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{feedback.teacher}</div>
-                          <div className="text-xs text-gray-500">{feedback.subject}</div>
-                        </div>
-                      </div>
-                      <div className="text-sm font-bold text-gray-900">{feedback.date}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Weekly Report */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Weekly Report</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <Calendar className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">Attendance</div>
-                        <div className="text-xs text-gray-500">{weeklyReport.attendance.present} present, {weeklyReport.attendance.absent} absent</div>
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-gray-900">{weeklyReport.attendance.present}/{weeklyReport.attendance.present + weeklyReport.attendance.absent}</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <BookOpen className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">Assignments</div>
-                        <div className="text-xs text-gray-500">{weeklyReport.assignments.completed} completed, {weeklyReport.assignments.pending} pending</div>
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-gray-900">{weeklyReport.assignments.completed}/{weeklyReport.assignments.completed + weeklyReport.assignments.pending}</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <TrendingUp className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">Average Grade</div>
-                        <div className="text-xs text-gray-500">{weeklyReport.average}</div>
-                      </div>
-                    </div>
-                    <div className="text-sm font-bold text-gray-900">{weeklyReport.average}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Achievements */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Achievements</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-2">
-                  {achievements.map((achievement) => (
-                    <div key={achievement.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                          <Award className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{achievement.title}</div>
-                          <div className="text-xs text-gray-500">{achievement.date}</div>
-                        </div>
-                      </div>
-                      <div className="text-sm font-bold text-gray-900">{achievement.icon}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Subject Performance */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Subject Performance</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-2">
-                  {subjectPerformance.map((subject) => (
-                    <div key={subject.subject} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                          {getSubjectIcon(subject.subject)}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{subject.subject}</div>
-                        </div>
-                      </div>
-                      <div className="text-sm font-bold text-gray-900">{subject.score}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Attendance Chart */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Attendance Chart</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={attendanceData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="present" fill="#8884d8" />
-                    <Bar dataKey="absent" fill="#ff0000" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Subject Performance Chart */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Subject Performance Chart</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={subjectPerformance}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="score"
-                    >
-                      {subjectPerformance.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={getSubjectGradient(entry.subject)} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Weekly Progress Chart */}
-              <div className="bg-white rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg font-bold text-gray-900">Weekly Progress Chart</h3>
-                  <button className="text-sm font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <ResponsiveContainer width="100%" height={200}>
-                  <LineChart data={weeklyReport}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="present" stroke="#8884d8" />
-                    <Line type="monotone" dataKey="absent" stroke="#ff0000" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                </motion.div>
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                  <motion.div 
-                    whileHover={{ y: -2 }}
-                    className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-3 shadow-sm border border-white/20 backdrop-blur-sm"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <CheckCircle className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-white">{studentData.presentDays}</div>
-                        <div className="text-xs text-white/80">Present</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">Last 7 days</div>
-                  </motion.div>
-
-                  <motion.div 
-                    whileHover={{ y: -2 }}
-                  >
-                    <div className="bg-[#1a1a1a] rounded-lg p-2">
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                          <div className="text-[10px] text-white/90">Total</div>
-                        </div>
-                        <div className="text-[10px] text-white/90">Last 7 days</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">Last 7 days</div>
-                  </motion.div>
-
-                  <motion.div 
-                    whileHover={{ y: -2 }}
-                  >
-                    <div className="bg-[#1a1a1a] rounded-lg p-2">
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                          <div className="text-[10px] text-white/90">Total</div>
-                        </div>
-                        <div className="text-[10px] text-white/90">Last 7 days</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">Last 7 days</div>
-                  </motion.div>
-
-                  <motion.div 
-                    whileHover={{ y: -2 }}
-                  >
-                    <div className="bg-[#1a1a1a] rounded-lg p-2">
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                          <div className="text-[10px] text-white/90">Total</div>
-                        </div>
-                        <div className="text-[10px] text-white/90">Last 7 days</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">Last 7 days</div>
-                  </motion.div>
-
-                  <motion.div 
-                    whileHover={{ y: -2 }}
-                  >
-                    <div className="bg-[#1a1a1a] rounded-lg p-2">
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                          <div className="text-[10px] text-white/90">Total</div>
-                        </div>
-                        <div className="text-[10px] text-white/90">Last 7 days</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">Last 7 days</div>
-                  </motion.div>
-
-                </motion.div>
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-                <motion.div 
-                  whileHover={{ y: -2 }}
-                >
-                  <div className="bg-[#1a1a1a] rounded-lg p-2">
-                    <div className="flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-[#2e2e2e]"></div>
-                        <div className="text-[10px] text-white/90">Total</div>
-                      </div>
-                      <div className="text-[10px] text-white/90">Last 7 days</div>
-                    </div>
-                  </div>
-                  <div className="text-[10px] text-white/90">Last 7 days</div>
-                </motion.div>
-
-              </div>
-
-              </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                    className="bg-gradient-to-br from-red-500 to-rose-600 rounded-lg p-3 shadow-sm border border-white/20 backdrop-blur-sm"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <AlertCircle className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-white">{studentData.absentDays}</div>
-                        <div className="text-xs text-white/80">Absent</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">Last 7 days</div>
-                  </motion.div>
-
-                  <motion.div 
-                    whileHover={{ y: -2 }}
-                    className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg p-3 shadow-sm border border-white/20 backdrop-blur-sm"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
-                        <Target className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-white">{studentData.currentGrade}</div>
-                        <div className="text-xs text-white/80">Grade</div>
-                      </div>
-                    </div>
-                    <div className="text-[10px] text-white/90">GPA: {studentData.gpa}</div>
-                  </motion.div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Assignments Tab */}
-          {activeTab === 'assignments' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col md:flex-row md:items-center justify-between mb-2 p-4 bg-white rounded-xl shadow-md border border-gray-100 relative overflow-hidden"
-              >
-                {/* Left Accent Bar */}
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-l-2xl"></div>
-                
-                {/* Background Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 -z-10 backdrop-blur-sm"></div>
-                
-                <div className="flex items-center gap-2 mb-2 md:mb-0">
-                  {/* Icon */}
-                  <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                    <BookOpen className="w-4 h-4 text-white" />
-                  </div>
-                  
-                  {/* Heading with Animation */}
-                  <div className="relative">
-                    <h2 className="text-3xl font-bold text-gray-900 relative z-10">Assignments</h2>
-                    <div className="absolute bottom-1 left-0 w-full h-2 bg-gradient-to-r from-blue-400/30 to-indigo-400/30 rounded-full -z-10 animate-pulse"></div>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-3">
-                  {/* Chip-Style Filter Controls */}
-                  <div className="relative group">
-                    <select className="px-4 py-2 bg-white/70 backdrop-blur-md border border-blue-200/50 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/90 pl-10">
-                      <option>All Subjects</option>
-                      <option>Mathematics</option>
-                      <option>Science</option>
-                      <option>English</option>
-                      <option>History</option>
-                    </select>
-                    <BookOpen className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-500" />
-                  </div>
-                  
-                  <div className="relative group">
-                    <select className="px-4 py-2 bg-white/70 backdrop-blur-md border border-purple-200/50 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/90 pl-10">
-                      <option>All Statuses</option>
-                      <option>Pending</option>
-                      <option>Submitted</option>
-                      <option>Overdue</option>
-                    </select>
-                    <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-500" />
-                  </div>
-                </div>
-              </motion.div>
-
-              <div className="grid grid-cols-1 gap-3">
-                {assignments.map((assignment) => (
-                  <motion.div 
-                    key={assignment.id}
-                    whileHover={{ y: -2 }}
-                    className={`rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm ${getSubjectGradient(assignment.subject)} relative overflow-hidden transition-all duration-300 hover:shadow-md`}
-                  >
-                    {/* Decorative elements */}
-                    <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-white/10 -mt-12 -mr-12"></div>
-                    <div className="absolute bottom-0 left-0 w-16 h-16 rounded-full bg-white/5 -mb-8 -ml-8"></div>
-                    
-                    {/* Book illustration */}
-                    <svg className="absolute top-3 right-3 w-12 h-12 text-white/10" viewBox="0 0 100 100">
-                      <path d="M20 20 L80 20 L80 80 L20 80 Z" fill="none" stroke="currentColor" strokeWidth="3" />
-                      <path d="M20 20 L30 10 L90 10 L90 70 L80 80" fill="none" stroke="currentColor" strokeWidth="3" />
-                      <line x1="30" y1="30" x2="70" y2="30" stroke="currentColor" strokeWidth="2" />
-                      <line x1="30" y1="40" x2="70" y2="40" stroke="currentColor" strokeWidth="2" />
-                      <line x1="30" y1="50" x2="70" y2="50" stroke="currentColor" strokeWidth="2" />
-                      <line x1="30" y1="60" x2="50" y2="60" stroke="currentColor" strokeWidth="2" />
-                    </svg>
-                    
-                    {/* Scale illustration */}
-                    <svg className="absolute bottom-3 left-3 w-12 h-12 text-white/10" viewBox="0 0 100 100">
-                      <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="3" />
-                      <line x1="50" y1="50" x2="50" y2="20" stroke="currentColor" strokeWidth="3" />
-                      <circle cx="50" cy="15" r="5" fill="currentColor" />
-                      <path d="M30 50 L25 60 L45 60 Z" fill="currentColor" />
-                      <path d="M70 50 L65 60 L85 60 Z" fill="currentColor" />
-                      <line x1="25" y1="60" x2="20" y2="70" stroke="currentColor" strokeWidth="2" />
-                      <line x1="45" y1="60" x2="50" y2="70" stroke="currentColor" strokeWidth="2" />
-                      <line x1="65" y1="60" x2="60" y2="70" stroke="currentColor" strokeWidth="2" />
-                      <line x1="85" y1="60" x2="90" y2="70" stroke="currentColor" strokeWidth="2" />
-                    </svg>
-                    
-                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3 relative z-10">
-                      <div className="flex flex-col sm:flex-row sm:items-start gap-3 flex-1">
-                        <div className="p-2 rounded-lg bg-white/20 border border-white/30 flex-shrink-0 flex items-center justify-center">
-                          {getSubjectIcon(assignment.subject)}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
-                            <h3 className="text-sm font-bold text-white">{assignment.title}</h3>
-                            <span className={`w-2 h-2 rounded-full ${getPriorityColor(assignment.priority)}`}></span>
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${getStatusColor(assignment.status)}`}>
-                              {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
-                            </span>
-                          </div>
-                          <p className="text-white/90 text-xs mb-2">{assignment.subject}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            <span className="text-[10px] px-2 py-1 bg-white/20 text-white rounded-full border border-white/30">
-                              Due: {assignment.dueDisplay}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        <button className="p-1 bg-white/20 hover:bg-white/30 rounded-md transition-all flex items-center justify-center">
-                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                          </svg>
-                        </button>
-                        {assignment.status === 'pending' && (
-                          <button 
-                            onClick={() => openAssignmentModal(assignment)}
-                            className="px-2 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors text-[10px] font-medium flex items-center gap-1 border border-white/30"
-                          >
-                            <Plus className="w-3 h-3" />
-                            Submit
-                          </button>
-                        )}
-                        <button 
-                          onClick={() => openAssignmentModal(assignment)}
-                          className="px-2 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors text-[10px] font-medium flex items-center gap-1 border border-white/30"
-                        >
-                          <Eye className="w-3 h-3" />
-                          Details
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Assignments Tab */}
-          {activeTab === 'assignments' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col gap-4"
-            >
-              {assignments.map((assignment) => (
-                <motion.div
-                  key={assignment.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-lg shadow-md p-4"
-                >
-                  <h3 className="text-lg font-semibold">{assignment.title}</h3>
-                  <p className="text-gray-600">{assignment.description}</p>
-                  <p className="text-gray-600">
-                    Due: {new Date(assignment.dueDate).toLocaleDateString()}
-                  </p>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-
-          {/* Reports Tab */}
-          {activeTab === 'reports' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col md:flex-row md:items-center justify-between mb-2 p-4 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl shadow-md border border-white/20 backdrop-blur-sm relative overflow-hidden"
-              >
-                {/* Background Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-50/20 to-pink-50/20 -z-10 backdrop-blur-sm"></div>
-                
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 w-full">
-                  <div className="flex items-center gap-2">
-                    {/* Icon */}
-                    <div className="p-3 rounded-xl bg-white/20 flex items-center justify-center shadow-md border border-white/30 backdrop-blur-sm">
-                      <FileText className="w-4 h-4 text-white" />
-                    </div>
-                    
-                    {/* Heading with Animation */}
-                    <div className="relative">
-                      <h2 className="text-xl font-bold text-white relative z-10">Performance Reports</h2>
-                      <div className="absolute bottom-1 left-0 w-full h-2 bg-white/30 rounded-full -z-10 animate-pulse"></div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full hover:bg-white/30 transition-all duration-300 shadow-sm hover:shadow-md pl-3 text-sm">
-                      <Printer className="w-3.5 h-3.5 text-white" />
-                      <span className="font-medium">Print</span>
-                    </button>
-                    <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full hover:bg-white/30 transition-all duration-300 shadow-sm hover:shadow-md pl-3 text-sm">
-                      <Download className="w-3.5 h-3.5 text-white" />
-                      <span className="font-medium">Export</span>
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Report Filters */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 shadow-sm border border-blue-200/50 backdrop-blur-sm mb-2 relative overflow-hidden"
-              >
-                <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5">
-                  <Filter className="w-3.5 h-3.5 text-blue-500" />
-                  Report Filters
-                </h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                  <div>
-                    <label className="block text-[10px] font-medium text-gray-700 mb-1 flex items-center gap-1">
-                      <BookOpen className="w-3 h-3 text-blue-500" />
-                      Subject
-                    </label>
-                    <div className="relative group">
-                      <select className="w-full px-2 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all duration-300 hover:shadow-md pl-7 text-xs">
-                        <option className="bg-white text-gray-700">All Subjects</option>
-                        <option className="bg-white text-gray-700">Mathematics</option>
-                        <option className="bg-white text-gray-700">Science</option>
-                        <option className="bg-white text-gray-700">English</option>
-                        <option className="bg-white text-gray-700">History</option>
-                      </select>
-                      <BookOpen className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-blue-500" />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-[10px] font-medium text-gray-700 mb-1 flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-green-500" />
-                      Start Date
-                    </label>
-                    <div className="flex gap-1.5">
-                      <input 
-                        type="date" 
-                        className="flex-1 px-2 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition-all duration-300 hover:shadow-md text-xs"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-[10px] font-medium text-gray-700 mb-1 flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-purple-500" />
-                      End Date
-                    </label>
-                    <div className="flex gap-1.5">
-                      <input 
-                        type="date" 
-                        className="flex-1 px-2 py-1.5 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/30 text-xs"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-end">
-                    <button className="w-full px-2 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 flex items-center justify-center gap-1.5 font-medium text-xs">
-                      <BarChartIcon className="w-3 h-3" />
-                      Generate
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Analytics Charts */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mb-2">
-                {/* Subject Performance Chart */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 shadow-sm border border-blue-300/50 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h3 className="text-sm font-bold text-white">Subject-wise Performance</h3>
-                      <p className="text-white/80 text-[10px] mt-1">Average scores by subject</p>
-                    </div>
-                    <button className="text-white text-[10px] font-medium hover:text-white flex items-center gap-1 hover:underline transition-all duration-300 bg-white/20 hover:bg-white/30 px-2 py-1 rounded-md border border-white/30 backdrop-blur-sm">
-                      Export
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="h-56 bg-white/20 rounded-lg p-2 backdrop-blur-sm border border-white/30">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={subjectPerformance}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
-                        <XAxis 
-                          dataKey="subject" 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
-                        />
-                        <YAxis 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
-                          domain={[80, 100]}
-                        />
-                        <Tooltip 
-                          formatter={(value) => [`${value}%`, 'Score']}
-                          contentStyle={{ 
-                            backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '10px',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(8px)'
-                          }}
-                          labelStyle={{ color: '#1e40af', fontSize: 12 }}
-                        />
-                        <Bar 
-                          dataKey="score" 
-                          name="Score" 
-                          fill="rgba(255,255,255,0.9)" 
-                          radius={[4, 4, 0, 0]} 
-                          barSize={20}
-                        >
-                          {subjectPerformance.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.score > 90 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.7)'} />
-                          ))}
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Grade Distribution */}
-                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg p-4 shadow-sm border border-purple-300/50 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h3 className="text-sm font-bold text-white">Grade Distribution</h3>
-                      <p className="text-white/80 text-[10px] mt-1">Overall grade breakdown</p>
-                    </div>
-                    <button className="text-white text-[10px] font-medium hover:text-white flex items-center gap-1 hover:underline transition-all duration-300 bg-white/20 hover:bg-white/30 px-2 py-1 rounded-md border border-white/30 backdrop-blur-sm">
-                      Details
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="h-56 bg-white/20 rounded-lg p-2 backdrop-blur-sm border border-white/30">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={[
-                            { name: 'A', value: 30 },
-                            { name: 'B', value: 45 },
-                            { name: 'C', value: 20 },
-                            { name: 'D', value: 5 },
-                          ]}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={true}
-                          outerRadius={70}
-                          innerRadius={40}
-                          fill="#8884d8"
-                          dataKey="value"
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                        >
-                          <Cell fill="rgba(255,255,255,0.9)" />
-                          <Cell fill="rgba(255,255,255,0.7)" />
-                          <Cell fill="rgba(255,255,255,0.5)" />
-                          <Cell fill="rgba(255,255,255,0.3)" />
-                        </Pie>
-                        <Tooltip 
-                          formatter={(value) => [`${value}%`, 'Percentage']}
-                          contentStyle={{ 
-                            backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '10px',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(8px)'
-                          }}
-                          labelStyle={{ color: '#4f46e5', fontSize: 12 }}
-                        />
-                        <Legend 
-                          layout="vertical"
-                          verticalAlign="middle"
-                          align="right"
-                          formatter={(value, entry, index) => (
-                            <span className="text-white text-[10px] ml-2">{value}</span>
-                          )}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recent Grades - Improved compact layout for reports tab */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-4 shadow-sm border border-white/20 backdrop-blur-sm relative overflow-hidden"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h3 className="text-base font-bold text-white flex items-center gap-1.5">
-                      <Award className="w-4 h-4 text-white" />
-                      Recent Grades
-                    </h3>
-                    <p className="text-white/80 text-xs mt-1">Latest assignment and test scores</p>
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                    {recentGrades.map((grade, index) => (
-                      <div key={index} className="bg-white hover:bg-gray-50 rounded-md p-2 shadow border border-gray-200 transition-all duration-200">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                          <div className="flex items-center gap-2">
-                            <div className={`p-1.5 rounded-md ${getSubjectGradient(grade.subject)} flex items-center justify-center`}>
-                              {getSubjectIcon(grade.subject)}
-                            </div>
-                            <div>
-                              <h3 className="font-medium text-gray-900 text-sm">{grade.subject}</h3>
-                              <p className="text-gray-600 text-xs">{grade.assignment}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="text-gray-500 text-xs flex items-center">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {grade.date}
-                            </div>
-                            <div className="font-medium text-gray-900 text-sm">
-                              {grade.score}
-                            </div>
-                            <div>
-                              {getGradeBadge(grade.grade)}
-                            </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{grade.date}</span>
                           </div>
                         </div>
                       </div>
                     ))}
+                  </div>
                 </div>
-              </motion.div>
-
-              {/* Recent Grades - Improved compact layout */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-white/20 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-semibold text-gray-900">Recent Grades</h3>
-                  <button className="text-xs font-medium text-blue-600 hover:text-blue-700">View All</button>
-                </div>
-                <div className="space-y-1.5">
-                  {recentGrades.map((grade, index) => (
-                    <div key={index} className="bg-gray-50 hover:bg-gray-100 rounded-md p-2 shadow-sm border border-gray-200 transition-all duration-200 hover:shadow-sm">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                        <div className="flex items-center gap-2">
-                          <div className={`p-1.5 rounded-md ${getSubjectGradient(grade.subject)} flex items-center justify-center`}>
-                            {getSubjectIcon(grade.subject)}
-                          </div>
-                          <div>
-                            <h3 className="font-medium text-gray-900 text-sm">{grade.subject}</h3>
-                            <p className="text-gray-600 text-xs">{grade.assignment}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="text-gray-500 text-xs flex items-center">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {grade.date}
-                          </div>
-                          <div className="font-medium text-gray-900 text-sm">
-                            {grade.score}
-                          </div>
-                          <div>
-                            {getGradeBadge(grade.grade)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Messages Section */}
-              <div className="grid grid-cols-1 gap-4">
-                {messages.map((message) => (
-                  <motion.div 
-                    key={message.id}
-                    whileHover={{ y: -2 }}
-                    className="bg-white rounded-lg p-4 shadow-sm border border-gray-100"
-                  >
-                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-2">
-                      <div className="flex flex-col sm:flex-row sm:items-start gap-2 flex-1">
-                        <div className="p-3 rounded-xl bg-gray-100 text-gray-800 flex-shrink-0">
-                          <MessageSquare className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex flex-wrap items-center gap-3 mb-3">
-                            <h3 className="text-lg font-semibold text-gray-900">{message.title}</h3>
-                            {message.unread && (
-                              <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
-                                Unread
-                              </span>
-                            )}
-                            <span className={`w-3 h-3 rounded-full ${
-                              message.priority === 'high' ? 'bg-red-500' :
-                              message.priority === 'medium' ? 'bg-orange-500' :
-                              'bg-green-500'
-                            }`}></span>
-                          </div>
-                          <p className="text-gray-500 text-sm mb-2">From: {message.from}</p>
-                          <p className="text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                          <div className="flex flex-wrap gap-2">
-                            <span className="text-xs px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full">
-                              {message.date}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-3">
-                        <button className="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-colors text-sm font-medium flex items-center gap-2">
-                          <Eye className="w-4 h-4" />
-                          View
-                        </button>
-                        <button className="px-4 py-2.5 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-colors text-sm font-medium flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4" />
-                          Reply
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Achievements Tab */}
-          {activeTab === 'achievements' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex justify-between items-center mb-8 p-4 bg-white rounded-2xl shadow-sm border-2 border-green-200/30">
-                <h2 className="text-2xl font-bold text-gray-900">Achievements</h2>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all">
-                  <Award className="w-4 h-4" />
-                  Claim Rewards
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-8">
-                {achievements.map((achievement) => (
-                  <motion.div 
-                    key={achievement.id}
-                    whileHover={{ y: -5 }}
-                    className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center"
-                  >
-                    <div className="text-4xl mb-2">{achievement.icon}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{achievement.title}</h3>
-                    <p className="text-gray-500 mb-2">Congratulations on your achievement!</p>
-                    <div className="text-sm text-gray-500">{achievement.date}</div>
-                  </motion.div>
-                ))}
               </div>
 
               {/* Teacher Feedback */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-blue-200/30">
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">Teacher Feedback</h3>
-                    <p className="text-gray-500 text-sm mt-1">Recent comments from your teachers</p>
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-purple-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Recent Grades</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {recentGrades.map((grade) => (
+                      <div key={grade.subject} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(grade.subject)}`}>
+                            {getSubjectIcon(grade.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{grade.subject}</h3>
+                            <p className="text-[10px] text-gray-500">{grade.assignment}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{grade.score}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{grade.date}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="space-y-6">
-                  {teacherFeedback.map((feedback) => (
-                    <div key={feedback.id} className="flex gap-2 p-4 bg-gray-50 rounded-xl">
-                      <div className={`p-3 rounded-xl flex-shrink-0 ${
-                        feedback.type === 'positive' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {feedback.type === 'positive' ? (
-                          <TrendingUp className="w-4 h-4" />
-                        ) : (
-                          <Target className="w-4 h-4" />
-                        )}
+              </div>
+
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Settings</h2>
+              </div>
+
+              {/* Profile Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Profile Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <img 
+                          src={studentAvatar} 
+                          alt="Student Avatar" 
+                          className="w-10 h-10 rounded-full object-cover shadow-md border-2 border-white/30 cursor-pointer"
+                          onClick={() => setShowAvatarModal(true)}
+                        />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex flex-wrap items-center gap-3 mb-2">
-                          <h4 className="font-semibold text-gray-900">{feedback.teacher}</h4>
-                          <span className="text-sm text-gray-500">•</span>
-                          <span className="text-sm text-gray-500">{feedback.subject}</span>
-                        </div>
-                        <p className="text-gray-700 mb-3">{feedback.feedback}</p>
-                        <div className="text-sm text-gray-500">{feedback.date}</div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">{profileData.name}</p>
+                        <p className="text-[10px] text-gray-500">{profileData.email}</p>
                       </div>
                     </div>
-                  ))}
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <User className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Class</p>
+                        <p className="text-[10px] text-gray-500">{profileData.class}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <BookOpen className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Roll Number</p>
+                        <p className="text-[10px] text-gray-500">{profileData.rollNumber}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <School className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">School</p>
+                        <p className="text-[10px] text-gray-500">{profileData.school}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notifications Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Notifications Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bell className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Email Notifications</p>
+                        <p className="text-[10px] text-gray-500">Receive email notifications for important updates</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bell className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">SMS Notifications</p>
+                        <p className="text-[10px] text-gray-500">Receive SMS notifications for important updates</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bell className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Push Notifications</p>
+                        <p className="text-[10px] text-gray-500">Receive push notifications for important updates</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Security Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Lock className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Password</p>
+                        <p className="text-[10px] text-gray-500">Change your account password</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Lock className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Two-Factor Authentication</p>
+                        <p className="text-[10px] text-gray-500">Enable two-factor authentication for added security</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Privacy Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Data Privacy Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Shield className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Data Sharing</p>
+                        <p className="text-[10px] text-gray-500">Control who can see your data</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Shield className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Data Deletion</p>
+                        <p className="text-[10px] text-gray-500">Request to delete your data</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Account Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <User className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Account Type</p>
+                        <p className="text-[10px] text-gray-500">Change your account type</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <User className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Account Deletion</p>
+                        <p className="text-[10px] text-gray-500">Request to delete your account</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      </div>
+      
+      {/* Avatar Modal */}
+      <AnimatePresence>
+        {showAvatarModal && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            onClick={() => setShowAvatarModal(false)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-lg p-4 shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Change Avatar</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowAvatarModal(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Assignment Modal */}
+      <AnimatePresence>
+        {showAssignmentModal && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            onClick={() => setShowAssignmentModal(false)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-lg p-4 shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Assignment Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowAssignmentModal(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Test Detail Drawer */}
+      <AnimatePresence>
+        {showTestDetailDrawer && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-y-0 right-0 bg-white rounded-l-lg shadow-lg w-full max-w-md"
+            onClick={() => setShowTestDetailDrawer(false)}
+          >
+            <motion.div 
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-l-lg shadow-lg w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Test Details</h2>
+                <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors" onClick={() => setShowTestDetailDrawer(false)}>
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <img 
+                  src={studentAvatar} 
+                  alt="Student Avatar" 
+                  className="w-24 h-24 rounded-full object-cover shadow-md border-2 border-white/30"
+                />
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                  <Edit className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="flex items-center justify-center mb-4">
+                <button className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors">
+                  <CheckCircle className="w-3 h-3" />
+                </button>
+              </div>
+              {/* Teacher Feedback */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mt-4 relative overflow-hidden">
+                {/* Geometric elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                <div className="absolute bottom-0 left-0 w-12 h-12 bg-indigo-500/5 rounded-full -mb-6 -ml-6"></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[10px] font-bold text-gray-900">Teacher Feedback</h3>
+                    <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                  </div>
+                  <div className="space-y-3">
+                    {teacherFeedback.map((feedback) => (
+                      <div key={feedback.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-5 h-5 rounded-sm flex items-center justify-center ${getSubjectGradient(feedback.subject)}`}>
+                            {getSubjectIcon(feedback.subject)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-[10px]">{feedback.teacher}</h3>
+                            <p className="text-[10px] text-gray-500">{feedback.subject}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-1 h-1 bg-blue-300 rounded-full"></div>
+                            <span className="text-[9px]">{feedback.type}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+                          value={profileData.email}
+                          onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
+                        <input 
+                          type="text" 
+                          value={profileData.class}
+                          onChange={(e) => setProfileData({...profileData, class: e.target.value})}
+                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Roll Number</label>
+                        <input 
+                          type="text" 
+                          value={profileData.rollNumber}
+                          onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
+                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-medium text-gray-700 mb-1.5">School</label>
+                        <input 
+                          type="text" 
+                          value={profileData.school}
+                          onChange={(e) => setProfileData({...profileData, school: e.target.value})}
+                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                        />
+                      </div>
+                      
+                      <div className="flex gap-2 pt-3">
+                        <button 
+                          onClick={() => {
+                            setProfileData({
+                              name: studentData.name,
+                              email: profileData.email, // Keep email as it's not in studentData
+                              class: studentData.class,
+                              rollNumber: studentData.rollNumber,
+                              school: profileData.school // Keep school as it's not in studentData
+                            });
+                          }}
+                          className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[10px]"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          onClick={() => {
+                            // In a real app, this would save to a backend
+                            alert('Profile updated successfully!');
+                          }}
+                          className="px-1.5 py-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px]"
+                        >
+                          Save Changes
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Settings Navigation */}
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 relative overflow-hidden">
+                    {/* Geometric elements */}
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-full -mt-6 -mr-6"></div>
+                    <div className="absolute bottom-0 left-0 w-10 h-10 bg-indigo-500/5 rounded-full -mb-5 -ml-5"></div>
+                    <div className="relative z-10">
+                      <h3 className="text-xs font-bold text-gray-900 mb-3">Settings</h3>
+                      <div className="space-y-1.5">
+                        <button 
+                          onClick={() => console.log('Account settings clicked')}
+                          className="w-full text-left px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded font-medium text-[10px]"
+                        >
+                          Account
+                        </button>
+                        <button 
+                          onClick={() => console.log('Security settings clicked')}
+                          className="w-full text-left px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
+                        >
+                          Security
+                        </button>
+                        <button 
+                          onClick={() => console.log('Notifications settings clicked')}
+                          className="w-full text-left px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
+                        >
+                          Notifications
+                        </button>
+                        <button 
+                          onClick={() => console.log('Appearance settings clicked')}
+                          className="w-full text-left px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
+                        >
+                          Appearance
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 relative overflow-hidden">
+                    {/* Geometric elements */}
+                    <div className="absolute top-0 right-0 w-12 h-12 bg-purple-500/5 rounded-full -mt-6 -mr-6"></div>
+                    <div className="absolute bottom-0 left-0 w-10 h-10 bg-indigo-500/5 rounded-full -mb-5 -ml-5"></div>
+                    <div className="relative z-10">
+                      <h3 className="text-xs font-bold text-gray-900 mb-3">Actions</h3>
+                      <div className="space-y-2">
+                        <button 
+                          onClick={() => window.location.reload()}
+                          className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
+                        >
+                          <RefreshCw className="w-2 h-2" />
+                          Refresh Settings
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setProfileData({
+                              name: "Sarah Johnson",
+                              email: "sarah.johnson@student.school.edu",
+                              class: "Class 10-A",
+                              rollNumber: "24",
+                              school: "Greenwood High School"
+                            });
+                          }}
+                          className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
+                        >
+                          <Settings className="w-2 h-2" />
+                          Reset Settings
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Assignments Tab */}
-          {activeTab === 'assignments' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Assignments</h2>
-                <button className="text-sm text-blue-500">View All</button>
+          {/* Important Notices Tab */}
+          {activeTab === 'notices' && (
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-[11.5px] font-bold text-gray-900">Notice Board</h2>
               </div>
-              <div className="flex flex-col gap-4">
-                {assignments.map((assignment) => (
-                  <motion.div
-                    key={assignment.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="flex flex-col gap-2">
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col gap-1">
-                          <div className="text-lg font-semibold">{assignment.title}</div>
-                          <div className="text-sm text-gray-500">{assignment.date}</div>
+
+              {/* Notice Board - Two Panel Layout */}
+              <div className="bg-white rounded-lg shadow-xs border border-gray-100 overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-3 h-[500px]">
+                  {/* Left Panel - Notices List */}
+                  <div className="lg:col-span-1 border-r border-gray-200 flex flex-col">
+                    {/* Notices List */}
+                    <div className="flex-1 overflow-y-auto">
+                      <div className="p-1 space-y-1">
+                        {/* Notice Item 1 - Selected */}
+                        <div className="p-2.5 rounded-md border border-blue-300 bg-blue-50 cursor-pointer hover:bg-blue-100 transition-colors relative overflow-hidden">
+                          {/* Geometric elements */}
+                          <div className="absolute top-0 right-0 w-10 h-10 bg-blue-500/10 rounded-full -mt-5 -mr-5"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 bg-indigo-500/10 rounded-full -mb-4 -ml-4"></div>
+                          <div className="relative z-10">
+                            <h3 className="font-bold text-gray-900 text-[10.5px] mb-1">School Closure - Annual Maintenance</h3>
+                            <p className="text-[9.5px] text-gray-600 mb-1 truncate">The school will be closed on April 22-24, 2024 for annual maintenance work...</p>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9.5px] text-gray-500">Dr. Smith • Apr 18, 2024</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <span className="px-1.5 py-0.5 bg-red-100 text-red-800 text-[9.5px] font-medium rounded-full">Urgent</span>
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">All Students</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Notice Item 2 */}
+                        <div className="p-2.5 rounded-md border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
+                          {/* Geometric elements */}
+                          <div className="absolute top-0 right-0 w-10 h-10 bg-amber-500/10 rounded-full -mt-5 -mr-5"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 bg-orange-500/10 rounded-full -mb-4 -ml-4"></div>
+                          <div className="relative z-10">
+                            <h3 className="font-bold text-gray-900 text-[10.5px] mb-1">Parent-Teacher Meeting Schedule</h3>
+                            <p className="text-[9.5px] text-gray-600 mb-1 truncate">Parent-Teacher meetings will be held on April 25-26, 2024...</p>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9.5px] text-gray-500">Mr. Johnson • Apr 15, 2024</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[9.5px] font-medium rounded-full">Important</span>
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">Parents</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Notice Item 3 */}
+                        <div className="p-2.5 rounded-md border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
+                          {/* Geometric elements */}
+                          <div className="absolute top-0 right-0 w-10 h-10 bg-green-500/10 rounded-full -mt-5 -mr-5"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 bg-emerald-500/10 rounded-full -mb-4 -ml-4"></div>
+                          <div className="relative z-10">
+                            <h3 className="font-bold text-gray-900 text-[10.5px] mb-1">Science Fair Registration</h3>
+                            <p className="text-[9.5px] text-gray-600 mb-1 truncate">Registration for the annual Science Fair is now open...</p>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9.5px] text-gray-500">Ms. Williams • Apr 10, 2024</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <span className="px-1.5 py-0.5 bg-green-100 text-green-800 text-[9.5px] font-medium rounded-full">Opportunity</span>
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">Grades 9-12</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Notice Item 4 */}
+                        <div className="p-2.5 rounded-md border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
+                          {/* Geometric elements */}
+                          <div className="absolute top-0 right-0 w-10 h-10 bg-blue-500/10 rounded-full -mt-5 -mr-5"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 bg-indigo-500/10 rounded-full -mb-4 -ml-4"></div>
+                          <div className="relative z-10">
+                            <h3 className="font-bold text-gray-900 text-[10.5px] mb-1">New Library Hours</h3>
+                            <p className="text-[9.5px] text-gray-600 mb-1 truncate">The school library will extend its hours starting April 15, 2024...</p>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9.5px] text-gray-500">Mrs. Brown • Apr 5, 2024</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">Information</span>
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">All Students</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Notice Item 5 */}
+                        <div className="p-2.5 rounded-md border border-gray-200 bg-white cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden">
+                          {/* Geometric elements */}
+                          <div className="absolute top-0 right-0 w-10 h-10 bg-purple-500/10 rounded-full -mt-5 -mr-5"></div>
+                          <div className="absolute bottom-0 left-0 w-8 h-8 bg-violet-500/10 rounded-full -mb-4 -ml-4"></div>
+                          <div className="relative z-10">
+                            <h3 className="font-bold text-gray-900 text-[10.5px] mb-1">Sports Day Event</h3>
+                            <p className="text-[9.5px] text-gray-600 mb-1 truncate">Annual Sports Day will be held on May 15, 2024...</p>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9.5px] text-gray-500">Coach Davis • Apr 1, 2024</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-800 text-[9.5px] font-medium rounded-full">Event</span>
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">All Students</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
+                  </div>
+                  
+                  {/* Right Panel - Notice Details */}
+                  <div className="lg:col-span-2 flex flex-col">
+                    {/* Notice Details */}
+                    <div className="flex-1 overflow-y-auto p-5 relative overflow-hidden">
+                      {/* Geometric background elements */}
+                      <div className="absolute top-0 left-0 w-full h-full opacity-5">
+                        <div className="absolute top-10 right-10 w-32 h-32 bg-blue-500 rounded-full mix-blend-overlay"></div>
+                        <div className="absolute bottom-20 left-20 w-24 h-24 bg-purple-500 rounded-full mix-blend-overlay"></div>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-indigo-500 rounded-sm rotate-45 mix-blend-overlay"></div>
+                      </div>
+                      <div className="relative z-10 mb-5">
+                        <div className="flex items-start justify-between mb-3">
+                          <h3 className="text-lg font-bold text-gray-900">School Closure - Annual Maintenance</h3>
+                          <div className="flex gap-1.5">
+                            <button className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 transition-colors">
+                              <Printer className="w-3.5 h-3.5 text-gray-600" />
+                            </button>
+                            <button className="p-1.5 rounded-md border border-gray-300 hover:bg-gray-100 transition-colors">
+                              <Download className="w-3.5 h-3.5 text-gray-600" />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 mb-5 text-xs text-gray-600">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-[9.5px]">
+                              DS
+                            </div>
+                            <span className="text-[0.75rem]">Dr. Smith (Principal)</span>
+                          </div>
+                          <span>•</span>
+                          <span className="text-[0.75rem]">April 18, 2024</span>
+                          <span>•</span>
+                          <span className="px-1.5 py-0.5 bg-red-100 text-red-800 text-[9.5px] font-medium rounded-full">Urgent</span>
+                          <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9.5px] font-medium rounded-full">All Students</span>
+                        </div>
+                        
+                        <div className="prose max-w-none text-gray-700 mb-6">
+                          <p className="mb-3 text-[0.875rem]">Dear Students, Parents, and Staff,</p>
+                          <p className="mb-3 text-[0.875rem]">This is to inform you that the school will be closed for annual maintenance work from April 22nd to April 24th, 2024. During this period, all classes and school activities will be suspended.</p>
+                          <p className="mb-3 text-[0.875rem]">The maintenance work includes:</p>
+                          <ul className="list-disc pl-4 mb-3 space-y-1.5 text-[0.875rem]">
+                            <li>Repainting of classrooms and common areas</li>
+                            <li>Repair and maintenance of laboratory equipment</li>
+                            <li>Upgrading of electrical systems</li>
+                            <li>Landscaping and garden maintenance</li>
+                            <li>Cleaning and sanitization of all facilities</li>
+                          </ul>
+                          <p className="mb-3 text-[0.875rem]">We apologize for any inconvenience this may cause and appreciate your understanding as we work to improve our facilities for a better learning environment.</p>
+                          <p className="mb-3 text-[0.875rem]">Regular classes will resume on April 25th, 2024.</p>
+                          <p className="text-[0.875rem]">Thank you for your cooperation.</p>
+                        </div>
+                      </div>
+                      
+                      {/* Comments Section */}
+                      <div className="border-t border-gray-200 pt-5">
+                        <h4 className="text-lg font-bold text-gray-900 mb-3">Comments (3)</h4>
+                        
+                        <div className="space-y-3 mb-5">
+                          {/* Comment 1 */}
+                          <div className="flex gap-2.5 relative">
+                            {/* Geometric elements */}
+                            <div className="absolute top-0 right-0 w-8 h-8 bg-green-500/10 rounded-full -mt-4 -mr-4"></div>
+                            <div className="relative z-10">
+                              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-[9.5px] flex-shrink-0">
+                                JS
+                              </div>
+                              <div className="flex-1">
+                                <div className="bg-gray-100 rounded-md p-2.5">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <h5 className="font-medium text-gray-900 text-[0.75rem]">John Smith</h5>
+                                    <span className="text-[9.5px] text-gray-500">Apr 18, 2024 • 10:30 AM</span>
+                                  </div>
+                                  <p className="text-[0.75rem] text-gray-700">Thank you for the advance notice. Will the library be accessible during this period for essential research work?</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Comment 2 */}
+                          <div className="flex gap-2.5 relative">
+                            {/* Geometric elements */}
+                            <div className="absolute top-0 right-0 w-8 h-8 bg-purple-500/10 rounded-full -mt-4 -mr-4"></div>
+                            <div className="relative z-10">
+                              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white font-bold text-[9.5px] flex-shrink-0">
+                                MP
+                              </div>
+                              <div className="flex-1">
+                                <div className="bg-gray-100 rounded-md p-2.5">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <h5 className="font-medium text-gray-900 text-[0.75rem]">Mary Parker</h5>
+                                    <span className="text-[9.5px] text-gray-500">Apr 18, 2024 • 11:15 AM</span>
+                                  </div>
+                                  <p className="text-[0.75rem] text-gray-700">Will the after-school programs be rescheduled or adjusted accordingly?</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Comment 3 */}
+                          <div className="flex gap-2.5 relative">
+                            {/* Geometric elements */}
+                            <div className="absolute top-0 right-0 w-8 h-8 bg-blue-500/10 rounded-full -mt-4 -mr-4"></div>
+                            <div className="relative z-10">
+                              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-[9.5px] flex-shrink-0">
+                                DS
+                              </div>
+                              <div className="flex-1">
+                                <div className="bg-blue-50 rounded-md p-2.5 border border-blue-200">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <h5 className="font-medium text-gray-900 text-[0.75rem]">Dr. Smith</h5>
+                                    <span className="text-[9.5px] text-gray-500">Apr 18, 2024 • 2:45 PM</span>
+                                  </div>
+                                  <p className="text-[0.75rem] text-gray-700">@John Smith: The library will be closed during the maintenance period. However, we will arrange for essential research materials to be available online. @Mary Parker: After-school programs will be rescheduled and details will be shared next week.</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Add Comment */}
+                        <div className="flex gap-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+                            SJ
+                          </div>
+                          <div className="flex-1">
+                            <div className="border border-gray-300 rounded-lg p-3">
+                              <textarea 
+                                className="w-full h-16 text-[0.875rem] border-none focus:ring-0 p-0 resize-none" 
+                                placeholder="Add a comment..."
+                              ></textarea>
+                              <div className="flex justify-between items-center mt-2">
+                                <div className="text-[0.75rem] text-gray-500">Press Enter to send</div>
+                                <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all text-[0.875rem] font-medium">
+                                  Post Comment
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </motion.div>
-          )}
-
-          {/* Reports Tab */}
-          {activeTab === 'reports' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Reports</h2>
-                <button className="text-sm text-blue-500">View All</button>
-              </div>
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <h3 className="text-lg font-semibold mb-2">Performance Report</h3>
-                <p className="text-gray-600">Detailed performance analysis and statistics.</p>
-              </div>
-            </motion.div>
+            </div>
           )}
 
           {/* Messages Tab */}
           {activeTab === 'messages' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+            <div>
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Messages</h2>
-                <button className="text-sm text-blue-500">View All</button>
+                <h2 className="text-sm font-bold text-gray-900">Messages</h2>
               </div>
-              <div className="flex flex-col gap-4">
-                {messages.map((message) => (
-                  <motion.div
-                    key={message.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="flex flex-col gap-2">
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col gap-1">
-                          <div className="text-lg font-semibold">{message.title}</div>
-                          <div className="text-sm text-gray-500">{message.date}</div>
+
+              {/* Messages List */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                  <h3 className="text-sm font-bold text-gray-900 mb-4">Conversations</h3>
+                  <div className="space-y-3">
+                    {messages.map((message) => (
+                      <div 
+                        key={message.id} 
+                        className="p-3 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-300 cursor-pointer bg-gray-50"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                            {message.from.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <h4 className="font-medium text-gray-900 truncate">{message.from}</h4>
+                              {message.unread && (
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-600 truncate">{message.title}</p>
+                            <p className="text-xs text-gray-500 mt-1">{message.date}</p>
+                          </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
+                      MD
                     </div>
-                  </motion.div>
-                ))}
+                    <div>
+                      <h3 className="font-bold text-gray-900">Mr. James Dean</h3>
+                      <p className="text-sm text-gray-500">Mathematics Teacher</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4 mb-6">
+                    <div className="flex justify-start">
+                      <div className="max-w-xs lg:max-w-md bg-gray-100 rounded-2xl rounded-bl-none p-4">
+                        <p className="text-gray-800">Hi Sarah, I wanted to discuss your progress in mathematics. You're doing great!</p>
+                        <p className="text-xs text-gray-500 mt-2">10:30 AM</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-end">
+                      <div className="max-w-xs lg:max-w-md bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl rounded-br-none p-4">
+                        <p>Thank you, Mr. Dean! I'm really enjoying the calculus topics we're covering.</p>
+                        <p className="text-xs text-blue-100 mt-2">10:32 AM</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-start">
+                      <div className="max-w-xs lg:max-w-md bg-gray-100 rounded-2xl rounded-bl-none p-4">
+                        <p className="text-gray-800">That's wonderful to hear! Keep up the excellent work. Let me know if you need any additional resources.</p>
+                        <p className="text-xs text-gray-500 mt-2">10:35 AM</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="text"
+                      placeholder="Type your message..."
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all">
+                      Send
+                    </button>
+                  </div>
+                </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
-          {/* Achievements Tab */}
-          {activeTab === 'achievements' && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Achievements</h2>
-                <button className="text-sm text-blue-500">View All</button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {achievements.map((achievement) => (
-                  <motion.div
-                    key={achievement.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <div className="bg-white rounded-lg shadow-md p-4">
-                      <h3 className="text-lg font-semibold">{achievement.title}</h3>
-                      <p className="text-gray-600">{achievement.date}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div>
+              // ... existing code ...
+            </div>
           )}
         </div>
       </div>
       
-      <style jsx>{`
-        @keyframes pulse {
-          0% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.7); }
-          70% { box-shadow: 0 0 0 10px rgba(72, 187, 120, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0); }
-        }
-      `}</style>
-
-      {/* Assignment Submission Modal */}
-      {showAssignmentModal && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-        >
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl w-full max-w-md"
-          >
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Submit Assignment</h3>
-                <button 
-                  onClick={closeAssignmentModal}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6">
-              {selectedAssignment && (
-                <div className="mb-2">
-                  <div className="mb-2">
-                    <h4 className="font-semibold text-gray-900 text-lg">{selectedAssignment.title}</h4>
-                    <p className="text-gray-500">{selectedAssignment.subject}</p>
-                  </div>
-                  
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
-                    <div className="px-4 py-2 bg-gray-100 rounded-xl">
-                      <span className="text-gray-900">{selectedAssignment.dueDisplay}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Instructions</label>
-                    <div className="p-4 bg-gray-50 rounded-xl text-gray-700">
-                      <p>Please complete the assignment and upload your solution file below. Make sure to follow all instructions carefully.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Solution</label>
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg className="w-8 h-8 mb-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                          <p className="text-xs text-gray-500">PDF, DOC, or DOCX (MAX. 10MB)</p>
-                        </div>
-                        <input type="file" className="hidden" />
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={closeAssignmentModal}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all font-medium"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={submitAssignment}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all font-medium"
-                >
-                  Submit Assignment
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-
-      {/* Test Detail Drawer */}
-      {showTestDetailDrawer && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-end z-50"
-        >
-          <motion.div 
-            initial={{ x: 300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            className="bg-white h-full w-full max-w-md shadow-xl"
-          >
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Test Details</h3>
-                <button 
-                  onClick={closeTestDetailDrawer}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            <div className="p-6 overflow-y-auto h-[calc(100%-73px)]">
-              {selectedTest && (
-                <div>
-                  <div className="mb-2">
-                    <h4 className="text-xl font-bold text-gray-900 mb-2">{selectedTest.topic}</h4>
-                    <p className="text-gray-500">{selectedTest.subject}</p>
-                  </div>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <h5 className="font-semibold text-gray-900 mb-3">Test Information</h5>
-                      <div className="bg-gray-50 rounded-xl p-4 space-y-1">
-                        <div className="flex justify-between">
-                          <span className="text-sm text-gray-500">Type</span>
-                          <span className="text-sm font-medium text-gray-900">{selectedTest.type}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm text-gray-500">Date</span>
-                          <span className="text-sm font-medium text-gray-900">{selectedTest.dateDisplay}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm text-gray-500">Time</span>
-                          <span className="text-sm font-medium text-gray-900">{selectedTest.time}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm text-gray-500">Duration</span>
-                          <span className="text-sm font-medium text-gray-900">{selectedTest.duration}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h5 className="font-semibold text-gray-900 mb-3">Syllabus</h5>
-                      <div className="bg-gray-50 rounded-xl p-4">
-                        <ul className="list-disc pl-5 space-y-2 text-gray-700">
-                          <li>Chapter 1: Introduction to Algebra</li>
-                          <li>Chapter 2: Linear Equations</li>
-                          <li>Chapter 3: Quadratic Equations</li>
-                          <li>Chapter 4: Trigonometric Functions</li>
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h5 className="font-semibold text-gray-900 mb-3">Instructions</h5>
-                      <div className="bg-gray-50 rounded-xl p-4 text-gray-700 space-y-2">
-                        <p>1. This test consists of 20 multiple choice questions.</p>
-                        <p>2. You have {selectedTest.duration} to complete the test.</p>
-                        <p>3. No calculators or other aids are permitted.</p>
-                        <p>4. Please arrive 15 minutes before the scheduled time.</p>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h5 className="font-semibold text-gray-900 mb-3">Preparation Tips</h5>
-                      <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                        <ul className="list-disc pl-5 space-y-2 text-blue-800">
-                          <li>Review all class notes and textbook chapters</li>
-                          <li>Practice with previous year question papers</li>
-                          <li>Focus on problem-solving techniques</li>
-                          <li>Get adequate sleep before the test</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-
-      {/* Avatar Change Modal */}
+      {/* Avatar Modal */}
       {showAvatarModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-96 overflow-y-auto">
-            <div className="p-6 border-b border-gray-100">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Change Avatar</h3>
-                <button 
-                  onClick={() => setShowAvatarModal(false)}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900">Change Avatar</h3>
+              <button 
+                onClick={() => setShowAvatarModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
             </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
-                  'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
-                  'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
-                  'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-                  'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia',
-                  'https://api.dicebear.com/7.x/avataaars/svg?seed=David'
-                ].map((avatar, index) => (
-                  <div 
-                    key={index} 
-                    className="cursor-pointer hover:scale-105 transition-transform"
-                    onClick={() => {
-                      setStudentAvatar(avatar);
-                      setShowAvatarModal(false);
-                    }}
-                  >
-                    <img 
-                      src={avatar} 
-                      alt={`Avatar ${index + 1}`} 
-                      className="w-16 h-16 rounded-full object-cover mx-auto"
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-500">Click on any avatar to select it</p>
-              </div>
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Mia',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=David',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex'
+              ].map((avatar, index) => (
+                <div 
+                  key={index} 
+                  className="cursor-pointer hover:scale-105 transition-transform"
+                  onClick={() => {
+                    setStudentAvatar(avatar);
+                    setShowAvatarModal(false);
+                  }}
+                >
+                  <img 
+                    src={avatar} 
+                    alt={`Avatar ${index + 1}`} 
+                    className="w-16 h-16 rounded-full object-cover mx-auto"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-500">Click on any avatar to select it</p>
             </div>
           </div>
         </div>

@@ -836,7 +836,7 @@ const TeacherDashboard = () => {
           {/* Alerts Tab */}
           {activeTab === 'alerts' && (
             <div style={{padding: '18px'}}>
-              <h2 style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '24px'}}>Alert Management & Notifications</h2>
+              <h2 style={{fontSize: '14px', fontWeight: 'bold', marginBottom: '6px'}}>Alert Management & Notifications</h2>
               
               {/* Alert Summary Cards */}
               <div style={{display: 'flex', gap: '13px', marginBottom: '16px'}}>
@@ -942,9 +942,7 @@ const TeacherDashboard = () => {
                   </div>
                 </div>
                 
-                <div style={{textAlign: 'center', marginTop: '18px'}}>
-                  <button style={{padding: '8px 18px', backgroundColor: 'white', border: '1px solid #d1d5db', color: '#374151', borderRadius: '4px', cursor: 'pointer', fontWeight: '500'}}>View All Alerts & Notifications</button>
-                </div>
+
               </div>
             </div>
           )}

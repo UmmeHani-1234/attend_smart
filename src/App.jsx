@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './i18n';
+import { ThemeProvider } from './components/ThemeContext';
 import LoginPage from './components/LoginPage';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
 import StudentDashboard from './components/teacher/StudentDashboard';
@@ -37,8 +38,10 @@ export default function App() {
   };
 
   return (
-    <div>
-      {isLoggedIn ? renderDashboard() : <LoginPage onLogin={handleLogin} />}
-    </div>
+    <ThemeProvider>
+      <div>
+        {isLoggedIn ? renderDashboard() : <LoginPage onLogin={handleLogin} />}
+      </div>
+    </ThemeProvider>
   );
 }

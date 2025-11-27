@@ -100,9 +100,9 @@ const Dashboardai = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-xl flex flex-col">
+      <div className="w-64 bg-white shadow-xl flex flex-col h-screen">
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
@@ -114,7 +114,7 @@ const Dashboardai = () => {
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Home' },
             { id: 'attendance', icon: UserCheck, label: 'Attendance' },
@@ -152,9 +152,9 @@ const Dashboardai = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-screen">
         {/* Header */}
-        <div className="bg-white border-b border-gray-100 px-8 py-4 shadow-sm">
+        <div className="flex-shrink-0 bg-white border-b border-gray-100 px-8 py-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 flex-1">
               <div className="relative flex-1 max-w-md">
@@ -194,7 +194,7 @@ const Dashboardai = () => {
         </div>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="p-8 flex-grow overflow-y-auto overscroll-contain">
           {/* Welcome Banner */}
           <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl p-8 mb-8 text-white shadow-xl">
             <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
