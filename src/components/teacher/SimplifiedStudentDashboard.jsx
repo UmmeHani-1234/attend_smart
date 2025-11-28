@@ -84,6 +84,7 @@ const SimplifiedStudentDashboard = () => {
         <nav className="flex-1 p-2 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
+            { id: 'classes', icon: BookOpen, label: 'My Classes' },
             { id: 'assignments', icon: FileText, label: 'Assignments' },
             { id: 'grades', icon: Award, label: 'Grades' },
             { id: 'notices', icon: AlertCircle, label: 'Important Notices' },
@@ -425,7 +426,8 @@ const SimplifiedStudentDashboard = () => {
                               </span>
                             </td>
                             <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-900">
-                              <button className="text-indigo-600 hover:text-indigo-900 mr-2">View</button>
+                              
+                               <button className="text-indigo-600 hover:text-indigo-900 mr-2">View</button>
                               <button className="text-indigo-600 hover:text-indigo-900">Submit</button>
                             </td>
                           </tr>
@@ -604,75 +606,24 @@ const SimplifiedStudentDashboard = () => {
                   <h3 className="font-bold text-gray-900 text-[10px] mb-1">Science Fair Registration</h3>
                   <p className="text-gray-600 text-[9px] mb-1">Registration for the annual Science Fair is now open. All students from grades 9-12 are encouraged to participate.</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Ms. Williams • Apr 10, 2024</span>
+                    <span className="text-gray-500 text-[9px]">Science Department • Mar 15, 2024</span>
                     <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-indigo-100 text-indigo-800 text-[9px] font-medium rounded-full">Opportunity</span>
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Grades 9-12</span>
+                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Event</span>
+                      <span className="px-1 py-0.5 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Science</span>
                     </div>
                   </div>
                 </div>
-                
                 <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Mathematics Olympiad Results</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Congratulations to our students who participated in the State Mathematics Olympiad. Outstanding results were achieved.</p>
+                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Library Closure Notice</h3>
+                  <p className="text-gray-600 text-[9px] mb-1">The school library will be closed for maintenance from April 18th to April 20th. We apologize for any inconvenience.</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Dr. Sharma • Apr 12, 2024</span>
+                    <span className="text-gray-500 text-[9px]">Library Staff • Mar 12, 2024</span>
                     <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Achievement</span>
-                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Mathematics</span>
+                      <span className="px-1 py-0.5 bg-yellow-100 text-yellow-800 text-[9px] font-medium rounded-full">Maintenance</span>
+                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Library</span>
                     </div>
                   </div>
                 </div>
-                
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Summer Sports Camp Registration</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Registration for the annual Summer Sports Camp is now open for all students. Various sports activities will be offered.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Coach Rajiv • Apr 8, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-violet-100 text-violet-800 text-[9px] font-medium rounded-full">Sports</span>
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Summer Program</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* New Notices */}
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Library Book Return Deadline</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Reminder: All library books must be returned by April 25th. Late fees will apply for overdue books.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Librarian • Apr 15, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-red-100 text-red-800 text-[9px] font-medium rounded-full">Important</span>
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Library</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Parent-Teacher Conference Schedule</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Parent-Teacher conferences will be held on May 1st and 2nd. Please book your slot through the parent portal.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Administration • Apr 14, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-indigo-100 text-indigo-800 text-[9px] font-medium rounded-full">Meeting</span>
-                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Parents</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Computer Lab Maintenance</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">The computer lab will be closed for maintenance on April 20th from 9 AM to 5 PM. We apologize for any inconvenience.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">IT Department • Apr 13, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-amber-100 text-amber-800 text-[9px] font-medium rounded-full">Maintenance</span>
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Computers</span>
-                    </div>
-                  </div>
-                </div>
-                
                 <div className="p-2">
                   <h3 className="font-bold text-gray-900 text-[10px] mb-1">Art Exhibition Inauguration</h3>
                   <p className="text-gray-600 text-[9px] mb-1">Join us for the inauguration of our annual student art exhibition on April 22nd at 3 PM in the school gallery.</p>
@@ -683,6 +634,358 @@ const SimplifiedStudentDashboard = () => {
                       <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Art</span>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'classes' && (
+            <div>
+              {/* Banner for Classes Section */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-bold text-white mb-1.5">My Classes</h2>
+                    <p className="text-xs text-blue-100">View all your enrolled classes and subjects</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <BookOpen className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Classes Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {/* Mathematics Class Card */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-blue-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-indigo-500/10 rounded-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=math&backgroundColor=3b82f6&radius=50" alt="Teacher" className="w-6 h-6 rounded-full" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-[11px]">Mathematics</h3>
+                          <p className="text-gray-600 text-[10px]">Class 10-A</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Active</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Teacher:</span> Mr. Johnson
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Period:</span> 2nd
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Students:</span> 32
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Room:</span> 204
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-100">
+                      <button 
+                        onClick={() => alert('Opening Mathematics class details...')}
+                        className="w-full py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-medium rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all"
+                      >
+                        View Class Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Science Class Card */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-green-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-emerald-500/10 rounded-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=science&backgroundColor=10b981&radius=50" alt="Teacher" className="w-6 h-6 rounded-full" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-[11px]">Science</h3>
+                          <p className="text-gray-600 text-[10px]">Class 10-A</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Active</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Teacher:</span> Dr. Smith
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Period:</span> 3rd
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Students:</span> 30
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Room:</span> 301
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-100">
+                      <button 
+                        onClick={() => alert('Opening Science class details...')}
+                        className="w-full py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-medium rounded-md hover:from-green-600 hover:to-emerald-700 transition-all"
+                      >
+                        View Class Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* English Class Card */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-purple-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-violet-500/10 rounded-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
+                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=english&backgroundColor=8b5cf6&radius=50" alt="Teacher" className="w-6 h-6 rounded-full" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-[11px]">English</h3>
+                          <p className="text-gray-600 text-[10px]">Class 10-A</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Active</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Teacher:</span> Ms. Williams
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Period:</span> 1st
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Students:</span> 31
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Room:</span> 105
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-100">
+                      <button 
+                        onClick={() => alert('Opening English class details...')}
+                        className="w-full py-1.5 bg-gradient-to-r from-purple-500 to-violet-600 text-white text-[10px] font-medium rounded-md hover:from-purple-600 hover:to-violet-700 transition-all"
+                      >
+                        View Class Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* History Class Card */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-amber-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-orange-500/10 rounded-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=history&backgroundColor=f59e0b&radius=50" alt="Teacher" className="w-6 h-6 rounded-full" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-[11px]">History</h3>
+                          <p className="text-gray-600 text-[10px]">Class 10-A</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Active</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Teacher:</span> Mr. Brown
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Period:</span> 4th
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Students:</span> 29
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Room:</span> 208
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-100">
+                      <button 
+                        onClick={() => alert('Opening History class details...')}
+                        className="w-full py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-[10px] font-medium rounded-md hover:from-amber-600 hover:to-orange-700 transition-all"
+                      >
+                        View Class Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Geography Class Card */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-cyan-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-teal-500/10 rounded-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center">
+                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=geography&backgroundColor=06b6d4&radius=50" alt="Teacher" className="w-6 h-6 rounded-full" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-[11px]">Geography</h3>
+                          <p className="text-gray-600 text-[10px]">Class 10-A</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Active</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Teacher:</span> Mrs. Davis
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Period:</span> 5th
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Students:</span> 30
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Room:</span> 305
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-100">
+                      <button 
+                        onClick={() => alert('Opening Geography class details...')}
+                        className="w-full py-1.5 bg-gradient-to-r from-cyan-500 to-teal-600 text-white text-[10px] font-medium rounded-md hover:from-cyan-600 hover:to-teal-700 transition-all"
+                      >
+                        View Class Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Art Class Card */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-pink-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-rose-500/10 rounded-full"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
+                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=art&backgroundColor=ec4899&radius=50" alt="Teacher" className="w-6 h-6 rounded-full" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-[11px]">Art</h3>
+                          <p className="text-gray-600 text-[10px]">Class 10-A</p>
+                        </div>
+                      </div>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Active</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Teacher:</span> Ms. Taylor
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Period:</span> 6th
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Students:</span> 28
+                      </div>
+                      <div className="text-[10px] text-gray-600">
+                        <span className="font-medium">Room:</span> Art Hall
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-100">
+                      <button 
+                        onClick={() => alert('Opening Art class details...')}
+                        className="w-full py-1.5 bg-gradient-to-r from-pink-500 to-rose-600 text-white text-[10px] font-medium rounded-md hover:from-pink-600 hover:to-rose-700 transition-all"
+                      >
+                        View Class Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Class Schedule Summary */}
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4">
+                <h3 className="font-bold text-gray-900 text-[11px] mb-3">Weekly Class Schedule</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase">Period</th>
+                        <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase">Monday</th>
+                        <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase">Tuesday</th>
+                        <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase">Wednesday</th>
+                        <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase">Thursday</th>
+                        <th className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase">Friday</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {[
+                        { period: '1st', mon: 'English', tue: 'Mathematics', wed: 'Science', thu: 'History', fri: 'Geography' },
+                        { period: '2nd', mon: 'Mathematics', tue: 'Science', wed: 'English', thu: 'Geography', fri: 'Art' },
+                        { period: '3rd', mon: 'Science', tue: 'History', wed: 'Mathematics', thu: 'English', fri: 'History' },
+                        { period: '4th', mon: 'History', tue: 'Geography', wed: 'Art', thu: 'Mathematics', fri: 'English' },
+                        { period: '5th', mon: 'Geography', tue: 'English', wed: 'History', thu: 'Art', fri: 'Mathematics' },
+                        { period: '6th', mon: 'Art', tue: 'Art', wed: 'Geography', thu: 'Science', fri: 'Science' },
+                      ].map((row, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{row.period}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-700">{row.mon}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-700">{row.tue}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-700">{row.wed}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-700">{row.thu}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-700">{row.fri}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
