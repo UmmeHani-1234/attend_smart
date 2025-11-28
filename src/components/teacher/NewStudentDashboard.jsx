@@ -252,6 +252,10 @@ const NewStudentDashboard = () => {
                       whileHover={{ y: -1 }}
                       className={`bg-gradient-to-br ${stat.color} rounded-lg p-2 shadow-sm border border-white/10 backdrop-blur-sm hover:shadow-md transition-all duration-300 relative overflow-hidden transform transition-transform duration-300 hover:scale-105`}
                     >
+                      {/* Geometric Background Elements */}
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mt-8 -mr-8"></div>
+                      <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full -mb-10 -ml-10"></div>
+                      <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-white/5 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
                       <div className="flex items-center justify-between mb-1 relative z-10">
                         <div className="w-6 h-6 bg-white/20 rounded-md flex items-center justify-center border border-white/20">
                           <IconComponent className="w-3 h-3 text-white" />
@@ -269,11 +273,16 @@ const NewStudentDashboard = () => {
               {/* Recent Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
                 {/* Upcoming Assignments */}
-                <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-[10px] font-bold text-gray-900">Upcoming Assignments</h3>
-                    <button className="text-[9px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
-                  </div>
+                <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 relative overflow-hidden">
+                  {/* Geometric Background Elements */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/5 rounded-full -mt-8 -mr-8"></div>
+                  <div className="absolute bottom-0 left-0 w-20 h-20 bg-gray-500/5 rounded-full -mb-10 -ml-10"></div>
+                  <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gray-500/5 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-[10px] font-bold text-gray-900">Upcoming Assignments</h3>
+                      <button className="text-[9px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                    </div>
                   <div className="space-y-2">
                     {assignments.slice(0, 3).map((assignment) => (
                       <div key={assignment.id} className="flex items-center gap-2 p-2 rounded-md border border-gray-100 hover:bg-gray-50 transition-colors">
@@ -486,7 +495,12 @@ const NewStudentDashboard = () => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100 transform transition-transform duration-300 hover:scale-[1.02]">
+              <div className="bg-white rounded-md p-2 shadow-sm border border-gray-100 transform transition-transform duration-300 hover:scale-[1.02] relative overflow-hidden">
+                {/* Geometric Background Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gray-500/5 rounded-full -mt-16 -mr-16"></div>
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-gray-500/5 rounded-full -mb-20 -ml-20"></div>
+                <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-gray-500/5 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
+                <div className="relative z-10">
                 <div className="overflow-x-auto">
                   <table className="w-full text-[9px]">
                     <thead>
@@ -520,6 +534,7 @@ const NewStudentDashboard = () => {
                   </table>
                 </div>
               </div>
+            </div>
             </div>
           )}
 
@@ -669,7 +684,12 @@ const NewStudentDashboard = () => {
                     };
                     
                     return (
-                      <div key={index} className="border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow transform transition-transform duration-300 hover:scale-105">
+                      <div key={index} className="border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow transform transition-transform duration-300 hover:scale-105 relative overflow-hidden">
+                        {/* Geometric Background Elements */}
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-gray-500/5 rounded-full -mt-8 -mr-8"></div>
+                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-gray-500/5 rounded-full -mb-10 -ml-10"></div>
+                        <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gray-500/5 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
+                        <div className="relative z-10">
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <h4 className="text-[10px] font-bold text-gray-900">{grade.subject}</h4>
@@ -709,7 +729,12 @@ const NewStudentDashboard = () => {
               </div>
 
               {/* Detailed Grade Report */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 transform transition-transform duration-300 hover:scale-[1.02]">
+              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 transform transition-transform duration-300 hover:scale-[1.02] relative overflow-hidden">
+                {/* Geometric Background Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gray-500/5 rounded-full -mt-16 -mr-16"></div>
+                <div className="absolute bottom-0 left-0 w-40 h-40 bg-gray-500/5 rounded-full -mb-20 -ml-20"></div>
+                <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-gray-500/5 transform -translate-x-1/2 -translate-y-1/2 rotate-45"></div>
+                <div className="relative z-10">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-[10px] font-bold text-gray-900">Detailed Grade Report</h3>
                   <button className="text-[9px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
@@ -758,6 +783,7 @@ const NewStudentDashboard = () => {
                   </table>
                 </div>
               </div>
+            </div>
             </div>
           )}
 
