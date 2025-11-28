@@ -6214,146 +6214,12 @@ const StudentDashboard = () => {
           </motion.div>
         )}
       </AnimatePresence>
-                          value={profileData.email}
-                          onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
-                        <input 
-                          type="text" 
-                          value={profileData.class}
-                          onChange={(e) => setProfileData({...profileData, class: e.target.value})}
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Roll Number</label>
-                        <input 
-                          type="text" 
-                          value={profileData.rollNumber}
-                          onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-[10px] font-medium text-gray-700 mb-1.5">School</label>
-                        <input 
-                          type="text" 
-                          value={profileData.school}
-                          onChange={(e) => setProfileData({...profileData, school: e.target.value})}
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
-                        />
-                      </div>
-                      
-                      <div className="flex gap-2 pt-3">
-                        <button 
-                          onClick={() => {
-                            setProfileData({
-                              name: studentData.name,
-                              email: profileData.email, // Keep email as it's not in studentData
-                              class: studentData.class,
-                              rollNumber: studentData.rollNumber,
-                              school: profileData.school // Keep school as it's not in studentData
-                            });
-                          }}
-                          className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[10px]"
-                        >
-                          Cancel
-                        </button>
-                        <button 
-                          onClick={() => {
-                            // In a real app, this would save to a backend
-                            alert('Profile updated successfully!');
-                          }}
-                          className="px-1.5 py-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px]"
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Settings Navigation */}
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 relative overflow-hidden">
-                    {/* Geometric elements */}
-                    <div className="absolute top-0 right-0 w-12 h-12 bg-blue-500/5 rounded-full -mt-6 -mr-6"></div>
-                    <div className="absolute bottom-0 left-0 w-10 h-10 bg-indigo-500/5 rounded-full -mb-5 -ml-5"></div>
-                    <div className="relative z-10">
-                      <h3 className="text-xs font-bold text-gray-900 mb-3">Settings</h3>
-                      <div className="space-y-1.5">
-                        <button 
-                          onClick={() => console.log('Account settings clicked')}
-                          className="w-full text-left px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded font-medium text-[10px]"
-                        >
-                          Account
-                        </button>
-                        <button 
-                          onClick={() => console.log('Security settings clicked')}
-                          className="w-full text-left px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                        >
-                          Security
-                        </button>
-                        <button 
-                          onClick={() => console.log('Notifications settings clicked')}
-                          className="w-full text-left px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                        >
-                          Notifications
-                        </button>
-                        <button 
-                          onClick={() => console.log('Appearance settings clicked')}
-                          className="w-full text-left px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                        >
-                          Appearance
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 relative overflow-hidden">
-                    {/* Geometric elements */}
-                    <div className="absolute top-0 right-0 w-12 h-12 bg-purple-500/5 rounded-full -mt-6 -mr-6"></div>
-                    <div className="absolute bottom-0 left-0 w-10 h-10 bg-indigo-500/5 rounded-full -mb-5 -ml-5"></div>
-                    <div className="relative z-10">
-                      <h3 className="text-xs font-bold text-gray-900 mb-3">Actions</h3>
-                      <div className="space-y-2">
-                        <button 
-                          onClick={() => window.location.reload()}
-                          className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                        >
-                          <RefreshCw className="w-2 h-2" />
-                          Refresh Settings
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setProfileData({
-                              name: "Sarah Johnson",
-                              email: "sarah.johnson@student.school.edu",
-                              class: "Class 10-A",
-                              rollNumber: "24",
-                              school: "Greenwood High School"
-                            });
-                          }}
-                          className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                        >
-                          <Settings className="w-2 h-2" />
-                          Reset Settings
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+    </div>
+  </div>
+</div>
+)}
 
-          {/* Important Notices Tab */}
+{/* Important Notices Tab */}
           {activeTab === 'notices' && (
             <div>
               <div className="flex justify-between items-center mb-3">
@@ -6698,11 +6564,176 @@ const StudentDashboard = () => {
           {/* Settings Tab */}
           {activeTab === 'settings' && (
             <div>
-              // ... existing code ...
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-sm font-bold text-gray-900">Settings</h2>
+              </div>
+
+              {/* Profile Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Profile Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <img 
+                          src={studentAvatar} 
+                          alt="Student Avatar" 
+                          className="w-10 h-10 rounded-full object-cover shadow-md border-2 border-white/30 cursor-pointer"
+                          onClick={() => setShowAvatarModal(true)}
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">{profileData.name}</p>
+                        <p className="text-[10px] text-gray-500">{profileData.email}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <User className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Class</p>
+                        <p className="text-[10px] text-gray-500">{profileData.class}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <BookOpen className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Roll Number</p>
+                        <p className="text-[10px] text-gray-500">{profileData.rollNumber}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <School className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">School</p>
+                        <p className="text-[10px] text-gray-500">{profileData.school}</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notifications Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Notifications Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bell className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Email Notifications</p>
+                        <p className="text-[10px] text-gray-500">Receive email notifications for important updates</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" defaultChecked />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bell className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">SMS Notifications</p>
+                        <p className="text-[10px] text-gray-500">Receive SMS notifications for important updates</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bell className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Push Notifications</p>
+                        <p className="text-[10px] text-gray-500">Receive push notifications for important updates</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" defaultChecked />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Security Settings */}
+              <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 mb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Security Settings</h3>
+                  <button className="text-[10px] text-blue-600 hover:text-blue-700 font-medium">Edit</button>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Lock className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Password</p>
+                        <p className="text-[10px] text-gray-500">Change your account password</p>
+                      </div>
+                    </div>
+                    <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Lock className="w-2.5 h-2.5 text-gray-500" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-[10px]">Two-Factor Authentication</p>
+                        <p className="text-[10px] text-gray-500">Enable two-factor authentication for added security</p>
+                      </div>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" value="" className="sr-only peer" />
+                      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
-        </div>
-      </div>
       
       {/* Avatar Modal */}
       {showAvatarModal && (
@@ -6748,7 +6779,6 @@ const StudentDashboard = () => {
           </div>
         </div>
       )}
-    </div>
   );
 }
 

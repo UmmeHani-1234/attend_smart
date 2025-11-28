@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Users, UserCheck, BookOpen, Monitor, ArrowLeft, School, Building, User, LogOut } from 'lucide-react';
 import TeacherDashboard from './teacher/TeacherDashboard';
-import StudentDashboard from './teacher/StudentDashboard';
+import NewStudentDashboard from './teacher/NewStudentDashboard';
 import UltraModernHeader from './UltraModernHeader';
 
 const CommonDashboard = ({ onLogout, userType }) => {
@@ -35,7 +35,7 @@ const CommonDashboard = ({ onLogout, userType }) => {
       case 'teacher':
         return <TeacherDashboard />;
       case 'student':
-        return <StudentDashboard />;
+        return <NewStudentDashboard />;
       case 'admin':
         return (
           <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
