@@ -47,12 +47,18 @@ const SimplifiedStudentDashboard = () => {
 
   // Sample avatars
   const sampleAvatars = [
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=4f46e5&radius=50`,
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=10b981&radius=50`,
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=John&backgroundColor=ef4444&radius=50`,
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=Mia&backgroundColor=f59e0b&radius=50`,
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=David&backgroundColor=8b5cf6&radius=50`,
-    `https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=ec4899&radius=50`
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Emma&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=John&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Mia&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=David&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Michael&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=James&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Olivia&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=William&backgroundColor=ffffff&radius=50`,
+    `https://api.dicebear.com/7.x/avataaars/svg?seed=Ava&backgroundColor=ffffff&radius=50`
   ];
 
   const [studentAvatar, setStudentAvatar] = useState(sampleAvatars[0]);
@@ -1402,7 +1408,7 @@ const SimplifiedStudentDashboard = () => {
                 <X className="w-4.5 h-4.5 text-gray-500" />
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-3.5">
+            <div className="grid grid-cols-4 gap-3.5">
               {sampleAvatars.map((avatar, index) => (
                 <div 
                   key={index} 
