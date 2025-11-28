@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Home, FileText, Award, AlertCircle, Settings, User, LogOut, Users, CheckCircle, Clock, TrendingUp, X, BookOpen, Calculator, FlaskConical, PenTool, Globe, Music, Palette, Edit, RefreshCw } from 'lucide-react';
+import { Home, FileText, Award, AlertCircle, Settings, User, LogOut, Users, CheckCircle, Clock, TrendingUp, X, BookOpen, Calculator, FlaskConical, PenTool, Globe, Music, Palette, Edit, RefreshCw, UserCheck } from 'lucide-react';
 import UltraModernHeader from '../UltraModernHeader';
+
 
 const SimplifiedStudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -85,6 +86,7 @@ const SimplifiedStudentDashboard = () => {
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
             { id: 'classes', icon: BookOpen, label: 'My Classes' },
+            { id: 'attendance', icon: UserCheck, label: 'Attendance' },
             { id: 'assignments', icon: FileText, label: 'Assignments' },
             { id: 'grades', icon: Award, label: 'Grades' },
             { id: 'notices', icon: AlertCircle, label: 'Important Notices' },
@@ -523,7 +525,6 @@ const SimplifiedStudentDashboard = () => {
                         <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Grade</th>
                         <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Performance</th>
                         <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -584,10 +585,6 @@ const SimplifiedStudentDashboard = () => {
                             <td className="px-2.5 py-1.5 whitespace-nowrap">
                               <div className="text-[10px] text-gray-500">{subject.teacher}</div>
                             </td>
-                            <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] font-medium">
-                              <button className="text-indigo-600 hover:text-indigo-900 mr-1.5">Details</button>
-                              <button className="text-indigo-600 hover:text-indigo-900">Report</button>
-                            </td>
                           </tr>
                         );
                       })}
@@ -624,7 +621,7 @@ const SimplifiedStudentDashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="p-2">
+                <div className="p-2 border-b border-gray-100">
                   <h3 className="font-bold text-gray-900 text-[10px] mb-1">Art Exhibition Inauguration</h3>
                   <p className="text-gray-600 text-[9px] mb-1">Join us for the inauguration of our annual student art exhibition on April 22nd at 3 PM in the school gallery.</p>
                   <div className="flex items-center justify-between">
@@ -632,6 +629,42 @@ const SimplifiedStudentDashboard = () => {
                     <div className="flex gap-1">
                       <span className="px-1 py-0.5 bg-pink-100 text-pink-800 text-[9px] font-medium rounded-full">Event</span>
                       <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Art</span>
+                    </div>
+                  </div>
+                </div>
+                {/* New Notice 1 */}
+                <div className="p-2 border-b border-gray-100">
+                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Sports Day Announcement</h3>
+                  <p className="text-gray-600 text-[9px] mb-1">Annual Sports Day will be held on May 5th. All students are required to wear their sports uniform. Registration closes April 30th.</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500 text-[9px]">Physical Education Department • Apr 15, 2024</span>
+                    <div className="flex gap-1">
+                      <span className="px-1 py-0.5 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Event</span>
+                      <span className="px-1 py-0.5 bg-orange-100 text-orange-800 text-[9px] font-medium rounded-full">Sports</span>
+                    </div>
+                  </div>
+                </div>
+                {/* New Notice 2 */}
+                <div className="p-2 border-b border-gray-100">
+                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Parent-Teacher Meeting</h3>
+                  <p className="text-gray-600 text-[9px] mb-1">Parent-Teacher meetings will be held on April 28th from 2 PM to 5 PM. Please book your slot through the parent portal.</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500 text-[9px]">Administration Office • Apr 10, 2024</span>
+                    <div className="flex gap-1">
+                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Meeting</span>
+                      <span className="px-1 py-0.5 bg-indigo-100 text-indigo-800 text-[9px] font-medium rounded-full">Parents</span>
+                    </div>
+                  </div>
+                </div>
+                {/* New Notice 3 */}
+                <div className="p-2">
+                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Mathematics Workshop</h3>
+                  <p className="text-gray-600 text-[9px] mb-1">A special mathematics workshop for grade 10 students will be conducted on April 25th during the 4th period in Room 204.</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500 text-[9px]">Mathematics Department • Apr 18, 2024</span>
+                    <div className="flex gap-1">
+                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Workshop</span>
+                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Mathematics</span>
                     </div>
                   </div>
                 </div>
