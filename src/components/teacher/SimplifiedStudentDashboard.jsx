@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Home, FileText, Award, AlertCircle, Settings, User, LogOut, Users, CheckCircle, Clock, TrendingUp, X, BookOpen, Calculator, FlaskConical, PenTool, Globe, Music, Palette, Edit, RefreshCw, UserCheck } from 'lucide-react';
+import { Home, FileText, Award, AlertCircle, Settings, User, LogOut, Users, CheckCircle, Clock, TrendingUp, X, BookOpen, Calculator, FlaskConical, PenTool, Globe, Music, Palette, Edit, RefreshCw, UserCheck, Calendar } from 'lucide-react';
 import UltraModernHeader from '../UltraModernHeader';
+
 
 
 const SimplifiedStudentDashboard = () => {
@@ -435,6 +436,142 @@ const SimplifiedStudentDashboard = () => {
                           </tr>
                         );
                       })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'attendance' && (
+            <div>
+              {/* Banner for Attendance Section */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-bold text-white mb-1.5">Attendance Records</h2>
+                    <p className="text-xs text-blue-100">Track your attendance and punctuality</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <UserCheck className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Attendance Summary Cards */}
+              <div className="flex gap-4 mb-6">
+                <div className="flex-1 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-md p-3 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="flex items-center justify-between relative z-10">
+                    <div>
+                      <p className="text-[10px] text-blue-100">Overall Attendance</p>
+                      <p className="text-base font-bold mt-2">92%</p>
+                    </div>
+                    <UserCheck className="w-6 h-6 text-blue-200 relative z-10" />
+                  </div>
+                </div>
+                
+                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="flex items-center justify-between relative z-10">
+                    <div>
+                      <p className="text-[10px] text-indigo-100">This Month</p>
+                      <p className="text-base font-bold mt-2">95%</p>
+                    </div>
+                    <Calendar className="w-6 h-6 text-indigo-200 relative z-10" />
+                  </div>
+                </div>
+                
+                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-3 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="flex items-center justify-between relative z-10">
+                    <div>
+                      <p className="text-[10px] text-violet-100">Late Entries</p>
+                      <p className="text-base font-bold mt-2">3</p>
+                    </div>
+                    <Clock className="w-6 h-6 text-violet-200 relative z-10" />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Weekly Attendance Chart */}
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-gray-900 text-[11px]">Weekly Attendance</h3>
+                  <div className="flex gap-1">
+                    <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Last 7 Days</span>
+                  </div>
+                </div>
+                <div className="flex items-end h-16 gap-1 mt-4">
+                  {[
+                    { day: 'Mon', percentage: 100, present: true },
+                    { day: 'Tue', percentage: 80, present: false },
+                    { day: 'Wed', percentage: 100, present: true },
+                    { day: 'Thu', percentage: 100, present: true },
+                    { day: 'Fri', percentage: 100, present: true },
+                    { day: 'Sat', percentage: 60, present: false },
+                    { day: 'Sun', percentage: 100, present: true }
+                  ].map((day, index) => (
+                    <div key={index} className="flex flex-col items-center flex-1">
+                      <div className="text-[8px] text-gray-500 mb-1">{day.day}</div>
+                      <div 
+                        className={`w-full rounded-t ${day.present ? 'bg-gradient-to-t from-blue-500 to-blue-400' : 'bg-gradient-to-t from-red-500 to-red-400'}`}
+                        style={{ height: `${day.percentage}%` }}
+                      ></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Attendance Details Table */}
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Day</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {[
+                        { date: '2024-04-01', day: 'Monday', status: 'present', time: '08:15 AM', remarks: 'On Time' },
+                        { date: '2024-04-02', day: 'Tuesday', status: 'late', time: '09:30 AM', remarks: '30 mins late' },
+                        { date: '2024-04-03', day: 'Wednesday', status: 'present', time: '08:10 AM', remarks: 'On Time' },
+                        { date: '2024-04-04', day: 'Thursday', status: 'present', time: '08:20 AM', remarks: 'On Time' },
+                        { date: '2024-04-05', day: 'Friday', status: 'present', time: '08:05 AM', remarks: 'Early Arrival' },
+                        { date: '2024-04-06', day: 'Saturday', status: 'absent', time: '-', remarks: 'Medical Leave' },
+                        { date: '2024-04-07', day: 'Sunday', status: 'holiday', time: '-', remarks: 'Weekend' }
+                      ].map((record, index) => (
+                        <tr key={index} className="hover:bg-indigo-50/50">
+                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.date}</td>
+                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.day}</td>
+                          <td className="px-2.5 py-1.5 whitespace-nowrap">
+                            <span className={`px-1 inline-flex text-[8px] leading-3 font-semibold rounded-full ${
+                              record.status === 'present' ? 'bg-green-100 text-green-800' : 
+                              record.status === 'late' ? 'bg-yellow-100 text-yellow-800' : 
+                              record.status === 'absent' ? 'bg-red-100 text-red-800' : 
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                            </span>
+                          </td>
+                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.time}</td>
+                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.remarks}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
