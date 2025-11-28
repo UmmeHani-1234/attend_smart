@@ -370,7 +370,6 @@ const SimplifiedStudentDashboard = () => {
                         <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                         <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Priority</th>
                         <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -433,11 +432,6 @@ const SimplifiedStudentDashboard = () => {
                               }`}>
                                 {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
                               </span>
-                            </td>
-                            <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-900">
-                              
-                               <button className="text-indigo-600 hover:text-indigo-900 mr-2">View</button>
-                              <button className="text-indigo-600 hover:text-indigo-900">Submit</button>
                             </td>
                           </tr>
                         );
