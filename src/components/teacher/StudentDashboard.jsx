@@ -281,6 +281,7 @@ const StudentDashboard = () => {
         <nav className="flex-1 p-3 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
+            { id: 'classes', icon: BookOpen, label: 'My Classes' },
             { id: 'assignments', icon: FileText, label: 'Assignments' },
             { id: 'grades', icon: Award, label: 'Grades' },
             { id: 'notices', icon: AlertCircle, label: 'Important Notices' },
