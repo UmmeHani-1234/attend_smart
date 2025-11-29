@@ -76,6 +76,13 @@ const GovernmentDashboard = ({ onLogout }) => {
     }
   };
 
+  const getBarColor = (value) => {
+    if (value >= 95) return '#10B981'; // green
+    if (value >= 90) return '#3B82F6'; // blue
+    if (value >= 85) return '#F59E0B'; // amber
+    return '#EF4444'; // red
+  };
+
   const summaryStats = [
     { label: 'Total Students', value: districtData.totalStudents.toLocaleString(), icon: Users, color: 'from-blue-500 to-blue-600', change: '+150' },
     { label: 'Total Schools', value: districtData.totalSchools, icon: School, color: 'from-blue-400 to-indigo-500', change: '+2' },
@@ -548,92 +555,108 @@ const GovernmentDashboard = ({ onLogout }) => {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
                 {/* Attendance Analytics */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
-                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-lg border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
-                  <h3 className="text-sm font-bold text-white mb-4">Attendance Analytics</h3>
-                  <div className="h-48 bg-white/20 rounded-md p-3 backdrop-blur-sm border border-white/30">
+                  <h3 className="text-base font-bold text-white mb-5">Attendance Analytics</h3>
+                  <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart data={attendanceTrendData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
                         <XAxis 
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          domain={[0, 100]}
                         />
                         <Tooltip 
                           contentStyle={{ 
-                            backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '8px',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(10px)',
-                            fontSize: '12px'
+                            backgroundColor: 'rgba(255,255,255,0.95)', 
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255,255,255,0.4)',
+                            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
+                            backdropFilter: 'blur(12px)',
+                            fontSize: '13px',
+                            padding: '10px'
                           }}
-                          labelStyle={{ color: '#1e40af' }}
+                          labelStyle={{ color: '#1e40af', fontWeight: 600 }}
+                          formatter={(value) => [`${value}%`, 'Attendance Rate']}
                         />
-                        <Legend />
+                        <Legend 
+                          wrapperStyle={{ paddingTop: '10px' }}
+                          formatter={(value) => <span className="text-white font-medium">{value}</span>}
+                        />
                         <Bar 
                           dataKey="attendance" 
                           name="Attendance Rate (%)" 
-                          fill="rgba(255,255,255,0.9)" 
-                          radius={[4, 4, 0, 0]} 
-                          barSize={24}
-                        />
+                          fill="rgba(255,255,255,0.95)" 
+                          radius={[6, 6, 0, 0]} 
+                          barSize={30}
+                          animationDuration={800}
+                        >
+                          {attendanceTrendData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={getBarColor(entry.attendance)} />
+                          ))}
+                        </Bar>
                       </RechartsBarChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
                 {/* School Performance */}
-                <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-md p-4 shadow-sm border border-green-200/30 backdrop-blur-sm relative overflow-hidden">
-                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-5 shadow-lg border border-green-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
-                  <h3 className="text-sm font-bold text-white mb-4">School Performance</h3>
-                  <div className="h-48 bg-white/20 rounded-md p-3 backdrop-blur-sm border border-white/30">
+                  <h3 className="text-base font-bold text-white mb-5">School Performance</h3>
+                  <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart data={attendanceTrendData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
                         <XAxis 
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
                         />
                         <Tooltip 
                           formatter={(value) => [`${value}`, 'Active Schools']}
                           contentStyle={{ 
-                            backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '8px',
-                            border: '1px solid rgba(255,255,255,0.3)',
-                            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(10px)',
-                            fontSize: '12px'
+                            backgroundColor: 'rgba(255,255,255,0.95)', 
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255,255,255,0.4)',
+                            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
+                            backdropFilter: 'blur(12px)',
+                            fontSize: '13px',
+                            padding: '10px'
                           }}
-                          labelStyle={{ color: '#047857' }}
+                          labelStyle={{ color: '#047857', fontWeight: 600 }}
                         />
-                        <Legend />
+                        <Legend 
+                          wrapperStyle={{ paddingTop: '10px' }}
+                          formatter={(value) => <span className="text-white font-medium">{value}</span>}
+                        />
                         <Line 
                           type="monotone" 
                           dataKey="schools" 
                           name="Active Schools" 
-                          stroke="rgba(255,255,255,0.9)" 
-                          strokeWidth={3}
-                          dot={{ r: 6, fill: 'rgba(255,255,255,0.9)', strokeWidth: 2, stroke: '#047857' }}
-                          activeDot={{ r: 8, fill: 'rgba(255,255,255,0.9)', strokeWidth: 2, stroke: '#047857' }}
+                          stroke="rgba(255,255,255,0.95)" 
+                          strokeWidth={4}
+                          dot={{ r: 8, fill: 'rgba(255,255,255,0.95)', strokeWidth: 2, stroke: '#047857' }}
+                          activeDot={{ r: 10, fill: 'rgba(255,255,255,0.95)', strokeWidth: 2, stroke: '#047857' }}
+                          animationDuration={800}
                         />
                       </RechartsLineChart>
                     </ResponsiveContainer>
