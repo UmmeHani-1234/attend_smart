@@ -287,7 +287,7 @@ const TeacherDashboard = () => {
               <span className="font-medium text-xs">{tab.label}</span>
               {tab.id === 'alerts' && (
                 <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
-                  3
+                  {alerts.filter(a => a.status === 'new').length}
                 </span>
               )}
             </button>

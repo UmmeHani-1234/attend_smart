@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, UserCheck, UserX, BookOpen, TrendingUp, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, AlertTriangle, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, School, Activity, User, Book } from 'lucide-react';
+import { Users, UserCheck, UserX, BookOpen, TrendingUp, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, AlertTriangle, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, School, Activity, User, Book, Utensils, GraduationCap } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import UltraModernHeader from '../UltraModernHeader';
@@ -14,6 +14,35 @@ const AdminDashboard = ({ onLogout }) => {
   const [studentAvatarPreview, setStudentAvatarPreview] = useState(null);
   const [showAvatarOptions, setShowAvatarOptions] = useState(false);
   const [avatarType, setAvatarType] = useState(''); // 'teacher' or 'student'
+  const [mealPeriod, setMealPeriod] = useState('daily'); // daily, weekly, monthly
+  const [mealFilter, setMealFilter] = useState('daily'); // daily, weekly, monthly
+  
+  // State for report generation
+  const [generatingReport, setGeneratingReport] = useState(null);
+  const [generatedReports, setGeneratedReports] = useState([]);
+  
+  // State for meal filtering
+  const [selectedSchool, setSelectedSchool] = useState('All Schools');
+  const [selectedDuration, setSelectedDuration] = useState('weekly'); // weekly, monthly
+  
+  // State for applied filters
+  const [appliedSchool, setAppliedSchool] = useState('All Schools');
+  const [appliedDuration, setAppliedDuration] = useState('weekly');
+
+  // Filter states for Teachers tab
+  const [teacherSubjectFilter, setTeacherSubjectFilter] = useState('All Subjects');
+  const [teacherClassFilter, setTeacherClassFilter] = useState('All Classes');
+  const [teacherStatusFilter, setTeacherStatusFilter] = useState('All Statuses');
+
+  // Filter states for Students tab
+  const [studentClassFilter, setStudentClassFilter] = useState('All Classes');
+  const [studentGradeFilter, setStudentGradeFilter] = useState('All Grades');
+  const [studentAttendanceFilter, setStudentAttendanceFilter] = useState('All');
+
+  // Filter states for Classes tab
+  const [classSubjectFilter, setClassSubjectFilter] = useState('All Subjects');
+  const [classGradeFilter, setClassGradeFilter] = useState('All Grades');
+  const [classStudentsFilter, setClassStudentsFilter] = useState('All');
 
   // Predefined avatars
   const predefinedAvatars = [
@@ -29,42 +58,89 @@ const AdminDashboard = ({ onLogout }) => {
 
   // School-specific data
   const schoolData = {
-    name: 'Greenwood High School',
-    location: 'New York, NY',
-    principal: 'Dr. James Wilson',
-    contact: 'info@greenwoodhs.edu',
-    established: '1985',
-    totalStudents: 350,
-    totalTeachers: 15,
-    currentAttendance: 92
+    name: 'Saboo Siddik Degree',
+    location: 'Mumbai, Maharashtra',
+    principal: 'Asrar Pathan',
+    contact: 'info@sabboosiddik.edu',
+    established: '1970',
+    totalStudents: 1500,
+    totalTeachers: 45,
+    currentAttendance: 88.5,
+    mealsPerStudent: 1,
+    totalMeals: 1500
   };
+
+  // Sample meal attendance data for this school
+  const mealAttendanceData = [
+    { id: 1, schoolId: 1, schoolName: 'Saboo Siddik Degree', totalStudents: 1500, presentToday: 1380, date: '2023-06-15' }
+  ];
+
+  // Sample weekly and monthly meal data
+  const weeklyMealData = [
+    { week: 'Week 1', meals: 7500 },
+    { week: 'Week 2', meals: 7800 },
+    { week: 'Week 3', meals: 7600 },
+    { week: 'Week 4', meals: 8100 }
+  ];
+
+  const monthlyMealData = [
+    { month: 'January', meals: 32000 },
+    { month: 'February', meals: 29000 },
+    { month: 'March', meals: 33000 },
+    { month: 'April', meals: 31000 },
+    { month: 'May', meals: 35000 }
+  ];
+
+  // Filtered data based on applied selections
+  const filteredMealAttendanceData = appliedSchool === 'All Schools' 
+    ? mealAttendanceData 
+    : mealAttendanceData.filter(school => school.schoolName === appliedSchool);
+
+  // Get filtered data for the applied school
+  const getFilteredSchoolData = () => {
+    if (appliedSchool === 'All Schools') {
+      return filteredMealAttendanceData;
+    }
+    return mealAttendanceData.filter(school => school.schoolName === appliedSchool);
+  };
+
+  const selectedSchoolData = getFilteredSchoolData();
 
   // Teachers data for this school
   const teachers = [
-    { id: 1, name: 'James Wilson', email: 'j.wilson@school.edu', subject: 'Mathematics', classes: ['10A', '11B', '12C'], students: 90, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=James' },
-    { id: 2, name: 'Sarah Johnson', email: 's.johnson@school.edu', subject: 'Science', classes: ['9A', '9B'], students: 65, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
-    { id: 3, name: 'Michael Brown', email: 'm.brown@school.edu', subject: 'English', classes: ['8A', '8B', '7A', '7B'], students: 120, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael' },
-    { id: 4, name: 'Emily Davis', email: 'e.davis@school.edu', subject: 'History', classes: ['6A', '6B'], students: 55, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emily' },
+    { id: 1, name: 'Asrar Pathan', email: 'principal@sabboosiddik.edu', subject: 'Principal', classes: ['Administration'], students: 1500, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Asrar' },
+    { id: 2, name: 'Prof. Mehta', email: 'mehta@sabboosiddik.edu', subject: 'Mathematics', classes: ['Grade 1'], students: 60, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mehta' },
+    { id: 3, name: 'Dr. Patil', email: 'patil@sabboosiddik.edu', subject: 'Science', classes: ['Grade 3'], students: 70, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Patil' },
+    { id: 4, name: 'Ms. Khan', email: 'khan@sabboosiddik.edu', subject: 'English', classes: ['Grade 6'], students: 70, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Khan' },
+    { id: 5, name: 'Mr. Sharma', email: 'sharma@sabboosiddik.edu', subject: 'Computer Science', classes: ['Grade 8'], students: 80, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sharma' },
   ];
 
   // Students data for this school
   const students = [
-    { id: 1, name: 'Robert Chen', roll: '10A-15', class: '10A', attendance: 95, grade: 'A', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Robert' },
-    { id: 2, name: 'Priya Patel', roll: '9B-22', class: '9B', attendance: 88, grade: 'B+', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Priya' },
-    { id: 3, name: 'Alex Turner', roll: '11C-08', class: '11C', attendance: 92, grade: 'A-', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' },
-    { id: 4, name: 'Maria Garcia', roll: '8D-30', class: '8D', attendance: 87, grade: 'B', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maria' },
-    { id: 5, name: 'David Kim', roll: '10A-12', class: '10A', attendance: 91, grade: 'A-', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=David' },
-    { id: 6, name: 'Sophia Williams', roll: '9B-05', class: '9B', attendance: 93, grade: 'A', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia' },
+    { id: 1, name: 'Umme Hani', roll: 'G1-01', class: 'Grade 1', attendance: 92, grade: 'A', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Umme' },
+    { id: 2, name: 'Ayesha', roll: 'G2-22', class: 'Grade 2', attendance: 88, grade: 'B+', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ayesha' },
+    { id: 3, name: 'Iqra', roll: 'G3-08', class: 'Grade 3', attendance: 90, grade: 'A-', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Iqra' },
+    { id: 4, name: 'Affan', roll: 'G4-30', class: 'Grade 4', attendance: 87, grade: 'B', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Affan' },
+    { id: 5, name: 'Eshaan', roll: 'G5-12', class: 'Grade 5', attendance: 91, grade: 'A-', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Eshaan' },
+    { id: 6, name: 'Aasim', roll: 'G6-05', class: 'Grade 6', attendance: 93, grade: 'A', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aasim' },
+    { id: 7, name: 'Arjun Patel', roll: 'G7-18', class: 'Grade 7', attendance: 89, grade: 'B+', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun' },
+    { id: 8, name: 'Neha Reddy', roll: 'G8-25', class: 'Grade 8', attendance: 94, grade: 'A', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Neha' },
+    { id: 9, name: 'Rohan Mehta', roll: 'G9-15', class: 'Grade 9', attendance: 88, grade: 'B+', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rohan' },
+    { id: 10, name: 'Ananya Desai', roll: 'G10-07', class: 'Grade 10', attendance: 95, grade: 'A', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ananya' },
   ];
 
   // Classes data for this school
   const classes = [
-    { id: 1, name: '10A', teacher: 'James Wilson', students: 35, subject: 'Mathematics' },
-    { id: 2, name: '9B', teacher: 'Sarah Johnson', students: 30, subject: 'Science' },
-    { id: 3, name: '11C', teacher: 'James Wilson', students: 40, subject: 'Mathematics' },
-    { id: 4, name: '8D', teacher: 'Emily Davis', students: 25, subject: 'History' },
-    { id: 5, name: '7A', teacher: 'Michael Brown', students: 35, subject: 'English' },
-    { id: 6, name: '6A', teacher: 'Emily Davis', students: 30, subject: 'History' },
+    { id: 1, name: 'Grade 1', teacher: 'Prof. Mehta', students: 60, subject: 'Basic Education' },
+    { id: 2, name: 'Grade 2', teacher: 'Dr. Patil', students: 60, subject: 'Elementary Studies' },
+    { id: 3, name: 'Grade 3', teacher: 'Ms. Khan', students: 70, subject: 'Primary Education' },
+    { id: 4, name: 'Grade 4', teacher: 'Mr. Sharma', students: 80, subject: 'Junior Elementary' },
+    { id: 5, name: 'Grade 5', teacher: 'Prof. Mehta', students: 65, subject: 'Upper Elementary' },
+    { id: 6, name: 'Grade 6', teacher: 'Dr. Patil', students: 70, subject: 'Middle School' },
+    { id: 7, name: 'Grade 7', teacher: 'Ms. Khan', students: 75, subject: 'Junior High' },
+    { id: 8, name: 'Grade 8', teacher: 'Mr. Sharma', students: 80, subject: 'High School Prep' },
+    { id: 9, name: 'Grade 9', teacher: 'Prof. Mehta', students: 85, subject: 'High School' },
+    { id: 10, name: 'Grade 10', teacher: 'Dr. Patil', students: 90, subject: 'Senior High' },
   ];
 
   // Enhanced attendance data for different periods
@@ -202,6 +278,205 @@ const AdminDashboard = ({ onLogout }) => {
     setAvatarType('');
   };
 
+  // Function to apply filters
+  const applyFilters = () => {
+    console.log('Applying filters:', selectedSchool, selectedDuration);
+    setAppliedSchool(selectedSchool);
+    setAppliedDuration(selectedDuration);
+  };
+
+  // Function to apply teacher filters
+  const applyTeacherFilters = () => {
+    console.log('Applying teacher filters:', teacherSubjectFilter, teacherClassFilter, teacherStatusFilter);
+    // Filtering logic would go here
+  };
+
+  // Filter teachers based on filter criteria
+  const getFilteredTeachers = () => {
+    return teachers.filter(teacher => {
+      // Subject filter
+      if (teacherSubjectFilter !== 'All Subjects' && teacher.subject !== teacherSubjectFilter) {
+        return false;
+      }
+      
+      // Class filter
+      if (teacherClassFilter !== 'All Classes' && !teacher.classes.includes(teacherClassFilter)) {
+        return false;
+      }
+      
+      // Status filter (simplified - in a real app, you'd have an actual status field)
+      if (teacherStatusFilter !== 'All Statuses') {
+        // For demo purposes, we'll consider all teachers as active
+        if (teacherStatusFilter === 'Inactive') {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+  };
+
+  // Function to apply student filters
+  const applyStudentFilters = () => {
+    console.log('Applying student filters:', studentClassFilter, studentGradeFilter, studentAttendanceFilter);
+    // Filtering logic would go here
+  };
+
+  // Filter students based on filter criteria
+  const getFilteredStudents = () => {
+    return students.filter(student => {
+      // Class filter
+      if (studentClassFilter !== 'All Classes' && student.class !== studentClassFilter) {
+        return false;
+      }
+      
+      // Grade filter
+      if (studentGradeFilter !== 'All Grades' && student.grade !== studentGradeFilter) {
+        return false;
+      }
+      
+      // Attendance filter
+      if (studentAttendanceFilter !== 'All') {
+        const attendance = student.attendance;
+        if (studentAttendanceFilter === 'Above 90%' && attendance <= 90) {
+          return false;
+        } else if (studentAttendanceFilter === '80-90%' && (attendance < 80 || attendance > 90)) {
+          return false;
+        } else if (studentAttendanceFilter === 'Below 80%' && attendance >= 80) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+  };
+
+  // Function to apply class filters
+  const applyClassFilters = () => {
+    console.log('Applying class filters:', classSubjectFilter, classGradeFilter, classStudentsFilter);
+    // Filtering logic would go here
+  };
+
+  // Filter classes based on filter criteria
+  const getFilteredClasses = () => {
+    return classes.filter(classItem => {
+      // Subject filter
+      if (classSubjectFilter !== 'All Subjects' && classItem.subject !== classSubjectFilter) {
+        return false;
+      }
+      
+      // Grade filter (using class name as grade)
+      if (classGradeFilter !== 'All Grades' && classItem.name !== classGradeFilter) {
+        return false;
+      }
+      
+      // Students filter
+      if (classStudentsFilter !== 'All') {
+        const studentCount = classItem.students;
+        if (classStudentsFilter === '0-25' && (studentCount < 0 || studentCount > 25)) {
+          return false;
+        } else if (classStudentsFilter === '26-35' && (studentCount < 26 || studentCount > 35)) {
+          return false;
+        } else if (classStudentsFilter === '36-50' && (studentCount < 36 || studentCount > 50)) {
+          return false;
+        } else if (classStudentsFilter === '51-100' && studentCount <= 50) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+  };
+
+  // Handler function for meal analysis report
+  const handleGenerateMealAnalysisReport = () => {
+    console.log('Generating meal analysis report');
+    setGeneratingReport('Meal Analysis');
+    
+    // Simulate report generation delay
+    setTimeout(() => {
+      // Calculate analysis data
+      const totalStudents = mealAttendanceData.reduce((total, school) => total + school.totalStudents, 0);
+      const totalPresent = mealAttendanceData.reduce((total, school) => total + school.presentToday, 0);
+      const attendanceRate = ((totalPresent / totalStudents) * 100).toFixed(2);
+      
+      const analysisData = {
+        totalSchools: mealAttendanceData.length,
+        totalStudents,
+        totalPresent,
+        attendanceRate,
+        date: new Date().toLocaleDateString(),
+        period: mealPeriod
+      };
+      
+      const newReport = {
+        id: Date.now(),
+        type: 'Meal Analysis',
+        generatedAt: new Date().toLocaleString(),
+        status: 'completed',
+        data: analysisData
+      };
+      
+      setGeneratedReports(prev => [...prev, newReport]);
+      setGeneratingReport(null);
+      
+      // Show success message with analysis data
+      alert(`Meal Analysis Report Generated!
+
+Date: ${analysisData.date}
+Period: ${analysisData.period}
+Total Schools: ${analysisData.totalSchools}
+Total Students: ${analysisData.totalStudents.toLocaleString()}
+Students Present: ${analysisData.totalPresent.toLocaleString()}
+Attendance Rate: ${analysisData.attendanceRate}%`);
+    }, 1500);
+  };
+
+  const handleExportMealAnalysisReport = () => {
+    console.log('Exporting meal analysis report');
+    // Calculate analysis data for export
+    const totalStudents = mealAttendanceData.reduce((total, school) => total + school.totalStudents, 0);
+    const totalPresent = mealAttendanceData.reduce((total, school) => total + school.presentToday, 0);
+    const attendanceRate = ((totalPresent / totalStudents) * 100).toFixed(2);
+    
+    const analysisData = {
+      totalSchools: mealAttendanceData.length,
+      totalStudents,
+      totalPresent,
+      attendanceRate,
+      date: new Date().toLocaleDateString(),
+      period: mealPeriod
+    };
+    
+    // Create CSV content
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Meal Analysis Report\n\n";
+    csvContent += `Date: ${analysisData.date}\n`;
+    csvContent += `Period: ${analysisData.period}\n`;
+    csvContent += `Total Schools: ${analysisData.totalSchools}\n`;
+    csvContent += `Total Students: ${analysisData.totalStudents}\n`;
+    csvContent += `Students Present: ${analysisData.totalPresent}\n`;
+    csvContent += `Attendance Rate: ${analysisData.attendanceRate}%\n\n`;
+    csvContent += "School Details\n";
+    csvContent += "School Name,Total Students,Present Today,Attendance Rate\n";
+    
+    mealAttendanceData.forEach(school => {
+      const schoolAttendanceRate = ((school.presentToday / school.totalStudents) * 100).toFixed(2);
+      csvContent += `${school.schoolName},${school.totalStudents},${school.presentToday},${schoolAttendanceRate}%\n`;
+    });
+    
+    // Create download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `meal_analysis_report_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert('Meal Analysis Report exported successfully!');
+  };
+
   // Get current attendance data based on selected period
   const getCurrentAttendanceData = () => {
     switch (reportPeriod) {
@@ -231,10 +506,10 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   const summaryStats = [
-    { label: 'Total Students', value: schoolData.totalStudents, icon: Users, color: 'from-blue-500 to-blue-600', change: '+15' },
-    { label: 'Total Teachers', value: schoolData.totalTeachers, icon: User, color: 'from-blue-400 to-indigo-500', change: '+2' },
-    { label: 'Present Today', value: Math.round(schoolData.totalStudents * schoolData.currentAttendance / 100), icon: UserCheck, color: 'from-indigo-400 to-indigo-500', change: '+42' },
-    { label: 'Attendance Rate', value: `${schoolData.currentAttendance}%`, icon: TrendingUp, color: 'from-indigo-500 to-purple-600', change: '+1.2%' },
+    { label: 'Total Students', value: schoolData.totalStudents, icon: Users, color: 'from-blue-500 to-blue-600', change: '+150' },
+    { label: 'Total Teachers', value: schoolData.totalTeachers, icon: User, color: 'from-blue-400 to-indigo-500', change: '+5' },
+    { label: 'Present Today', value: Math.round(schoolData.totalStudents * schoolData.currentAttendance / 100), icon: UserCheck, color: 'from-indigo-400 to-indigo-500', change: '+180' },
+    { label: 'Attendance Rate', value: `${schoolData.currentAttendance}%`, icon: TrendingUp, color: 'from-indigo-500 to-purple-600', change: '-0.3%' },
   ];
 
   return (
@@ -280,6 +555,7 @@ const AdminDashboard = ({ onLogout }) => {
             { id: 'classes', icon: BookOpen, label: 'Classes' },
             { id: 'reports', icon: FileText, label: 'Reports' },
             { id: 'alerts', icon: Bell, label: 'Alerts' },
+            { id: 'middaymeal', icon: Utensils, label: 'Mid Day Meal' },
             { id: 'settings', icon: Settings, label: 'Settings' },
           ].map((tab) => (
             <button
@@ -537,6 +813,35 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Teachers Tab */}
           {activeTab === 'teachers' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Teacher Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Manage and organize all teachers in your institution</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{teachers.length} active teachers</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{classes.length} classes taught</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Teacher Management</h2>
                 <button 
@@ -553,37 +858,55 @@ const AdminDashboard = ({ onLogout }) => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Subjects</option>
-                      <option>Mathematics</option>
-                      <option>Science</option>
-                      <option>English</option>
-                      <option>History</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={teacherSubjectFilter}
+                      onChange={(e) => setTeacherSubjectFilter(e.target.value)}
+                    >
+                      <option value="All Subjects">All Subjects</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="Science">Science</option>
+                      <option value="English">English</option>
+                      <option value="History">History</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Classes</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Classes</option>
-                      <option>6th Grade</option>
-                      <option>7th Grade</option>
-                      <option>8th Grade</option>
-                      <option>9th Grade</option>
-                      <option>10th Grade</option>
-                      <option>11th Grade</option>
-                      <option>12th Grade</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={teacherClassFilter}
+                      onChange={(e) => setTeacherClassFilter(e.target.value)}
+                    >
+                      <option value="All Classes">All Classes</option>
+                      <option value="Grade 1">Grade 1</option>
+                      <option value="Grade 2">Grade 2</option>
+                      <option value="Grade 3">Grade 3</option>
+                      <option value="Grade 4">Grade 4</option>
+                      <option value="Grade 5">Grade 5</option>
+                      <option value="Grade 6">Grade 6</option>
+                      <option value="Grade 7">Grade 7</option>
+                      <option value="Grade 8">Grade 8</option>
+                      <option value="Grade 9">Grade 9</option>
+                      <option value="Grade 10">Grade 10</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Status</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Statuses</option>
-                      <option>Active</option>
-                      <option>Inactive</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={teacherStatusFilter}
+                      onChange={(e) => setTeacherStatusFilter(e.target.value)}
+                    >
+                      <option value="All Statuses">All Statuses</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
                     </select>
                   </div>
                   <div className="flex items-end">
-                    <button className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                    <button 
+                      className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                      onClick={applyTeacherFilters}
+                    >
                       Apply Filters
                     </button>
                   </div>
@@ -591,24 +914,29 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* Teachers Table */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-purple-500/10 rounded-full"></div>
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-sm font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Teachers List</h3>
+                </div>
+                <div className="overflow-x-auto relative z-10">
                   <table className="w-full">
-                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
-                      <tr>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Avatar</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Teacher</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Email</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Classes</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Students</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Avatar</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Teacher</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Email</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Subject</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Classes</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-50">
-                      {teachers.map((teacher) => (
-                        <tr key={teacher.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                          <td className="px-3 py-2">
+                    <tbody>
+                      {getFilteredTeachers().map((teacher) => (
+                        <tr key={teacher.id} className="border-b border-gray-100 hover:bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 transition-all duration-300">
+                          <td className="py-3 px-4">
                             {teacher.avatar ? (
                               <img 
                                 src={teacher.avatar} 
@@ -621,20 +949,19 @@ const AdminDashboard = ({ onLogout }) => {
                               </div>
                             )}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{teacher.name}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.email}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.subject}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.classes.join(', ')}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.students}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                          <td className="py-3 px-4 font-medium text-gray-900 text-[10px]">{teacher.name}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{teacher.email}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{teacher.subject}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{teacher.classes.join(', ')}</td>
+                          <td className="py-3 px-4">
                             <div className="flex items-center gap-1">
-                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
                                 <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-all">
                                 <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
                                 <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
@@ -651,6 +978,35 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Students Tab */}
           {activeTab === 'students' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-green-600 via-teal-500 to-blue-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Student Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Track and manage all students in your institution</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{students.length} enrolled students</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{classes.length} active classes</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Student Management</h2>
                 <button 
@@ -667,40 +1023,58 @@ const AdminDashboard = ({ onLogout }) => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Classes</option>
-                      <option>6th Grade</option>
-                      <option>7th Grade</option>
-                      <option>8th Grade</option>
-                      <option>9th Grade</option>
-                      <option>10th Grade</option>
-                      <option>11th Grade</option>
-                      <option>12th Grade</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={studentClassFilter}
+                      onChange={(e) => setStudentClassFilter(e.target.value)}
+                    >
+                      <option value="All Classes">All Classes</option>
+                      <option value="Grade 1">Grade 1</option>
+                      <option value="Grade 2">Grade 2</option>
+                      <option value="Grade 3">Grade 3</option>
+                      <option value="Grade 4">Grade 4</option>
+                      <option value="Grade 5">Grade 5</option>
+                      <option value="Grade 6">Grade 6</option>
+                      <option value="Grade 7">Grade 7</option>
+                      <option value="Grade 8">Grade 8</option>
+                      <option value="Grade 9">Grade 9</option>
+                      <option value="Grade 10">Grade 10</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Grade</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Grades</option>
-                      <option>A+</option>
-                      <option>A</option>
-                      <option>B+</option>
-                      <option>B</option>
-                      <option>C+</option>
-                      <option>C</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={studentGradeFilter}
+                      onChange={(e) => setStudentGradeFilter(e.target.value)}
+                    >
+                      <option value="All Grades">All Grades</option>
+                      <option value="A+">A+</option>
+                      <option value="A">A</option>
+                      <option value="B+">B+</option>
+                      <option value="B">B</option>
+                      <option value="C+">C+</option>
+                      <option value="C">C</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Attendance</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All</option>
-                      <option>Above 90%</option>
-                      <option>80-90%</option>
-                      <option>Below 80%</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={studentAttendanceFilter}
+                      onChange={(e) => setStudentAttendanceFilter(e.target.value)}
+                    >
+                      <option value="All">All</option>
+                      <option value="Above 90%">Above 90%</option>
+                      <option value="80-90%">80-90%</option>
+                      <option value="Below 80%">Below 80%</option>
                     </select>
                   </div>
                   <div className="flex items-end">
-                    <button className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                    <button 
+                      className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                      onClick={applyStudentFilters}
+                    >
                       Apply Filters
                     </button>
                   </div>
@@ -708,24 +1082,30 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* Students Table */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500"></div>
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-teal-500/10 rounded-full"></div>
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-500/10 rounded-full"></div>
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-sm font-bold text-gray-900 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Students List</h3>
+                </div>
+                <div className="overflow-x-auto relative z-10">
                   <table className="w-full">
-                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
-                      <tr>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Avatar</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Student</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Roll Number</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Class</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Attendance</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Grade</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Avatar</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Student</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Roll Number</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Class</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Attendance</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Grade</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-50">
-                      {students.map((student) => (
-                        <tr key={student.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                          <td className="px-3 py-2">
+                    <tbody>
+                      {getFilteredStudents().map((student) => (
+                        <tr key={student.id} className="border-b border-gray-100 hover:bg-gradient-to-r from-green-50/50 via-teal-50/50 to-blue-50/50 transition-all duration-300">
+                          <td className="py-3 px-4">
                             {student.avatar ? (
                               <img 
                                 src={student.avatar} 
@@ -738,24 +1118,24 @@ const AdminDashboard = ({ onLogout }) => {
                               </div>
                             )}
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{student.name}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{student.roll}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{student.class}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{student.attendance}%</td>
-                          <td className="px-3 py-2 whitespace-nowrap">
-                            <span className="px-2 py-1 text-[8px] font-semibold rounded-full bg-green-100 text-green-800">
+                          <td className="py-3 px-4 font-medium text-gray-900 text-[10px]">{student.name}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{student.roll}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{student.class}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{student.attendance}%</td>
+                          <td className="py-3 px-4">
+                            <span className="px-2 py-1 text-[9px] font-semibold rounded-full bg-green-100 text-green-800">
                               {student.grade}
                             </span>
                           </td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                          <td className="py-3 px-4">
                             <div className="flex items-center gap-1">
-                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
                                 <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-all">
                                 <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
                                 <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
@@ -772,6 +1152,35 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Classes Tab */}
           {activeTab === 'classes' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Class Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Organize and manage all classes in your institution</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{classes.length} active classes</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{students.length} total students</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <BookOpen className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Class Management</h2>
                 <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
@@ -785,38 +1194,57 @@ const AdminDashboard = ({ onLogout }) => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Subjects</option>
-                      <option>Mathematics</option>
-                      <option>Science</option>
-                      <option>English</option>
-                      <option>History</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={classSubjectFilter}
+                      onChange={(e) => setClassSubjectFilter(e.target.value)}
+                    >
+                      <option value="All Subjects">All Subjects</option>
+                      <option value="Mathematics">Mathematics</option>
+                      <option value="Science">Science</option>
+                      <option value="English">English</option>
+                      <option value="History">History</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Grade</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All Grades</option>
-                      <option>6th Grade</option>
-                      <option>7th Grade</option>
-                      <option>8th Grade</option>
-                      <option>9th Grade</option>
-                      <option>10th Grade</option>
-                      <option>11th Grade</option>
-                      <option>12th Grade</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={classGradeFilter}
+                      onChange={(e) => setClassGradeFilter(e.target.value)}
+                    >
+                      <option value="All Grades">All Grades</option>
+                      <option value="Grade 1">Grade 1</option>
+                      <option value="Grade 2">Grade 2</option>
+                      <option value="Grade 3">Grade 3</option>
+                      <option value="Grade 4">Grade 4</option>
+                      <option value="Grade 5">Grade 5</option>
+                      <option value="Grade 6">Grade 6</option>
+                      <option value="Grade 7">Grade 7</option>
+                      <option value="Grade 8">Grade 8</option>
+                      <option value="Grade 9">Grade 9</option>
+                      <option value="Grade 10">Grade 10</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Students</label>
-                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>All</option>
-                      <option>0-25</option>
-                      <option>26-35</option>
-                      <option>36-50</option>
+                    <select 
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={classStudentsFilter}
+                      onChange={(e) => setClassStudentsFilter(e.target.value)}
+                    >
+                      <option value="All">All</option>
+                      <option value="0-25">0-25</option>
+                      <option value="26-35">26-35</option>
+                      <option value="36-50">36-50</option>
+                      <option value="51-100">51-100</option>
                     </select>
                   </div>
                   <div className="flex items-end">
-                    <button className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                    <button 
+                      className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                      onClick={applyClassFilters}
+                    >
                       Apply Filters
                     </button>
                   </div>
@@ -824,34 +1252,40 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* Classes Table */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500"></div>
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-purple-500/10 rounded-full"></div>
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-sm font-bold text-gray-900 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Classes List</h3>
+                </div>
+                <div className="overflow-x-auto relative z-10">
                   <table className="w-full">
-                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
-                      <tr>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Class</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Teacher</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Students</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Class</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Subject</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Teacher</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Students</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-50">
-                      {classes.map((classItem) => (
-                        <tr key={classItem.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{classItem.name}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.subject}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.teacher}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.students}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                    <tbody>
+                      {getFilteredClasses().map((classItem) => (
+                        <tr key={classItem.id} className="border-b border-gray-100 hover:bg-gradient-to-r from-purple-50/50 via-indigo-50/50 to-blue-50/50 transition-all duration-300">
+                          <td className="py-3 px-4 font-medium text-gray-900 text-[10px]">{classItem.name}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{classItem.subject}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{classItem.teacher}</td>
+                          <td className="py-3 px-4 text-gray-600 text-[10px]">{classItem.students}</td>
+                          <td className="py-3 px-4">
                             <div className="flex items-center gap-1">
-                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
                                 <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-all">
                                 <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-all">
                                 <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
@@ -868,6 +1302,35 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Reports Tab */}
           {activeTab === 'reports' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Reports & Analytics Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Comprehensive insights and analytics for data-driven decisions</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{classes.length} classes analyzed</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Real-time analytics</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <BarChart className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Reports & Analytics</h2>
                 <div className="flex gap-2">
@@ -944,6 +1407,35 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Alerts Tab */}
           {activeTab === 'alerts' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Alert Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Monitor and respond to critical system alerts and notifications</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-red-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{alerts.length} active alerts</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Real-time monitoring</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Bell className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Alert Management</h2>
                 <div className="flex gap-2">
@@ -1149,6 +1641,320 @@ const AdminDashboard = ({ onLogout }) => {
                         Save
                       </button>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Mid Day Meal Tab */}
+          {activeTab === 'middaymeal' && (
+            <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Mid Day Meal Program Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Monitor and manage the mid day meal program for your school</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{schoolData.name}</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{schoolData.totalMeals.toLocaleString()} meals served</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Utensils className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <h2 className="text-sm font-bold text-blue-700">Meal Program Overview</h2>
+                <p className="text-[10px] text-gray-600 mt-1">Total meals to be served today: {selectedSchoolData.reduce((total, school) => total + school.presentToday, 0).toLocaleString()}</p>
+              </div>
+              
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  {/* Filter Controls */}
+                  <div className="flex gap-2 items-center bg-white rounded-lg border border-gray-200 p-1.5">
+                    <select 
+                      value={selectedSchool}
+                      onChange={(e) => setSelectedSchool(e.target.value)}
+                      className="px-2 py-1 text-[10px] rounded-md bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="All Schools">All Schools</option>
+                      {mealAttendanceData.map((school) => (
+                        <option key={school.id} value={school.schoolName}>
+                          {school.schoolName}
+                        </option>
+                      ))}
+                    </select>
+                    <select 
+                      value={selectedDuration}
+                      onChange={(e) => setSelectedDuration(e.target.value)}
+                      className="px-2 py-1 text-[10px] rounded-md bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                    <button 
+                      onClick={applyFilters}
+                      className="px-2 py-1 text-[10px] rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                    >
+                      Apply Filter
+                    </button>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="flex gap-1">
+                    <button 
+                      onClick={() => setMealPeriod('daily')}
+                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'daily' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Daily
+                    </button>
+                    <button 
+                      onClick={() => setMealPeriod('weekly')}
+                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'weekly' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Weekly
+                    </button>
+                    <button 
+                      onClick={() => setMealPeriod('monthly')}
+                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'monthly' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Monthly
+                    </button>
+                  </div>
+                  <button 
+                    onClick={handleGenerateMealAnalysisReport}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-[10px] font-medium"
+                  >
+                    <FileText className="w-3 h-3" />
+                    Generate Analysis
+                  </button>
+                  <button 
+                    onClick={handleExportMealAnalysisReport}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium"
+                  >
+                    <Download className="w-3 h-3" />
+                    Export Analysis
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                {/* Meal Statistics */}
+                <div className="lg:col-span-1 space-y-4">
+                  <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                    <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
+                    <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-purple-500/10 rounded-full"></div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative z-10">Program Statistics</h3>
+                    <div className="space-y-3 relative z-10">
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 rounded-md border border-blue-100/50">
+                        <div className="flex items-center gap-2">
+                          <Utensils className="w-4 h-4 text-blue-500" />
+                          <span className="text-[10px] text-gray-700 font-medium">Total Meals Served</span>
+                        </div>
+                        <span className="font-bold text-gray-900 text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{selectedSchoolData.reduce((total, school) => total + Math.round(school.presentToday * schoolData.mealsPerStudent), 0).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 rounded-md border border-blue-100/50">
+                        <div className="flex items-center gap-2">
+                          <School className="w-4 h-4 text-blue-500" />
+                          <span className="text-[10px] text-gray-700 font-medium">Enrolled Schools</span>
+                        </div>
+                        <span className="font-bold text-gray-900 text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{selectedSchoolData.length}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 rounded-md border border-blue-100/50">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-blue-500" />
+                          <span className="text-[10px] text-gray-700 font-medium">Beneficiary Students</span>
+                        </div>
+                        <span className="font-bold text-gray-900 text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{selectedSchoolData.reduce((total, school) => total + school.totalStudents, 0).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 rounded-md border border-green-100/50">
+                        <div className="flex items-center gap-2">
+                          <TrendingUp className="w-4 h-4 text-green-500" />
+                          <span className="text-[10px] text-gray-700 font-medium">Program Coverage</span>
+                        </div>
+                        <span className="font-bold text-green-600 text-[10px]">98.5%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Nutrition Information and Meal Distribution Chart side by side */}
+                <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Nutrition Information */}
+                  <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500"></div>
+                    <div className="absolute -top-2 -right-2 w-10 h-10 bg-teal-500/10 rounded-full"></div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent relative z-10">Nutrition Information</h3>
+                    <div className="space-y-3 relative z-10">
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50/50 via-teal-50/50 to-blue-50/50 rounded-md border border-green-100/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-gray-700 font-medium">Calories per Meal</span>
+                        </div>
+                        <span className="font-bold text-gray-900 text-[10px]">450-500 kcal</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50/50 via-teal-50/50 to-blue-50/50 rounded-md border border-green-100/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-gray-700 font-medium">Protein Content</span>
+                        </div>
+                        <span className="font-bold text-gray-900 text-[10px]">12-15g</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-gradient-to-r from-green-50/50 via-teal-50/50 to-blue-50/50 rounded-md border border-green-100/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-gray-700 font-medium">Iron Content</span>
+                        </div>
+                        <span className="font-bold text-gray-900 text-[10px]">3-5mg</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Meal Distribution Chart */}
+                  <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500"></div>
+                    <div className="absolute -top-2 -right-2 w-10 h-10 bg-orange-500/10 rounded-full"></div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent relative z-10">Meal Distribution Trends (Daily)</h3>
+                    <div className="h-48 bg-gradient-to-br from-amber-50 to-orange-50 rounded-md p-3 border border-amber-100 relative z-10">
+                      <div className="flex items-center justify-center h-full text-gray-500 text-[10px]">
+                        <div className="text-center">
+                          <Utensils className="w-8 h-8 mx-auto mb-2 text-amber-400" />
+                          <p>Meal distribution chart for {mealPeriod} period</p>
+                          <p className="mt-1 text-[9px]">Data visualization will be displayed here</p>
+                          <div className="flex justify-center gap-2 mt-3">
+                            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-md flex items-center justify-center border border-amber-200 overflow-hidden">
+                              <img 
+                                src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=120&h=120&q=80"
+                                alt="Rice and Curry Meal"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-md flex items-center justify-center border border-amber-200 overflow-hidden">
+                              <img 
+                                src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=120&h=120&q=80"
+                                alt="Vegetable Thali"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-md flex items-center justify-center border border-amber-200 overflow-hidden">
+                              <img 
+                                src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=120&h=120&q=80"
+                                alt="Dal and Rice"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* School Meal Participation */}
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 relative overflow-hidden mb-6">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500"></div>
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-purple-500/10 rounded-full"></div>
+                <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent relative z-10">School Meal Participation</h3>
+                <div className="overflow-x-auto relative z-10">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">School</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Total Students</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Present Today</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Meals Served</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Participation Rate</th>
+                        <th className="text-left py-3 px-4 font-medium text-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedSchoolData.map((school) => (
+                        <tr key={school.id} className="border-b border-gray-100 hover:bg-gradient-to-r from-purple-50/50 via-indigo-50/50 to-blue-50/50 transition-all duration-300">
+                          <td className="py-1.5 px-4">
+                            <div className="font-medium text-gray-900 text-[10px] flex items-center gap-1">
+                              <GraduationCap className="w-3 h-3 text-purple-500" />
+                              {school.schoolName}
+                            </div>
+                          </td>
+                          <td className="py-1.5 px-4 text-gray-600 text-[10px]">{school.totalStudents.toLocaleString()}</td>
+                          <td className="py-1.5 px-4 text-gray-600 text-[10px]">{school.presentToday.toLocaleString()}</td>
+                          <td className="py-1.5 px-4 text-gray-600 text-[10px]">{Math.round(school.presentToday * schoolData.mealsPerStudent).toLocaleString()}</td>
+                          <td className="py-1.5 px-4 text-gray-600 text-[10px]">{((school.presentToday / school.totalStudents) * 100).toFixed(1)}%</td>
+                          <td className="py-1.5 px-4">
+                            <span className="px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-[9px] font-medium">Active</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Weekly and Monthly Meal Reports */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {/* Weekly Meal Report */}
+                <div className={`bg-white rounded-md p-4 shadow-sm border ${appliedDuration === 'weekly' ? 'border-blue-300 ring-2 ring-blue-100' : 'border-gray-100'} relative overflow-hidden`}>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                  <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
+                  <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative z-10">Weekly Meal Generation Report</h3>
+                  <div className="overflow-x-auto relative z-10">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-2 px-3 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Week</th>
+                          <th className="text-left py-2 px-3 font-medium text-[10px] bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Meals Generated</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {weeklyMealData.map((week, index) => (
+                          <tr key={index} className="border-b border-gray-100 hover:bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 transition-all duration-300">
+                            <td className="py-2 px-3 text-gray-900 text-[10px] font-medium">{week.week}</td>
+                            <td className="py-2 px-3 text-gray-600 text-[10px]">{week.meals.toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Monthly Meal Report */}
+                <div className={`bg-white rounded-md p-4 shadow-sm border ${appliedDuration === 'monthly' ? 'border-green-300 ring-2 ring-green-100' : 'border-gray-100'} relative overflow-hidden`}>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 via-teal-500 to-blue-500"></div>
+                  <div className="absolute -top-2 -right-2 w-10 h-10 bg-teal-500/10 rounded-full"></div>
+                  <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent relative z-10">Monthly Meal Generation Report</h3>
+                  <div className="overflow-x-auto relative z-10">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-2 px-3 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Month</th>
+                          <th className="text-left py-2 px-3 font-medium text-[10px] bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">Meals Generated</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {monthlyMealData.map((month, index) => (
+                          <tr key={index} className="border-b border-gray-100 hover:bg-gradient-to-r from-green-50/50 via-teal-50/50 to-blue-50/50 transition-all duration-300">
+                            <td className="py-2 px-3 text-gray-900 text-[10px] font-medium">{month.month}</td>
+                            <td className="py-2 px-3 text-gray-600 text-[10px]">{month.meals.toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
