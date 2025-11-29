@@ -782,15 +782,15 @@ const GovernmentDashboard = ({ onLogout }) => {
             <div>
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">System Settings</h2>
-                  <p className="text-gray-600 text-sm mt-1">Manage your account preferences and system settings</p>
+                  <h2 className="text-base font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">System Settings</h2>
+                  <p className="text-gray-600 text-xs mt-1">Manage your account preferences and system settings</p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-sm font-medium">
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium">
                     <RefreshCw className="w-3 h-3" />
                     Refresh
                   </button>
-                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md text-sm font-medium">
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md text-xs font-medium">
                     <Settings className="w-3 h-3" />
                     Reset
                   </button>
@@ -802,7 +802,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                 <div className="lg:col-span-1">
                   <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-1.5 sticky top-4">
                     <div className="p-3 border-b border-gray-200">
-                      <h3 className="font-semibold text-gray-900 flex items-center gap-1.5 text-sm">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-1.5 text-[10px]">
                         <Settings className="w-4 h-4 text-blue-500" />
                         Settings
                       </h3>
@@ -821,11 +821,11 @@ const GovernmentDashboard = ({ onLogout }) => {
                           className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all ${
                             activeSettingsTab === tab.id
                               ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-sm'
-                              : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600 text-sm'
+                              : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600 text-xs'
                           }`}
                         >
                           <IconComponent className="w-4 h-4" />
-                          <span className="font-medium text-sm">{tab.label}</span>
+                          <span className="font-medium text-[10px]">{tab.label}</span>
                         </button>
                       );
                     })}
@@ -839,11 +839,11 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="mb-4 pb-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                            <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
                               <User className="w-4 h-4 text-blue-500" />
                               Profile Information
                             </h2>
-                            <p className="text-gray-600 text-sm mt-1">Update your personal and professional details</p>
+                            <p className="text-gray-600 text-xs mt-1">Update your personal and professional details</p>
                           </div>
                           <div className="flex gap-1">
                             <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
@@ -863,67 +863,67 @@ const GovernmentDashboard = ({ onLogout }) => {
                               <Edit className="w-3 h-3" />
                             </button>
                           </div>
-                          <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-all hover:underline text-sm">
+                          <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-all hover:underline text-xs">
                             <Camera className="w-3 h-3" />
                             Change Picture
                           </button>
                         </div>
                         
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium text-gray-700">Full Name</label>
+                          <label className="block text-[10px] font-medium text-gray-700">Full Name</label>
                           <div className="relative">
                             <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input 
                               type="text" 
                               defaultValue="Government Official"
-                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-xs"
                             />
                           </div>
                         </div>
                         
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium text-gray-700">Email Address</label>
+                          <label className="block text-[10px] font-medium text-gray-700">Email Address</label>
                           <div className="relative">
                             <Mail className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input 
                               type="email" 
                               defaultValue="official@education.gov"
-                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-xs"
                             />
                           </div>
                         </div>
                         
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium text-gray-700">Department</label>
+                          <label className="block text-[10px] font-medium text-gray-700">Department</label>
                           <div className="relative">
                             <Building className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input 
                               type="text" 
                               defaultValue="Education Oversight"
-                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-xs"
                             />
                           </div>
                         </div>
                         
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-medium text-gray-700">District</label>
+                          <label className="block text-[10px] font-medium text-gray-700">District</label>
                           <div className="relative">
                             <MapPin className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input 
                               type="text" 
                               defaultValue="Central District"
-                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-xs"
                             />
                           </div>
                         </div>
                       </div>
                       
                       <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
-                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-xs">
                           <X className="w-3 h-3" />
                           Cancel
                         </button>
-                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-xs">
                           <Save className="w-3 h-3" />
                           Save
                         </button>
@@ -936,11 +936,11 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="mb-4 pb-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                            <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
                               <Bell className="w-4 h-4 text-blue-500" />
                               Notification Preferences
                             </h2>
-                            <p className="text-gray-600 text-sm mt-1">Customize how and when you receive alerts and updates</p>
+                            <p className="text-gray-600 text-xs mt-1">Customize how and when you receive alerts and updates</p>
                           </div>
                         </div>
                       </div>
@@ -948,8 +948,8 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div>
-                            <h3 className="font-medium text-gray-900 text-sm">Email Notifications</h3>
-                            <p className="text-gray-600 text-xs mt-1">Receive alerts via email</p>
+                            <h3 className="font-medium text-gray-900 text-xs">Email Notifications</h3>
+                            <p className="text-gray-600 text-[10px] mt-1">Receive alerts via email</p>
                           </div>
                           <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
                             <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
@@ -959,8 +959,8 @@ const GovernmentDashboard = ({ onLogout }) => {
                         
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div>
-                            <h3 className="font-medium text-gray-900 text-sm">Push Notifications</h3>
-                            <p className="text-gray-600 text-xs mt-1">Receive alerts on your device</p>
+                            <h3 className="font-medium text-gray-900 text-xs">Push Notifications</h3>
+                            <p className="text-gray-600 text-[10px] mt-1">Receive alerts on your device</p>
                           </div>
                           <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
                             <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
@@ -970,8 +970,8 @@ const GovernmentDashboard = ({ onLogout }) => {
                         
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div>
-                            <h3 className="font-medium text-gray-900 text-sm">SMS Notifications</h3>
-                            <p className="text-gray-600 text-xs mt-1">Receive alerts via text message</p>
+                            <h3 className="font-medium text-gray-900 text-xs">SMS Notifications</h3>
+                            <p className="text-gray-600 text-[10px] mt-1">Receive alerts via text message</p>
                           </div>
                           <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
                             <input type="checkbox" className="absolute opacity-0 w-0 h-0" />
@@ -981,8 +981,8 @@ const GovernmentDashboard = ({ onLogout }) => {
                         
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div>
-                            <h3 className="font-medium text-gray-900 text-sm">Critical Alerts</h3>
-                            <p className="text-gray-600 text-xs mt-1">Immediate notifications for critical issues</p>
+                            <h3 className="font-medium text-gray-900 text-xs">Critical Alerts</h3>
+                            <p className="text-gray-600 text-[10px] mt-1">Immediate notifications for critical issues</p>
                           </div>
                           <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
                             <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
@@ -1009,7 +1009,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="mb-4 pb-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                            <h2 className="text-base font-bold text-gray-900 flex items-center gap-1.5">
                               <Shield className="w-4 h-4 text-blue-500" />
                               Security Settings
                             </h2>
@@ -1064,37 +1064,37 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="mb-4 pb-3 border-b border-gray-200">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                            <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
                               <Settings className="w-4 h-4 text-blue-500" />
                               Appearance Settings
                             </h2>
-                            <p className="text-gray-600 text-sm mt-1">Customize the look and feel of your dashboard</p>
+                            <p className="text-gray-600 text-xs mt-1">Customize the look and feel of your dashboard</p>
                           </div>
                         </div>
                       </div>
                       
                       <div className="space-y-4">
                         <div className="p-3 bg-gray-50 rounded-lg">
-                          <h3 className="font-medium text-gray-900 text-sm mb-2">Theme</h3>
+                          <h3 className="font-medium text-gray-900 text-xs mb-2">Theme</h3>
                           <div className="grid grid-cols-3 gap-2">
                             <button className="p-3 bg-white border-2 border-blue-500 rounded-lg flex flex-col items-center">
                               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md mb-1"></div>
-                              <span className="text-xs font-medium">Default</span>
+                              <span className="text-[10px] font-medium">Default</span>
                             </button>
                             <button className="p-3 bg-white border border-gray-200 rounded-lg flex flex-col items-center hover:border-blue-300">
                               <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-900 rounded-md mb-1"></div>
-                              <span className="text-xs font-medium">Dark</span>
+                              <span className="text-[10px] font-medium">Dark</span>
                             </button>
                             <button className="p-3 bg-white border border-gray-200 rounded-lg flex flex-col items-center hover:border-blue-300">
                               <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-md mb-1"></div>
-                              <span className="text-xs font-medium">Sunset</span>
+                              <span className="text-[10px] font-medium">Sunset</span>
                             </button>
                           </div>
                         </div>
                         
                         <div className="p-3 bg-gray-50 rounded-lg">
-                          <h3 className="font-medium text-gray-900 text-sm mb-2">Language</h3>
-                          <select className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                          <h3 className="font-medium text-gray-900 text-xs mb-2">Language</h3>
+                          <select className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs">
                             <option>English</option>
                             <option>Spanish</option>
                             <option>French</option>
@@ -1103,17 +1103,17 @@ const GovernmentDashboard = ({ onLogout }) => {
                         </div>
                         
                         <div className="p-3 bg-gray-50 rounded-lg">
-                          <h3 className="font-medium text-gray-900 text-sm mb-2">Layout Preferences</h3>
+                          <h3 className="font-medium text-gray-900 text-xs mb-2">Layout Preferences</h3>
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                              <span className="text-xs text-gray-600">Compact View</span>
+                              <span className="text-[10px] text-gray-600">Compact View</span>
                               <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
                                 <input type="checkbox" className="absolute opacity-0 w-0 h-0" />
                                 <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
                               </div>
                             </div>
                             <div className="flex items-center justify-between">
-                              <span className="text-xs text-gray-600">Auto-refresh Data</span>
+                              <span className="text-[10px] text-gray-600">Auto-refresh Data</span>
                               <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
                                 <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
                                 <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
@@ -1124,11 +1124,11 @@ const GovernmentDashboard = ({ onLogout }) => {
                       </div>
                       
                       <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 mt-4">
-                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-xs">
                           <X className="w-3 h-3" />
                           Cancel
                         </button>
-                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-xs">
                           <Save className="w-3 h-3" />
                           Save
                         </button>
@@ -1144,7 +1144,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="p-1.5 bg-white/20 rounded-md">
                         <Shield className="w-4 h-4" />
                       </div>
-                      <h3 className="font-bold text-sm">Security Settings</h3>
+                      <h3 className="font-bold text-xs">Security Settings</h3>
                     </div>
                     <p className="text-white/90 mb-3 text-xs">Manage your account security and authentication preferences</p>
                     <button className="px-3 py-1.5 bg-white text-purple-600 rounded-md hover:bg-gray-100 transition-all font-medium text-xs flex items-center gap-1">
@@ -1158,7 +1158,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                       <div className="p-1.5 bg-white/20 rounded-md">
                         <Bell className="w-4 h-4" />
                       </div>
-                      <h3 className="font-bold text-sm">Notifications</h3>
+                      <h3 className="font-bold text-xs">Notifications</h3>
                     </div>
                     <p className="text-white/90 mb-3 text-xs">Customize how and when you receive alerts and updates</p>
                     <button className="px-3 py-1.5 bg-white text-amber-600 rounded-md hover:bg-gray-100 transition-all font-medium text-xs flex items-center gap-1">
