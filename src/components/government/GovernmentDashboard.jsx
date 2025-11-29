@@ -413,6 +413,35 @@ const GovernmentDashboard = ({ onLogout }) => {
           {/* Schools Tab */}
           {activeTab === 'schools' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">School Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Manage and monitor all schools under your jurisdiction</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{districtData.totalSchools} active schools</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{districtData.totalStudents.toLocaleString()} total students</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <School className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-base font-bold text-gray-900">School Management</h2>
                 <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium">
@@ -500,6 +529,35 @@ const GovernmentDashboard = ({ onLogout }) => {
           {/* Reports Tab */}
           {activeTab === 'reports' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Reports & Analytics Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Comprehensive insights and analytics for data-driven decisions</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{attendanceTrendData.length} months data</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Real-time analytics</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <BarChart className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-base font-bold text-gray-900">Reports & Analytics</h2>
                 <div className="flex gap-3">
@@ -659,6 +717,35 @@ const GovernmentDashboard = ({ onLogout }) => {
           {/* Alerts Tab */}
           {activeTab === 'alerts' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">Alert Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Monitor and respond to critical system alerts and notifications</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-red-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{alerts.length} active alerts</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Real-time monitoring</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Bell className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-base font-bold text-gray-900">Alert Management</h2>
                 <div className="flex gap-3">
@@ -764,6 +851,35 @@ const GovernmentDashboard = ({ onLogout }) => {
           {/* Settings Tab */}
           {activeTab === 'settings' && (
             <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">System Settings Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Configure and customize your dashboard experience</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{Object.keys({ profile: 1, notifications: 1, security: 1, appearance: 1 }).length} setting categories</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Personalized experience</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Settings className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h2 className="text-base font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">System Settings</h2>
