@@ -133,9 +133,9 @@ const SimplifiedStudentDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen max-h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="flex min-h-screen h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Sidebar - Reduced size by 1 unit */}
-      <div className="w-52 bg-white shadow-lg flex flex-col h-screen">
+      <div className="w-52 bg-white shadow-lg flex flex-col h-full">
         <div className="p-2.5 border-b border-gray-100">
           <div className="flex items-center gap-1.5">
             <div className="relative">
@@ -201,7 +201,7 @@ const SimplifiedStudentDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-screen">
+      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-full">
         {/* Ultra Modern Header - Matching teacher dashboard exactly */}
         <div className="flex-shrink-0">
           <UltraModernHeader 
@@ -214,7 +214,7 @@ const SimplifiedStudentDashboard = () => {
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-5 flex-grow overflow-y-auto overscroll-contain">
+        <div className="p-5 flex-grow overflow-y-auto">
           {/* Home Tab */}
           {activeTab === 'home' && (
             <div>
