@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './i18n';
 import { ThemeProvider } from './components/ThemeContext';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
 import SimplifiedStudentDashboard from './components/teacher/SimplifiedStudentDashboard';
@@ -11,54 +11,38 @@ import ClassDetailsPage from './components/ClassDetailsPage';
 import AttendSmartLogo from './components/AttendSmartLogo';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState('');
 
   const handleLogin = (type) => {
-    setIsLoggedIn(true);
     setUserType(type);
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
     setUserType('');
   };
 
-  const renderDashboard = () => {
-    switch (userType) {
-      case 'teacher':
-        return <TeacherDashboard />;
-      case 'student':
-        return <SimplifiedStudentDashboard />;
-      case 'admin':
-        return <AdminDashboard onLogout={handleLogout} />;
-      case 'government':
-        return <GovernmentDashboard onLogout={handleLogout} />;
-      default:
-        return <LoginPage onLogin={handleLogin} />;
-    }
-  };
-
-  // For testing purposes - direct access to student dashboard
-  const directStudentAccess = () => {
-    setIsLoggedIn(true);
-    setUserType('student');
-  };
-
   return (
-    <ThemeProvider>
-      <div>
-        {!isLoggedIn ? (
-          <div>
-            <LoginPage onLogin={handleLogin} />
-          </div>
-        ) : (
+    <Router>
+      <ThemeProvider>
+        <div>
           <Routes>
-            <Route path="/" element={renderDashboard()} />
+            <Route path="/" element={
+              userType === '' ? 
+                <LoginPage onLogin={handleLogin} /> : 
+                userType === 'teacher' ? 
+                  <TeacherDashboard onLogout={handleLogout} /> : 
+                userType === 'student' ? 
+                  <SimplifiedStudentDashboard onLogout={handleLogout} /> : 
+                userType === 'admin' ? 
+                  <AdminDashboard onLogout={handleLogout} /> : 
+                userType === 'government' ? 
+                  <GovernmentDashboard onLogout={handleLogout} /> : 
+                  <LoginPage onLogin={handleLogin} />
+            } />
             <Route path="/class/:classId" element={<ClassDetailsPage />} />
           </Routes>
-        )}
-      </div>
-    </ThemeProvider>
+        </div>
+      </ThemeProvider>
+    </Router>
   );
 }
