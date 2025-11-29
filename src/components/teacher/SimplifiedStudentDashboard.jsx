@@ -7,6 +7,7 @@ import UltraModernHeader from '../UltraModernHeader';
 const SimplifiedStudentDashboard = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [selectedClass, setSelectedClass] = useState(null);
 
   // Sample data
   const initialStudentData = {
@@ -908,7 +909,7 @@ const SimplifiedStudentDashboard = () => {
               </div>
               
               {/* Classes Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                 {/* Mathematics Class Card */}
                 <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-blue-500/10 rounded-full"></div>
@@ -948,7 +949,14 @@ const SimplifiedStudentDashboard = () => {
                     
                     <div className="pt-2 border-t border-gray-100">
                       <button 
-                        onClick={() => alert('Opening Mathematics class details...')}
+                        onClick={() => setSelectedClass({
+                          name: 'Mathematics',
+                          teacher: 'Mr. Johnson',
+                          period: '2nd',
+                          students: 32,
+                          room: '204',
+                          subject: 'Mathematics'
+                        })}
                         className="w-full py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-medium rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all"
                       >
                         View Class Details
@@ -996,7 +1004,14 @@ const SimplifiedStudentDashboard = () => {
                     
                     <div className="pt-2 border-t border-gray-100">
                       <button 
-                        onClick={() => alert('Opening Science class details...')}
+                        onClick={() => setSelectedClass({
+                          name: 'Science',
+                          teacher: 'Dr. Smith',
+                          period: '3rd',
+                          students: 30,
+                          room: '301',
+                          subject: 'Science'
+                        })}
                         className="w-full py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-medium rounded-md hover:from-green-600 hover:to-emerald-700 transition-all"
                       >
                         View Class Details
@@ -1044,7 +1059,14 @@ const SimplifiedStudentDashboard = () => {
                     
                     <div className="pt-2 border-t border-gray-100">
                       <button 
-                        onClick={() => alert('Opening English class details...')}
+                        onClick={() => setSelectedClass({
+                          name: 'English',
+                          teacher: 'Ms. Williams',
+                          period: '1st',
+                          students: 31,
+                          room: '105',
+                          subject: 'English'
+                        })}
                         className="w-full py-1.5 bg-gradient-to-r from-purple-500 to-violet-600 text-white text-[10px] font-medium rounded-md hover:from-purple-600 hover:to-violet-700 transition-all"
                       >
                         View Class Details
@@ -1092,7 +1114,14 @@ const SimplifiedStudentDashboard = () => {
                     
                     <div className="pt-2 border-t border-gray-100">
                       <button 
-                        onClick={() => alert('Opening History class details...')}
+                        onClick={() => setSelectedClass({
+                          name: 'History',
+                          teacher: 'Mr. Brown',
+                          period: '4th',
+                          students: 29,
+                          room: '208',
+                          subject: 'History'
+                        })}
                         className="w-full py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-[10px] font-medium rounded-md hover:from-amber-600 hover:to-orange-700 transition-all"
                       >
                         View Class Details
@@ -1140,7 +1169,14 @@ const SimplifiedStudentDashboard = () => {
                     
                     <div className="pt-2 border-t border-gray-100">
                       <button 
-                        onClick={() => alert('Opening Geography class details...')}
+                        onClick={() => setSelectedClass({
+                          name: 'Geography',
+                          teacher: 'Mrs. Davis',
+                          period: '5th',
+                          students: 30,
+                          room: '305',
+                          subject: 'Geography'
+                        })}
                         className="w-full py-1.5 bg-gradient-to-r from-cyan-500 to-teal-600 text-white text-[10px] font-medium rounded-md hover:from-cyan-600 hover:to-teal-700 transition-all"
                       >
                         View Class Details
@@ -1188,7 +1224,14 @@ const SimplifiedStudentDashboard = () => {
                     
                     <div className="pt-2 border-t border-gray-100">
                       <button 
-                        onClick={() => alert('Opening Art class details...')}
+                        onClick={() => setSelectedClass({
+                          name: 'Art',
+                          teacher: 'Ms. Taylor',
+                          period: '6th',
+                          students: 28,
+                          room: 'Art Hall',
+                          subject: 'Art'
+                        })}
                         className="w-full py-1.5 bg-gradient-to-r from-pink-500 to-rose-600 text-white text-[10px] font-medium rounded-md hover:from-pink-600 hover:to-rose-700 transition-all"
                       >
                         View Class Details
@@ -1402,6 +1445,159 @@ const SimplifiedStudentDashboard = () => {
                         <Settings className="w-2 h-2" />
                         Reset Settings
                       </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Class Details View */}
+          {selectedClass && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-2xl p-5 max-w-4xl w-full max-h-[90vh] overflow-auto">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-[15px] font-bold text-gray-900">{selectedClass.name} - Class Details</h3>
+                  <button 
+                    onClick={() => setSelectedClass(null)}
+                    className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-4.5 h-4.5 text-gray-500" />
+                  </button>
+                </div>
+                
+                {/* Class Information */}
+                <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-6 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-3 right-3 w-6 h-6 bg-white/10 rotate-45"></div>
+                  
+                  <div className="relative z-10 flex items-center gap-4">
+                    <div className="flex-1">
+                      <h2 className="text-sm font-bold text-white mb-2">{selectedClass.name}</h2>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <div className="text-xs text-blue-100">
+                          <span className="font-medium">Teacher:</span> {selectedClass.teacher}
+                        </div>
+                        <div className="text-xs text-blue-100">
+                          <span className="font-medium">Period:</span> {selectedClass.period}
+                        </div>
+                        <div className="text-xs text-blue-100">
+                          <span className="font-medium">Students:</span> {selectedClass.students}
+                        </div>
+                        <div className="text-xs text-blue-100">
+                          <span className="font-medium">Room:</span> {selectedClass.room}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Study Resources Section */}
+                <div className="mb-8">
+                  <h3 className="text-[13px] font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-indigo-600" />
+                    Study Resources
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {/* Sample resources - in a real app, these would come from props or API */}
+                    <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                      <div className="absolute -top-3 -right-3 w-12 h-12 bg-blue-500/10 rounded-full"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-start gap-2 mb-3">
+                          <FileText className="w-5 h-5 text-indigo-600 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-gray-900 text-[11px]">Chapter 5 Notes</h4>
+                            <p className="text-gray-600 text-[10px]">PDF Document</p>
+                          </div>
+                        </div>
+                        <button className="w-full py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[10px] font-medium rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all">
+                          View/Download
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                      <div className="absolute -top-3 -right-3 w-12 h-12 bg-green-500/10 rounded-full"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-start gap-2 mb-3">
+                          <Globe className="w-5 h-5 text-green-600 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-gray-900 text-[11px]">Interactive Learning</h4>
+                            <p className="text-gray-600 text-[10px]">Online Resource</p>
+                          </div>
+                        </div>
+                        <button className="w-full py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-medium rounded-md hover:from-green-600 hover:to-emerald-700 transition-all">
+                          View/Download
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
+                      <div className="absolute -top-3 -right-3 w-12 h-12 bg-purple-500/10 rounded-full"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-start gap-2 mb-3">
+                          <Palette className="w-5 h-5 text-purple-600 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-gray-900 text-[11px]">Presentation Slides</h4>
+                            <p className="text-gray-600 text-[10px]">PPT Document</p>
+                          </div>
+                        </div>
+                        <button className="w-full py-1.5 bg-gradient-to-r from-purple-500 to-violet-600 text-white text-[10px] font-medium rounded-md hover:from-purple-600 hover:to-violet-700 transition-all">
+                          View/Download
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Assignments Section */}
+                <div>
+                  <h3 className="text-[13px] font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-indigo-600" />
+                    Assignments to be Submitted
+                  </h3>
+                  
+                  <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+                    <div className="overflow-x-auto relative z-10">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {/* Sample assignments - in a real app, these would be filtered by class */}
+                          {assignments
+                            .filter(assignment => assignment.subject === selectedClass.subject && assignment.status === 'pending')
+                            .map((assignment) => (
+                              <tr key={assignment.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                                <td className="px-3 py-2 whitespace-nowrap">
+                                  <div className="text-[10px] font-medium text-gray-900">{assignment.title}</div>
+                                </td>
+                                <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-900">{assignment.dueDisplay}</td>
+                                <td className="px-3 py-2 whitespace-nowrap">
+                                  <span className="px-2 py-1 text-[9px] font-medium rounded-full bg-amber-100 text-amber-800">
+                                    {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
+                                  </span>
+                                </td>
+                                <td className="px-3 py-2 whitespace-nowrap">
+                                  <button 
+                                    onClick={() => alert(`Opening assignment: ${assignment.title}`)}
+                                    className="px-2 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[9px] font-medium rounded hover:from-indigo-600 hover:to-purple-700 transition-all"
+                                  >
+                                    Open/Submit
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          }
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
