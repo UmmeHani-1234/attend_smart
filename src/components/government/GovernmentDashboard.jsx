@@ -77,9 +77,9 @@ const GovernmentDashboard = ({ onLogout }) => {
 
   const summaryStats = [
     { label: 'Total Students', value: districtData.totalStudents.toLocaleString(), icon: Users, color: 'from-blue-500 to-blue-600', change: '+150' },
-    { label: 'Total Schools', value: districtData.totalSchools, icon: School, color: 'from-green-500 to-emerald-600', change: '+2' },
-    { label: 'Daily Meals', value: districtData.totalMeals.toLocaleString(), icon: Utensils, color: 'from-amber-500 to-orange-600', change: '+150' },
-    { label: 'Attendance Rate', value: `${districtData.attendanceRate}%`, icon: TrendingUp, color: 'from-purple-500 to-purple-600', change: '+0.8%' },
+    { label: 'Total Schools', value: districtData.totalSchools, icon: School, color: 'from-blue-400 to-indigo-500', change: '+2' },
+    { label: 'Daily Meals', value: districtData.totalMeals.toLocaleString(), icon: Utensils, color: 'from-indigo-400 to-indigo-500', change: '+150' },
+    { label: 'Attendance Rate', value: `${districtData.attendanceRate}%`, icon: TrendingUp, color: 'from-indigo-500 to-purple-600', change: '+0.8%' },
   ];
 
   return (
@@ -89,28 +89,28 @@ const GovernmentDashboard = ({ onLogout }) => {
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-56 bg-white shadow-lg flex flex-col h-screen"
+        className="w-52 bg-white shadow-lg flex flex-col h-screen"
       >
-        <div className="p-4 border-b border-gray-100">
-          <div className="flex items-center gap-2">
+        <div className="p-2.5 border-b border-gray-100">
+          <div className="flex items-center gap-1.5">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md">
+              <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-[11px] shadow-md">
                 GD
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1">
-                <span className="text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                <span className="text-[11px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
                   Smart Attendance
                 </span>
               </div>
-              <p className="text-xs text-gray-500 truncate">Government</p>
+              <p className="text-[10px] text-gray-500 truncate">Government</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-3 pt-0 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 p-2 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
             { id: 'schools', icon: School, label: 'Schools' },
@@ -121,16 +121,16 @@ const GovernmentDashboard = ({ onLogout }) => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
                   : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
               }`}
             >
-              <tab.icon className="w-4 h-4" />
-              <span className="font-medium text-sm">{tab.label}</span>
+              <tab.icon className="w-3 h-3" />
+              <span className="font-medium text-[11px]">{tab.label}</span>
               {tab.id === 'alerts' && (
-                <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="ml-auto bg-red-500 text-white text-[8px] font-bold rounded-full w-3 h-3 flex items-center justify-center">
                   3
                 </span>
               )}
@@ -138,13 +138,13 @@ const GovernmentDashboard = ({ onLogout }) => {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-gray-100 space-y-1">
+        <div className="p-2 border-t border-gray-100 space-y-1">
           <button 
             onClick={onLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-all"
+            className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
           >
-            <LogOut className="w-4 h-4" />
-            <span className="font-medium text-sm">Logout</span>
+            <LogOut className="w-3 h-3" />
+            <span className="font-medium text-[11px]">Logout</span>
           </button>
         </div>
       </motion.div>
@@ -163,58 +163,62 @@ const GovernmentDashboard = ({ onLogout }) => {
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-8 flex-grow overflow-y-auto overscroll-contain">
+        <div className="p-4 flex-grow overflow-y-auto overscroll-contain">
           {/* Home Tab */}
           {activeTab === 'home' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-3xl p-8 mb-8 shadow-xl backdrop-blur-sm border border-white/20 relative overflow-hidden">
-                {/* Animated background elements */}
-                <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                  <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full mix-blend-overlay"></div>
-                  <div className="absolute bottom-10 right-10 w-48 h-48 bg-white rounded-full mix-blend-overlay"></div>
-                </div>
-                <div className="relative z-10">
-                  <h2 className="text-4xl font-bold text-white mb-2">
-                    Good Morning, Official! 👋
-                  </h2>
-                  <p className="text-blue-100 text-lg mb-6">
-                    Monitor educational statistics and policy implementation across districts
-                  </p>
-                  <div className="flex items-center gap-4 text-white">
-                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm border border-white/20">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span className="text-sm">{districtData.totalSchools} active schools</span>
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-white mb-1.5">Good Morning, Official! 👋</h2>
+                    <p className="text-xs text-blue-100 mb-2">Monitor educational statistics and policy implementation across districts</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{districtData.totalSchools} active schools</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{alerts.filter(a => a.status === 'new').length} new alerts</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm border border-white/20">
-                      <div className="w-2 h-2 bg-blue-300 rounded-full"></div>
-                      <span className="text-sm">{alerts.filter(a => a.status === 'new').length} new alerts</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Building className="w-5 h-5 text-white" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="flex gap-4 mb-6">
                 {summaryStats.map((stat, index) => {
                   const IconComponent = stat.icon;
                   return (
-                    <motion.div 
+                    <div 
                       key={index}
-                      whileHover={{ y: -5 }}
-                      className={`bg-gradient-to-br ${stat.color} rounded-2xl p-6 shadow-lg border border-white/20 backdrop-blur-sm`}
+                      className={`flex-grow bg-gradient-to-br ${stat.color} rounded-md p-4 shadow-sm border border-white/20 backdrop-blur-sm relative overflow-hidden`}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
-                          <IconComponent className="w-6 h-6 text-white" />
+                      <div className="absolute -top-2 -right-2 w-10 h-10 bg-white/10 rounded-full"></div>
+                      <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
+                          <IconComponent className="w-4 h-4 text-white" />
                         </div>
                         <div className="text-right">
-                          <div className="text-3xl font-bold text-white">{stat.value}</div>
-                          <div className="text-xs text-white/80">{stat.label}</div>
+                          <div className="text-lg font-bold text-white">{stat.value}</div>
+                          <div className="text-[9px] text-white/80">{stat.label}</div>
                         </div>
                       </div>
-                      <div className="text-sm text-white/90 font-medium">+{stat.change} from last period</div>
-                    </motion.div>
+                      <div className="text-[9px] text-white/90 font-medium">+{stat.change} from last period</div>
+                    </div>
                   );
                 })}
               </div>
@@ -222,60 +226,64 @@ const GovernmentDashboard = ({ onLogout }) => {
               {/* Charts and Recent Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {/* Attendance Trends Chart */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border border-blue-200/30 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-white">Attendance Trends</h2>
-                    <div className="flex gap-2">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-sm font-bold text-white">Attendance Trends</h2>
+                    <div className="flex gap-1">
                       <button 
                         onClick={() => setReportPeriod('weekly')}
-                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'weekly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                        className={`px-2 py-1 text-[9px] rounded-md ${reportPeriod === 'weekly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
                       >
                         Weekly
                       </button>
                       <button 
                         onClick={() => setReportPeriod('monthly')}
-                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'monthly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                        className={`px-2 py-1 text-[9px] rounded-md ${reportPeriod === 'monthly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
                       >
                         Monthly
                       </button>
                       <button 
                         onClick={() => setReportPeriod('yearly')}
-                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'yearly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                        className={`px-2 py-1 text-[9px] rounded-md ${reportPeriod === 'yearly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
                       >
                         Yearly
                       </button>
                     </div>
                   </div>
-                  <div className="h-64 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                  <div className="h-48 bg-white rounded-md p-3 border border-gray-200">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart data={attendanceTrendData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(229, 231, 235, 1)" />
                         <XAxis 
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(107, 114, 128, 1)', fontSize: 10 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(107, 114, 128, 1)', fontSize: 10 }}
                         />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '12px',
-                            border: 'none',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                            borderRadius: '8px',
+                            border: '1px solid #e5e7eb',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                            fontSize: '12px'
                           }} 
                         />
                         <Line 
                           type="monotone" 
                           dataKey="attendance" 
-                          stroke="#fff" 
-                          strokeWidth={4}
-                          dot={{ r: 8, fill: '#fff', strokeWidth: 2, stroke: '#3b82f6' }}
-                          activeDot={{ r: 10, fill: '#fff', strokeWidth: 2, stroke: '#2563eb' }}
+                          stroke="#1e40af" 
+                          strokeWidth={2}
+                          dot={{ r: 6, fill: '#fff', strokeWidth: 2, stroke: '#1e40af' }}
+                          activeDot={{ r: 8, fill: '#fff', strokeWidth: 2, stroke: '#1e3a8a' }}
                         />
                       </RechartsLineChart>
                     </ResponsiveContainer>
@@ -283,27 +291,30 @@ const GovernmentDashboard = ({ onLogout }) => {
                 </div>
 
                 {/* Recent Alerts */}
-                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-lg border border-gray-200/30 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-gray-900">Recent Alerts</h2>
-                    <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-md p-4 shadow-sm border border-gray-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-500/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-sm font-bold text-gray-900">Recent Alerts</h2>
+                    <button className="text-[9px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {alerts.slice(0, 3).map((alert) => (
                       <motion.div
                         key={alert.id}
                         whileHover={{ x: 5 }}
-                        className={`p-4 rounded-xl border ${getSeverityColor(alert.severity)} transition-all duration-300`}
+                        className={`p-3 rounded-md border ${getSeverityColor(alert.severity)} transition-all duration-300`}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className={`p-2 rounded-lg ${getSeverityColorSolid(alert.severity)}`}>
+                        <div className="flex items-start gap-2">
+                          <div className={`p-1.5 rounded-md ${getSeverityColorSolid(alert.severity)}`}>
                             {getAlertIcon(alert.type)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 mb-1">{alert.message}</p>
-                            <p className="text-sm text-gray-500">{alert.time}</p>
+                            <p className="font-medium text-gray-900 text-[10px] mb-1">{alert.message}</p>
+                            <p className="text-[9px] text-gray-500">{alert.time}</p>
                           </div>
-                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                          <div className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${getSeverityColor(alert.severity)}`}>
                             {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
                           </div>
                         </div>
@@ -314,31 +325,31 @@ const GovernmentDashboard = ({ onLogout }) => {
               </div>
 
               {/* Schools Overview */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <h3 className="text-xl font-bold text-gray-900">Schools Overview</h3>
-                    <div className="flex flex-wrap gap-3">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
+                <div className="p-4 border-b border-gray-100">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <h3 className="text-sm font-bold text-gray-900">Schools Overview</h3>
+                    <div className="flex flex-wrap gap-2">
                       <div className="relative">
                         <input
                           type="text"
                           placeholder="Search schools..."
-                          className="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                          className="pl-8 pr-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
                         />
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                       </div>
                       <select 
                         value={selectedDistrict}
                         onChange={(e) => setSelectedDistrict(e.target.value)}
-                        className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="All Districts">All Districts</option>
                         <option value="Central">Central District</option>
                         <option value="North">North District</option>
                         <option value="South">South District</option>
                       </select>
-                      <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
-                        <Plus className="w-4 h-4" />
+                      <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                        <Plus className="w-3 h-3" />
                         Add School
                       </button>
                     </div>
@@ -347,42 +358,38 @@ const GovernmentDashboard = ({ onLogout }) => {
                 
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">School Name</th>
-                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Students</th>
-                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Attendance</th>
-                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Performance</th>
-                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Alerts</th>
-                        <th className="py-4 px-6 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">School Name</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Students</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Attendance</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Performance</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Alerts</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {schools.map((school) => (
-                        <tr key={school.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="py-4 px-6 font-medium text-gray-900">{school.name}</td>
-                          <td className="py-4 px-6 text-gray-600">{school.students.toLocaleString()}</td>
-                          <td className="py-4 px-6">
-                            <span className="font-medium text-gray-900">{school.attendance}%</span>
-                          </td>
-                          <td className="py-4 px-6">
-                            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                        <tr key={school.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{school.name}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{school.students.toLocaleString()}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{school.attendance}%</td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <span className="px-2 py-1 text-[8px] font-semibold rounded-full bg-green-100 text-green-800">
                               {school.performance}
                             </span>
                           </td>
-                          <td className="py-4 px-6">
-                            <span className="font-medium text-gray-900">{school.alerts}</span>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-2">
-                              <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{school.alerts}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                            <div className="flex items-center gap-1">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                                <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                                <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                <Trash2 className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                                <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
                           </td>
@@ -398,10 +405,10 @@ const GovernmentDashboard = ({ onLogout }) => {
           {/* Schools Tab */}
           {activeTab === 'schools' && (
             <div>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">School Management</h2>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  <Plus className="w-4 h-4" />
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-sm font-bold text-gray-900">School Management</h2>
+                <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                  <Plus className="w-3 h-3" />
                   Add School
                 </button>
               </div>
@@ -409,24 +416,24 @@ const GovernmentDashboard = ({ onLogout }) => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* School Statistics */}
                 <div className="lg:col-span-1 space-y-6">
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-6">District Statistics</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                        <span className="text-gray-600">Total Schools</span>
-                        <span className="font-bold text-gray-900">{districtData.totalSchools}</span>
+                  <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100">
+                    <h3 className="text-sm font-bold text-gray-900 mb-4">District Statistics</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-2.5 bg-gray-50 rounded-md">
+                        <span className="text-[10px] text-gray-600">Total Schools</span>
+                        <span className="font-bold text-gray-900 text-[10px]">{districtData.totalSchools}</span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                        <span className="text-gray-600">Total Students</span>
-                        <span className="font-bold text-gray-900">{districtData.totalStudents.toLocaleString()}</span>
+                      <div className="flex justify-between items-center p-2.5 bg-gray-50 rounded-md">
+                        <span className="text-[10px] text-gray-600">Total Students</span>
+                        <span className="font-bold text-gray-900 text-[10px]">{districtData.totalStudents.toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                        <span className="text-gray-600">Average Class Size</span>
-                        <span className="font-bold text-gray-900">{districtData.averageClassSize}</span>
+                      <div className="flex justify-between items-center p-2.5 bg-gray-50 rounded-md">
+                        <span className="text-[10px] text-gray-600">Average Class Size</span>
+                        <span className="font-bold text-gray-900 text-[10px]">{districtData.averageClassSize}</span>
                       </div>
-                      <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                        <span className="text-gray-600">Schools Needing Support</span>
-                        <span className="font-bold text-red-600">{districtData.schoolsNeedingSupport}</span>
+                      <div className="flex justify-between items-center p-2.5 bg-gray-50 rounded-md">
+                        <span className="text-[10px] text-gray-600">Schools Needing Support</span>
+                        <span className="font-bold text-red-600 text-[10px]">{districtData.schoolsNeedingSupport}</span>
                       </div>
                     </div>
                   </div>
@@ -538,11 +545,14 @@ const GovernmentDashboard = ({ onLogout }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
                 {/* Attendance Analytics */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border-2 border-blue-300/50 backdrop-blur-sm">
-                  <h3 className="text-lg font-bold text-white mb-6">Attendance Analytics</h3>
-                  <div className="h-80 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                  
+                  <h3 className="text-sm font-bold text-white mb-4">Attendance Analytics</h3>
+                  <div className="h-48 bg-white/20 rounded-md p-3 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart data={attendanceTrendData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
@@ -550,20 +560,21 @@ const GovernmentDashboard = ({ onLogout }) => {
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
                         />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '12px',
+                            borderRadius: '8px',
                             border: '1px solid rgba(255,255,255,0.3)',
                             boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(10px)'
+                            backdropFilter: 'blur(10px)',
+                            fontSize: '12px'
                           }}
                           labelStyle={{ color: '#1e40af' }}
                         />
@@ -581,9 +592,12 @@ const GovernmentDashboard = ({ onLogout }) => {
                 </div>
 
                 {/* School Performance */}
-                <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl p-6 shadow-lg border-2 border-green-300/50 backdrop-blur-sm">
-                  <h3 className="text-lg font-bold text-white mb-6">School Performance</h3>
-                  <div className="h-80 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-md p-4 shadow-sm border border-green-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                  
+                  <h3 className="text-sm font-bold text-white mb-4">School Performance</h3>
+                  <div className="h-48 bg-white/20 rounded-md p-3 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart data={attendanceTrendData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
@@ -591,21 +605,22 @@ const GovernmentDashboard = ({ onLogout }) => {
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
                         />
                         <Tooltip 
                           formatter={(value) => [`${value}`, 'Active Schools']}
                           contentStyle={{ 
                             backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '12px',
+                            borderRadius: '8px',
                             border: '1px solid rgba(255,255,255,0.3)',
                             boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(10px)'
+                            backdropFilter: 'blur(10px)',
+                            fontSize: '12px'
                           }}
                           labelStyle={{ color: '#047857' }}
                         />
@@ -626,9 +641,9 @@ const GovernmentDashboard = ({ onLogout }) => {
               </div>
 
               {/* Detailed Reports */}
-              <div className="mt-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-6">Detailed Reports</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="mt-6 bg-white rounded-md p-4 shadow-sm border border-gray-100">
+                <h3 className="text-sm font-bold text-gray-900 mb-4">Detailed Reports</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
                     { title: 'Monthly Attendance Report', description: 'Comprehensive attendance analysis', icon: FileText },
                     { title: 'School Performance Index', description: 'Performance metrics across schools', icon: Target },
@@ -637,15 +652,15 @@ const GovernmentDashboard = ({ onLogout }) => {
                   ].map((report, index) => {
                     const IconComponent = report.icon;
                     return (
-                      <div key={index} className="p-4 border border-gray-200 rounded-xl hover:border-blue-300 transition-colors cursor-pointer">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <IconComponent className="w-5 h-5 text-blue-600" />
+                      <div key={index} className="p-3 border border-gray-200 rounded-md hover:border-blue-300 transition-colors cursor-pointer">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
+                            <IconComponent className="w-4 h-4 text-blue-600" />
                           </div>
-                          <h4 className="font-medium text-gray-900">{report.title}</h4>
+                          <h4 className="font-medium text-gray-900 text-[10px]">{report.title}</h4>
                         </div>
-                        <p className="text-sm text-gray-500">{report.description}</p>
-                        <button className="mt-3 text-blue-600 text-sm font-medium hover:text-blue-700">
+                        <p className="text-[9px] text-gray-500 mb-2">{report.description}</p>
+                        <button className="text-[9px] text-blue-600 font-medium hover:text-blue-700">
                           Generate Report
                         </button>
                       </div>
@@ -675,71 +690,80 @@ const GovernmentDashboard = ({ onLogout }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">Critical Alerts</h3>
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <AlertTriangle className="w-6 h-6" />
+              <div className="flex gap-4 mb-6">
+                <div className="flex-grow bg-gradient-to-br from-red-500 to-orange-500 rounded-md p-4 text-white shadow-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold">Critical Alerts</h3>
+                    <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold mb-2">12</div>
-                  <div className="text-red-100">Require immediate attention</div>
+                  <div className="text-lg font-bold mb-1">12</div>
+                  <div className="text-[9px] text-red-100">Require immediate attention</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">High Priority</h3>
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Bell className="w-6 h-6" />
+                <div className="flex-grow bg-gradient-to-br from-amber-500 to-yellow-500 rounded-md p-4 text-white shadow-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold">High Priority</h3>
+                    <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
+                      <Bell className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold mb-2">24</div>
-                  <div className="text-amber-100">Should be addressed soon</div>
+                  <div className="text-lg font-bold mb-1">24</div>
+                  <div className="text-[9px] text-amber-100">Should be addressed soon</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">Medium Priority</h3>
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Bell className="w-6 h-6" />
+                <div className="flex-grow bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md p-4 text-white shadow-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold">Medium Priority</h3>
+                    <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
+                      <Bell className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold mb-2">36</div>
-                  <div className="text-blue-100">Monitor regularly</div>
+                  <div className="text-lg font-bold mb-1">36</div>
+                  <div className="text-[9px] text-blue-100">Monitor regularly</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900">All Alerts</h3>
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-900">All Alerts</h3>
                 </div>
                 <div className="divide-y divide-gray-100">
                   {alerts.map((alert) => (
-                    <div key={alert.id} className="p-6 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-xl ${getSeverityColorSolid(alert.severity)}`}>
+                    <div key={alert.id} className="p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-md ${getSeverityColorSolid(alert.severity)}`}>
                           {getAlertIcon(alert.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-3 mb-2">
-                            <h4 className="font-medium text-gray-900">{alert.message}</h4>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <h4 className="font-medium text-gray-900 text-[10px]">{alert.message}</h4>
+                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${getSeverityColor(alert.severity)}`}>
                               {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
                             </span>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColorSolid(alert.severity)} text-white`}>
+                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${getSeverityColorSolid(alert.severity)} text-white`}>
                               {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-500 mb-3">{alert.time}</p>
+                          <p className="text-[9px] text-gray-500 mb-2">{alert.time}</p>
                           <div className="flex gap-2">
-                            <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors">
+                            <button className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-[9px] font-medium hover:bg-blue-200 transition-colors">
                               Acknowledge
                             </button>
-                            <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <button className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-[9px] font-medium hover:bg-gray-200 transition-colors">
                               Snooze
                             </button>
-                            <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <button className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-[9px] font-medium hover:bg-gray-200 transition-colors">
                               Details
                             </button>
                           </div>
@@ -829,7 +853,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                       <div className="flex flex-col items-center md:col-span-2">
                         <div className="relative mb-3 group">
-                          <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md transform transition-all group-hover:scale-105">
+                          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md transform transition-all group-hover:scale-105">
                             GO
                           </div>
                           <button className="absolute bottom-1 right-1 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-all shadow-md transform hover:scale-110 flex items-center justify-center">

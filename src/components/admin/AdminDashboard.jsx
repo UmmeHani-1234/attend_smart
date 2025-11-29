@@ -225,9 +225,9 @@ const AdminDashboard = ({ onLogout }) => {
 
   const summaryStats = [
     { label: 'Total Students', value: schoolData.totalStudents, icon: Users, color: 'from-blue-500 to-blue-600', change: '+15' },
-    { label: 'Total Teachers', value: schoolData.totalTeachers, icon: User, color: 'from-green-500 to-emerald-600', change: '+2' },
-    { label: 'Present Today', value: Math.round(schoolData.totalStudents * schoolData.currentAttendance / 100), icon: UserCheck, color: 'from-green-500 to-green-600', change: '+42' },
-    { label: 'Attendance Rate', value: `${schoolData.currentAttendance}%`, icon: TrendingUp, color: 'from-purple-500 to-purple-600', change: '+1.2%' },
+    { label: 'Total Teachers', value: schoolData.totalTeachers, icon: User, color: 'from-blue-400 to-indigo-500', change: '+2' },
+    { label: 'Present Today', value: Math.round(schoolData.totalStudents * schoolData.currentAttendance / 100), icon: UserCheck, color: 'from-indigo-400 to-indigo-500', change: '+42' },
+    { label: 'Attendance Rate', value: `${schoolData.currentAttendance}%`, icon: TrendingUp, color: 'from-indigo-500 to-purple-600', change: '+1.2%' },
   ];
 
   return (
@@ -237,28 +237,28 @@ const AdminDashboard = ({ onLogout }) => {
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-64 md:w-72 bg-white shadow-xl flex flex-col h-screen"
+        className="w-52 bg-white shadow-lg flex flex-col h-screen"
       >
-        <div className="p-5 border-b border-gray-100">
-          <div className="flex items-center gap-3">
+        <div className="p-2.5 border-b border-gray-100">
+          <div className="flex items-center gap-1.5">
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-[11px] shadow-md">
                 AD
               </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
-                  Smart Attendance System
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate block">
+                  Smart Attendance
                 </span>
               </div>
-              <p className="text-xs text-gray-500 truncate">School Admin Dashboard</p>
+              <p className="text-[10px] text-gray-500 truncate">Admin</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-4 pt-0 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-2 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
             { id: 'teachers', icon: User, label: 'Teachers' },
@@ -271,16 +271,16 @@ const AdminDashboard = ({ onLogout }) => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 ${
+              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30'
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
                   : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
               }`}
             >
-              <tab.icon className="w-5 h-5" />
-              <span className="font-medium">{tab.label}</span>
+              <tab.icon className="w-3 h-3" />
+              <span className="font-medium text-[11px]">{tab.label}</span>
               {tab.id === 'alerts' && (
-                <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="ml-auto bg-red-500 text-white text-[8px] font-bold rounded-full w-3 h-3 flex items-center justify-center">
                   3
                 </span>
               )}
@@ -288,13 +288,13 @@ const AdminDashboard = ({ onLogout }) => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-100 space-y-1">
+        <div className="p-2 border-t border-gray-100 space-y-1">
           <button 
             onClick={onLogout}
-            className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-600 hover:bg-gray-50 transition-all"
+            className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
           >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">Logout</span>
+            <LogOut className="w-3 h-3" />
+            <span className="font-medium text-[11px]">Logout</span>
           </button>
         </div>
       </motion.div>
@@ -313,58 +313,62 @@ const AdminDashboard = ({ onLogout }) => {
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-8 flex-grow overflow-y-auto overscroll-contain">
+        <div className="p-4 flex-grow overflow-y-auto overscroll-contain">
           {/* Home Tab */}
           {activeTab === 'home' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-3xl p-8 mb-8 shadow-xl backdrop-blur-sm border border-white/20 relative overflow-hidden">
-                {/* Animated background elements */}
-                <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                  <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full mix-blend-overlay"></div>
-                  <div className="absolute bottom-10 right-10 w-48 h-48 bg-white rounded-full mix-blend-overlay"></div>
-                </div>
-                <div className="relative z-10">
-                  <h2 className="text-4xl font-bold text-white mb-2">
-                    Good Morning, Admin! 👋
-                  </h2>
-                  <p className="text-blue-100 text-lg mb-6">
-                    Manage school-wide attendance and oversee academic performance
-                  </p>
-                  <div className="flex items-center gap-4 text-white">
-                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm border border-white/20">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span className="text-sm">{schoolData.totalStudents} total students</span>
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-white mb-1.5">Good Morning, Admin! 👋</h2>
+                    <p className="text-xs text-blue-100 mb-2">Manage school-wide attendance and oversee academic performance</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{schoolData.totalStudents} total students</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{alerts.filter(a => a.status === 'new').length} new alerts</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm border border-white/20">
-                      <div className="w-2 h-2 bg-blue-300 rounded-full"></div>
-                      <span className="text-sm">{alerts.filter(a => a.status === 'new').length} new alerts</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <School className="w-5 h-5 text-white" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Summary Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="flex gap-4 mb-6">
                 {summaryStats.map((stat, index) => {
                   const IconComponent = stat.icon;
                   return (
-                    <motion.div 
+                    <div 
                       key={index}
-                      whileHover={{ y: -5 }}
-                      className={`bg-gradient-to-br ${stat.color} rounded-2xl p-6 shadow-lg border border-white/20 backdrop-blur-sm`}
+                      className={`flex-grow bg-gradient-to-br ${stat.color} rounded-md p-4 shadow-sm border border-white/20 backdrop-blur-sm relative overflow-hidden`}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
-                          <IconComponent className="w-6 h-6 text-white" />
+                      <div className="absolute -top-2 -right-2 w-10 h-10 bg-white/10 rounded-full"></div>
+                      <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                      
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center border border-white/30">
+                          <IconComponent className="w-4 h-4 text-white" />
                         </div>
                         <div className="text-right">
-                          <div className="text-3xl font-bold text-white">{stat.value}</div>
-                          <div className="text-xs text-white/80">{stat.label}</div>
+                          <div className="text-lg font-bold text-white">{stat.value}</div>
+                          <div className="text-[9px] text-white/80">{stat.label}</div>
                         </div>
                       </div>
-                      <div className="text-sm text-white/90 font-medium">+{stat.change} from last period</div>
-                    </motion.div>
+                      <div className="text-[9px] text-white/90 font-medium">+{stat.change} from last period</div>
+                    </div>
                   );
                 })}
               </div>
@@ -372,60 +376,64 @@ const AdminDashboard = ({ onLogout }) => {
               {/* Charts and Recent Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {/* Attendance Trends Chart */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border border-blue-200/30 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-white">Attendance Trends</h2>
-                    <div className="flex gap-2">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-sm font-bold text-white">Attendance Trends</h2>
+                    <div className="flex gap-1">
                       <button 
                         onClick={() => setReportPeriod('weekly')}
-                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'weekly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                        className={`px-2 py-1 text-[9px] rounded-md ${reportPeriod === 'weekly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
                       >
                         Weekly
                       </button>
                       <button 
                         onClick={() => setReportPeriod('monthly')}
-                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'monthly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                        className={`px-2 py-1 text-[9px] rounded-md ${reportPeriod === 'monthly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
                       >
                         Monthly
                       </button>
                       <button 
                         onClick={() => setReportPeriod('yearly')}
-                        className={`px-3 py-1.5 text-sm rounded-lg ${reportPeriod === 'yearly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
+                        className={`px-2 py-1 text-[9px] rounded-md ${reportPeriod === 'yearly' ? 'bg-white text-blue-600' : 'bg-white/20 text-white'}`}
                       >
                         Yearly
                       </button>
                     </div>
                   </div>
-                  <div className="h-64 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                  <div className="h-48 bg-white rounded-md p-3 border border-gray-200">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart data={getCurrentAttendanceData()}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(229, 231, 235, 1)" />
                         <XAxis 
                           dataKey={getDataKey()} 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(107, 114, 128, 1)', fontSize: 10 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(107, 114, 128, 1)', fontSize: 10 }}
                         />
                         <Tooltip 
                           contentStyle={{ 
                             backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '12px',
-                            border: 'none',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                            borderRadius: '8px',
+                            border: '1px solid #e5e7eb',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                            fontSize: '12px'
                           }} 
                         />
                         <Line 
                           type="monotone" 
                           dataKey="attendance" 
-                          stroke="#fff" 
-                          strokeWidth={4}
-                          dot={{ r: 8, fill: '#fff', strokeWidth: 2, stroke: '#3b82f6' }}
-                          activeDot={{ r: 10, fill: '#fff', strokeWidth: 2, stroke: '#2563eb' }}
+                          stroke="#1e40af" 
+                          strokeWidth={2}
+                          dot={{ r: 6, fill: '#fff', strokeWidth: 2, stroke: '#1e40af' }}
+                          activeDot={{ r: 8, fill: '#fff', strokeWidth: 2, stroke: '#1e3a8a' }}
                         />
                       </RechartsLineChart>
                     </ResponsiveContainer>
@@ -433,27 +441,30 @@ const AdminDashboard = ({ onLogout }) => {
                 </div>
 
                 {/* Recent Alerts */}
-                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-lg border border-gray-200/30 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-gray-900">Recent Alerts</h2>
-                    <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">View All</button>
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-md p-4 shadow-sm border border-gray-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-500/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-sm font-bold text-gray-900">Recent Alerts</h2>
+                    <button className="text-[9px] text-blue-600 hover:text-blue-700 font-medium">View All</button>
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {alerts.slice(0, 3).map((alert) => (
                       <motion.div
                         key={alert.id}
                         whileHover={{ x: 5 }}
-                        className={`p-4 rounded-xl border ${getSeverityColor(alert.severity)} transition-all duration-300`}
+                        className={`p-3 rounded-md border ${getSeverityColor(alert.severity)} transition-all duration-300`}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className={`p-2 rounded-lg ${getSeverityColorSolid(alert.severity)}`}>
+                        <div className="flex items-start gap-2">
+                          <div className={`p-1.5 rounded-md ${getSeverityColorSolid(alert.severity)}`}>
                             {getAlertIcon(alert.type)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 mb-1">{alert.message}</p>
-                            <p className="text-sm text-gray-500">{alert.time}</p>
+                            <p className="font-medium text-gray-900 text-[10px] mb-1">{alert.message}</p>
+                            <p className="text-[9px] text-gray-500">{alert.time}</p>
                           </div>
-                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                          <div className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${getSeverityColor(alert.severity)}`}>
                             {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
                           </div>
                         </div>
@@ -464,31 +475,31 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* School Info */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-blue-200/30 mb-8 hover:shadow-lg transition-all duration-300">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{schoolData.name}</h2>
-                    <p className="text-gray-600 mt-1">{schoolData.location}</p>
-                    <div className="flex flex-wrap gap-4 mt-4">
-                      <div className="flex items-center gap-2">
-                        <UserCheck className="w-5 h-5 text-blue-500" />
-                        <span className="text-gray-600">{schoolData.totalStudents} Students</span>
+                    <h2 className="text-sm font-bold text-gray-900">{schoolData.name}</h2>
+                    <p className="text-[10px] text-gray-600 mt-1">{schoolData.location}</p>
+                    <div className="flex flex-wrap gap-3 mt-3">
+                      <div className="flex items-center gap-1.5">
+                        <UserCheck className="w-4 h-4 text-blue-500" />
+                        <span className="text-[10px] text-gray-600">{schoolData.totalStudents} Students</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <User className="w-5 h-5 text-green-500" />
-                        <span className="text-gray-600">{schoolData.totalTeachers} Teachers</span>
+                      <div className="flex items-center gap-1.5">
+                        <User className="w-4 h-4 text-green-500" />
+                        <span className="text-[10px] text-gray-600">{schoolData.totalTeachers} Teachers</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-5 h-5 text-purple-500" />
-                        <span className="text-gray-600">{schoolData.currentAttendance}% Attendance</span>
+                      <div className="flex items-center gap-1.5">
+                        <TrendingUp className="w-4 h-4 text-purple-500" />
+                        <span className="text-[10px] text-gray-600">{schoolData.currentAttendance}% Attendance</span>
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col items-end">
-                    <p className="text-sm text-gray-500">Principal</p>
-                    <p className="font-medium text-gray-900">{schoolData.principal}</p>
-                    <p className="text-sm text-gray-500 mt-2">Contact</p>
-                    <p className="font-medium text-gray-900">{schoolData.contact}</p>
+                    <p className="text-[9px] text-gray-500">Principal</p>
+                    <p className="font-medium text-gray-900 text-[10px]">{schoolData.principal}</p>
+                    <p className="text-[9px] text-gray-500 mt-1">Contact</p>
+                    <p className="font-medium text-gray-900 text-[10px]">{schoolData.contact}</p>
                   </div>
                 </div>
               </div>
@@ -498,23 +509,23 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Teachers Tab */}
           {activeTab === 'teachers' && (
             <div>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Teacher Management</h2>
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-sm font-bold text-gray-900">Teacher Management</h2>
                 <button 
                   onClick={() => setShowAddTeacherModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-xl hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3" />
                   Add Teacher
                 </button>
               </div>
 
               {/* Teachers Filters */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-blue-200/30 mb-8 hover:shadow-lg transition-all duration-300">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                    <select className="w-full px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Subjects</option>
                       <option>Mathematics</option>
                       <option>Science</option>
@@ -523,8 +534,8 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Classes</label>
-                    <select className="w-full px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Classes</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Classes</option>
                       <option>6th Grade</option>
                       <option>7th Grade</option>
@@ -536,15 +547,15 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select className="w-full px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Status</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Statuses</option>
                       <option>Active</option>
                       <option>Inactive</option>
                     </select>
                   </div>
                   <div className="flex items-end">
-                    <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all">
+                    <button className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
                       Apply Filters
                     </button>
                   </div>
@@ -552,51 +563,51 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* Teachers Table */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Avatar</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Teacher</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Email</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Subject</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Classes</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Students</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Avatar</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Teacher</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Email</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Classes</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Students</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {teachers.map((teacher) => (
-                        <tr key={teacher.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-4 px-4">
+                        <tr key={teacher.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                          <td className="px-3 py-2">
                             {teacher.avatar ? (
                               <img 
                                 src={teacher.avatar} 
                                 alt={teacher.name} 
-                                className="w-10 h-10 rounded-full object-cover"
+                                className="w-7 h-7 rounded-md object-cover"
                               />
                             ) : (
-                              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <User className="w-6 h-6 text-gray-400" />
+                              <div className="w-7 h-7 rounded-md bg-gray-200 flex items-center justify-center">
+                                <User className="w-4 h-4 text-gray-400" />
                               </div>
                             )}
                           </td>
-                          <td className="py-4 px-4 font-medium text-gray-900">{teacher.name}</td>
-                          <td className="py-4 px-4 text-gray-600">{teacher.email}</td>
-                          <td className="py-4 px-4 text-gray-600">{teacher.subject}</td>
-                          <td className="py-4 px-4 text-gray-600">{teacher.classes.join(', ')}</td>
-                          <td className="py-4 px-4 text-gray-600">{teacher.students}</td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{teacher.name}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.email}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.subject}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.classes.join(', ')}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{teacher.students}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                            <div className="flex items-center gap-1">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                                <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                                <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                <Trash2 className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                                <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
                           </td>
@@ -612,23 +623,23 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Students Tab */}
           {activeTab === 'students' && (
             <div>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Student Management</h2>
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-sm font-bold text-gray-900">Student Management</h2>
                 <button 
                   onClick={() => setShowAddStudentModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-xl hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3" />
                   Add Student
                 </button>
               </div>
 
               {/* Students Filters */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Class</label>
-                    <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Classes</option>
                       <option>6th Grade</option>
                       <option>7th Grade</option>
@@ -640,8 +651,8 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Grade</label>
-                    <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Grade</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Grades</option>
                       <option>A+</option>
                       <option>A</option>
@@ -652,8 +663,8 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Attendance</label>
-                    <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Attendance</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All</option>
                       <option>Above 90%</option>
                       <option>80-90%</option>
@@ -661,7 +672,7 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div className="flex items-end">
-                    <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all">
+                    <button className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
                       Apply Filters
                     </button>
                   </div>
@@ -669,57 +680,55 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* Students Table */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Avatar</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Student</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Roll Number</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Class</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Attendance</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Grade</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Avatar</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Student</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Roll Number</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Class</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Attendance</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Grade</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {students.map((student) => (
-                        <tr key={student.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-4 px-4">
+                        <tr key={student.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                          <td className="px-3 py-2">
                             {student.avatar ? (
                               <img 
                                 src={student.avatar} 
                                 alt={student.name} 
-                                className="w-10 h-10 rounded-full object-cover"
+                                className="w-7 h-7 rounded-md object-cover"
                               />
                             ) : (
-                              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <User className="w-6 h-6 text-gray-400" />
+                              <div className="w-7 h-7 rounded-md bg-gray-200 flex items-center justify-center">
+                                <User className="w-4 h-4 text-gray-400" />
                               </div>
                             )}
                           </td>
-                          <td className="py-4 px-4 font-medium text-gray-900">{student.name}</td>
-                          <td className="py-4 px-4 text-gray-600">{student.roll}</td>
-                          <td className="py-4 px-4 text-gray-600">{student.class}</td>
-                          <td className="py-4 px-4">
-                            <span className="text-gray-900 font-medium">{student.attendance}%</span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{student.name}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{student.roll}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{student.class}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{student.attendance}%</td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <span className="px-2 py-1 text-[8px] font-semibold rounded-full bg-green-100 text-green-800">
                               {student.grade}
                             </span>
                           </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                            <div className="flex items-center gap-1">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                                <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                                <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                <Trash2 className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                                <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
                           </td>
@@ -735,20 +744,20 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Classes Tab */}
           {activeTab === 'classes' && (
             <div>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Class Management</h2>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-400 to-indigo-500 text-white rounded-xl hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border border-blue-300/50 hover:border-blue-200/80 backdrop-blur-sm hover:backdrop-blur-md hover:shadow-blue-500/30 glow-on-hover">
-                  <Plus className="w-4 h-4" />
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-sm font-bold text-gray-900">Class Management</h2>
+                <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                  <Plus className="w-3 h-3" />
                   Add Class
                 </button>
               </div>
 
               {/* Classes Filters */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                    <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Subjects</option>
                       <option>Mathematics</option>
                       <option>Science</option>
@@ -757,8 +766,8 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Grade</label>
-                    <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Grade</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All Grades</option>
                       <option>6th Grade</option>
                       <option>7th Grade</option>
@@ -770,8 +779,8 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Students</label>
-                    <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Students</label>
+                    <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option>All</option>
                       <option>0-25</option>
                       <option>26-35</option>
@@ -779,7 +788,7 @@ const AdminDashboard = ({ onLogout }) => {
                     </select>
                   </div>
                   <div className="flex items-end">
-                    <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all">
+                    <button className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
                       Apply Filters
                     </button>
                   </div>
@@ -787,35 +796,35 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
 
               {/* Classes Table */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Class</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Subject</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Teacher</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Students</th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-500">Actions</th>
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                      <tr>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Class</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Teacher</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Students</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {classes.map((classItem) => (
-                        <tr key={classItem.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-4 px-4 font-medium text-gray-900">{classItem.name}</td>
-                          <td className="py-4 px-4 text-gray-600">{classItem.subject}</td>
-                          <td className="py-4 px-4 text-gray-600">{classItem.teacher}</td>
-                          <td className="py-4 px-4 text-gray-600">{classItem.students}</td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
+                        <tr key={classItem.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{classItem.name}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.subject}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.teacher}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.students}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px]">
+                            <div className="flex items-center gap-1">
+                              <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors">
+                                <Eye className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors">
+                                <Edit className="w-3 h-3" />
                               </button>
-                              <button className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                                <Trash2 className="w-4 h-4" />
+                              <button className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                                <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
                           </td>
@@ -831,15 +840,15 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Reports Tab */}
           {activeTab === 'reports' && (
             <div>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
-                <div className="flex gap-3">
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all">
-                    <Filter className="w-4 h-4" />
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-sm font-bold text-gray-900">Reports & Analytics</h2>
+                <div className="flex gap-2">
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]">
+                    <Filter className="w-3 h-3" />
                     Filter
                   </button>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
-                    <Download className="w-4 h-4" />
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
+                    <Download className="w-3 h-3" />
                     Export Report
                   </button>
                 </div>
@@ -847,9 +856,12 @@ const AdminDashboard = ({ onLogout }) => {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Attendance Analytics */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 shadow-lg border-2 border-blue-300/50 backdrop-blur-sm">
-                  <h3 className="text-lg font-bold text-white mb-6">Attendance Analytics</h3>
-                  <div className="h-80 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                  
+                  <h3 className="text-sm font-bold text-white mb-4">Attendance Analytics</h3>
+                  <div className="h-48 bg-white/20 rounded-md p-3 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart data={classes}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.3)" />
@@ -857,21 +869,22 @@ const AdminDashboard = ({ onLogout }) => {
                           dataKey="name" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 12 }}
+                          tick={{ fill: 'rgba(255,255,255,0.8)', fontSize: 10 }}
                         />
                         <Tooltip 
                           formatter={(value) => [`${value}`, 'Students']}
                           contentStyle={{ 
                             backgroundColor: 'rgba(255,255,255,0.9)', 
-                            borderRadius: '12px',
+                            borderRadius: '8px',
                             border: '1px solid rgba(255,255,255,0.3)',
                             boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                            backdropFilter: 'blur(10px)'
+                            backdropFilter: 'blur(10px)',
+                            fontSize: '12px'
                           }}
                           labelStyle={{ color: '#1e40af' }}
                         />
@@ -880,8 +893,8 @@ const AdminDashboard = ({ onLogout }) => {
                           dataKey="students" 
                           name="Students" 
                           fill="rgba(255,255,255,0.9)" 
-                          radius={[6, 6, 0, 0]} 
-                          barSize={32}
+                          radius={[4, 4, 0, 0]} 
+                          barSize={24}
                         />
                       </RechartsBarChart>
                     </ResponsiveContainer>
@@ -889,9 +902,12 @@ const AdminDashboard = ({ onLogout }) => {
                 </div>
 
                 {/* Student Distribution */}
-                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl p-6 shadow-lg border-2 border-purple-300/50 backdrop-blur-sm">
-                  <h3 className="text-lg font-bold text-white mb-6">Student Distribution</h3>
-                  <div className="h-80 bg-white/20 rounded-xl p-4 backdrop-blur-sm border border-white/30">
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-md p-4 shadow-sm border border-purple-200/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-3 -right-3 w-12 h-12 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-3 -left-3 w-10 h-10 bg-white/10 rounded-full"></div>
+                  
+                  <h3 className="text-sm font-bold text-white mb-4">Student Distribution</h3>
+                  <div className="h-48 bg-white/20 rounded-md p-3 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsPieChart>
                         <Pie
@@ -906,8 +922,8 @@ const AdminDashboard = ({ onLogout }) => {
                           ]}
                           cx="50%"
                           cy="50%"
-                          innerRadius={60}
-                          outerRadius={80}
+                          innerRadius={40}
+                          outerRadius={60}
                           paddingAngle={2}
                           dataKey="value"
                           label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
@@ -924,7 +940,16 @@ const AdminDashboard = ({ onLogout }) => {
                             <Cell key={`cell-${index}`} fill={entry.color} />
                           ))}
                         </Pie>
-                        <Tooltip />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.9)', 
+                            borderRadius: '8px',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                            backdropFilter: 'blur(10px)',
+                            fontSize: '12px'
+                          }}
+                        />
                         <Legend />
                       </RechartsPieChart>
                     </ResponsiveContainer>
@@ -937,87 +962,96 @@ const AdminDashboard = ({ onLogout }) => {
           {/* Alerts Tab */}
           {activeTab === 'alerts' && (
             <div>
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Alert Management</h2>
-                <div className="flex gap-3">
-                  <select className="px-4 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-sm font-bold text-gray-900">Alert Management</h2>
+                <div className="flex gap-2">
+                  <select className="px-3 py-1.5 bg-white border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>All Statuses</option>
                     <option>New</option>
                     <option>Acknowledged</option>
                     <option>Resolved</option>
                   </select>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all">
-                    <RefreshCw className="w-4 h-4" />
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]">
+                    <RefreshCw className="w-3 h-3" />
                     Refresh
                   </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">Critical Alerts</h3>
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <AlertTriangle className="w-6 h-6" />
+              <div className="flex gap-4 mb-6">
+                <div className="flex-grow bg-gradient-to-br from-red-500 to-orange-500 rounded-md p-4 text-white shadow-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold">Critical Alerts</h3>
+                    <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold mb-2">12</div>
-                  <div className="text-red-100">Require immediate attention</div>
+                  <div className="text-lg font-bold mb-1">12</div>
+                  <div className="text-[9px] text-red-100">Require immediate attention</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-amber-500 to-yellow-500 rounded-2xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">High Priority</h3>
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Bell className="w-6 h-6" />
+                <div className="flex-grow bg-gradient-to-br from-amber-500 to-yellow-500 rounded-md p-4 text-white shadow-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold">High Priority</h3>
+                    <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
+                      <Bell className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold mb-2">24</div>
-                  <div className="text-amber-100">Should be addressed soon</div>
+                  <div className="text-lg font-bold mb-1">24</div>
+                  <div className="text-[9px] text-amber-100">Should be addressed soon</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white shadow-lg">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-bold">Medium Priority</h3>
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Bell className="w-6 h-6" />
+                <div className="flex-grow bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md p-4 text-white shadow-sm relative overflow-hidden">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white/10 rounded-full"></div>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-bold">Medium Priority</h3>
+                    <div className="w-8 h-8 bg-white/20 rounded-md flex items-center justify-center">
+                      <Bell className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="text-3xl font-bold mb-2">36</div>
-                  <div className="text-blue-100">Monitor regularly</div>
+                  <div className="text-lg font-bold mb-1">36</div>
+                  <div className="text-[9px] text-blue-100">Monitor regularly</div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900">All Alerts</h3>
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
+                <div className="p-4 border-b border-gray-100">
+                  <h3 className="text-sm font-semibold text-gray-900">All Alerts</h3>
                 </div>
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-gray-50">
                   {alerts.map((alert) => (
-                    <div key={alert.id} className="p-6 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-xl ${getSeverityColorSolid(alert.severity)}`}>
+                    <div key={alert.id} className="p-4 hover:bg-indigo-50/50 transition-colors duration-150">
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-md ${getSeverityColorSolid(alert.severity)}`}>
                           {getAlertIcon(alert.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-3 mb-2">
-                            <h4 className="font-medium text-gray-900">{alert.message}</h4>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <h4 className="font-medium text-gray-900 text-[10px]">{alert.message}</h4>
+                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${getSeverityColor(alert.severity)}`}>
                               {alert.status.charAt(0).toUpperCase() + alert.status.slice(1)}
                             </span>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSeverityColorSolid(alert.severity)} text-white`}>
+                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-medium ${getSeverityColorSolid(alert.severity)} text-white`}>
                               {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-500 mb-3">{alert.time}</p>
-                          <div className="flex gap-2">
-                            <button className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors">
+                          <p className="text-[9px] text-gray-500 mb-2">{alert.time}</p>
+                          <div className="flex gap-1.5">
+                            <button className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-[9px] font-medium hover:bg-blue-200 transition-colors">
                               Acknowledge
                             </button>
-                            <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <button className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-[9px] font-medium hover:bg-gray-200 transition-colors">
                               Snooze
                             </button>
-                            <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+                            <button className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-[9px] font-medium hover:bg-gray-200 transition-colors">
                               Details
                             </button>
                           </div>
@@ -1035,15 +1069,15 @@ const AdminDashboard = ({ onLogout }) => {
             <div>
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">System Settings</h2>
-                  <p className="text-gray-600 text-sm mt-1">Manage your account preferences and system settings</p>
+                  <h2 className="text-sm font-bold text-gray-900">System Settings</h2>
+                  <p className="text-gray-600 text-[10px] mt-1">Manage your account preferences and system settings</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 {/* Settings Navigation */}
                 <div className="lg:col-span-1">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-1.5 sticky top-4">
+                  <div className="bg-white rounded-md shadow-sm border border-gray-100 p-1 sticky top-4">
                     {[
                       { id: 'profile', icon: User, label: 'Profile' },
                       { id: 'notifications', icon: Bell, label: 'Notifications' },
@@ -1054,13 +1088,13 @@ const AdminDashboard = ({ onLogout }) => {
                       return (
                         <button
                           key={tab.id}
-                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-left transition-all text-sm ${
+                          className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-left transition-all text-[11px] ${
                             activeTab === tab.id
                               ? 'bg-blue-50 text-blue-600 font-medium'
                               : 'text-gray-600 hover:bg-gray-50'
                           }`}
                         >
-                          <IconComponent className="w-4 h-4" />
+                          <IconComponent className="w-3.5 h-3.5" />
                           <span>{tab.label}</span>
                         </button>
                       );
@@ -1070,66 +1104,66 @@ const AdminDashboard = ({ onLogout }) => {
                 
                 {/* Settings Content */}
                 <div className="lg:col-span-3">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-                    <div className="mb-4">
-                      <h2 className="text-lg font-bold text-gray-900 mb-1">Profile Information</h2>
-                      <p className="text-gray-600 text-sm">Update your personal and professional details</p>
+                  <div className="bg-white rounded-md shadow-sm border border-gray-100 p-3">
+                    <div className="mb-3">
+                      <h2 className="text-sm font-bold text-gray-900 mb-1">Profile Information</h2>
+                      <p className="text-gray-600 text-[10px]">Update your personal and professional details</p>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 mb-3">
                       <div className="flex flex-col items-center md:col-span-2">
-                        <div className="relative mb-3">
-                          <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
+                        <div className="relative mb-2">
+                          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-base">
                             AD
                           </div>
-                          <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 transition-colors shadow-md">
-                            <Edit className="w-3 h-3" />
+                          <button className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full hover:bg-blue-600 transition-colors shadow-sm">
+                            <Edit className="w-2.5 h-2.5" />
                           </button>
                         </div>
-                        <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                        <button className="text-blue-600 hover:text-blue-700 font-medium text-[10px]">
                           Change Picture
                         </button>
                       </div>
                       
                       <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1.5">Full Name</label>
+                        <label className="block text-[9px] font-medium text-gray-700 mb-1">Full Name</label>
                         <input 
                           type="text" 
                           defaultValue="Admin User"
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          className="w-full px-2.5 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1.5">Email Address</label>
+                        <label className="block text-[9px] font-medium text-gray-700 mb-1">Email Address</label>
                         <input 
                           type="email" 
                           defaultValue="admin@school.edu"
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          className="w-full px-2.5 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1.5">School</label>
+                        <label className="block text-[9px] font-medium text-gray-700 mb-1">School</label>
                         <input 
                           type="text" 
                           defaultValue={schoolData.name}
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          className="w-full px-2.5 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
                         />
                       </div>
                       
                       <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1.5">Position</label>
+                        <label className="block text-[9px] font-medium text-gray-700 mb-1">Position</label>
                         <input 
                           type="text" 
                           defaultValue="School Administrator"
-                          className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          className="w-full px-2.5 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
                         />
                       </div>
                     </div>
                     
                     <div className="flex justify-end">
-                      <button className="px-4 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium text-sm">
+                      <button className="px-3 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium text-[10px]">
                         Save
                       </button>
                     </div>
@@ -1144,74 +1178,74 @@ const AdminDashboard = ({ onLogout }) => {
       {/* Add Teacher Modal */}
       {showAddTeacherModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-96 overflow-y-auto">
-            <div className="p-6 border-b border-gray-100">
+          <div className="bg-white rounded-md w-full max-w-md max-h-80 overflow-y-auto">
+            <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Add New Teacher</h3>
+                <h3 className="text-sm font-bold text-gray-900">Add New Teacher</h3>
                 <button 
                   onClick={() => setShowAddTeacherModal(false)}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all"
+                  className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
             
-            <div className="p-6">
-              <div className="flex flex-col items-center mb-6">
-                <div className="relative mb-4">
+            <div className="p-4">
+              <div className="flex flex-col items-center mb-4">
+                <div className="relative mb-3">
                   {teacherAvatarPreview ? (
                     <img 
                       src={teacherAvatarPreview} 
                       alt="Teacher preview" 
-                      className="w-24 h-24 rounded-full object-cover border-4 border-blue-100"
+                      className="w-20 h-20 rounded-md object-cover border-2 border-blue-100"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-4 border-blue-100">
-                      <User className="w-12 h-12 text-gray-400" />
+                    <div className="w-20 h-20 rounded-md bg-gray-200 flex items-center justify-center border-2 border-blue-100">
+                      <User className="w-10 h-10 text-gray-400" />
                     </div>
                   )}
                   <div className="absolute bottom-0 right-0 flex gap-1">
-                    <label className="bg-blue-500 rounded-full p-2 cursor-pointer hover:bg-blue-600 transition-colors">
+                    <label className="bg-blue-500 rounded-md p-1.5 cursor-pointer hover:bg-blue-600 transition-colors">
                       <input 
                         type="file" 
                         className="hidden" 
                         accept="image/*"
                         onChange={handleTeacherAvatarChange}
                       />
-                      <Edit className="w-4 h-4 text-white" />
+                      <Edit className="w-3 h-3 text-white" />
                     </label>
                     <button 
-                      className="bg-green-500 rounded-full p-2 cursor-pointer hover:bg-green-600 transition-colors"
+                      className="bg-green-500 rounded-md p-1.5 cursor-pointer hover:bg-green-600 transition-colors"
                       onClick={() => openAvatarOptions('teacher')}
                     >
-                      <User className="w-4 h-4 text-white" />
+                      <User className="w-3 h-3 text-white" />
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">Upload or choose avatar</p>
+                <p className="text-[10px] text-gray-500">Upload or choose avatar</p>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Full Name</label>
                   <input 
                     type="text" 
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter teacher's name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Email</label>
                   <input 
                     type="email" 
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter teacher's email"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                  <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
+                  <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Select subject</option>
                     <option>Mathematics</option>
                     <option>Science</option>
@@ -1221,16 +1255,16 @@ const AdminDashboard = ({ onLogout }) => {
                 </div>
               </div>
               
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-2 mt-4">
                 <button 
                   onClick={() => setShowAddTeacherModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all"
+                  className="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddTeacher}
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all"
+                  className="flex-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
                 >
                   Add Teacher
                 </button>
@@ -1243,74 +1277,74 @@ const AdminDashboard = ({ onLogout }) => {
       {/* Add Student Modal */}
       {showAddStudentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-96 overflow-y-auto">
-            <div className="p-6 border-b border-gray-100">
+          <div className="bg-white rounded-md w-full max-w-md max-h-80 overflow-y-auto">
+            <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Add New Student</h3>
+                <h3 className="text-sm font-bold text-gray-900">Add New Student</h3>
                 <button 
                   onClick={() => setShowAddStudentModal(false)}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all"
+                  className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
             
-            <div className="p-6">
-              <div className="flex flex-col items-center mb-6">
-                <div className="relative mb-4">
+            <div className="p-4">
+              <div className="flex flex-col items-center mb-4">
+                <div className="relative mb-3">
                   {studentAvatarPreview ? (
                     <img 
                       src={studentAvatarPreview} 
                       alt="Student preview" 
-                      className="w-24 h-24 rounded-full object-cover border-4 border-blue-100"
+                      className="w-20 h-20 rounded-md object-cover border-2 border-blue-100"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-4 border-blue-100">
-                      <User className="w-12 h-12 text-gray-400" />
+                    <div className="w-20 h-20 rounded-md bg-gray-200 flex items-center justify-center border-2 border-blue-100">
+                      <User className="w-10 h-10 text-gray-400" />
                     </div>
                   )}
                   <div className="absolute bottom-0 right-0 flex gap-1">
-                    <label className="bg-blue-500 rounded-full p-2 cursor-pointer hover:bg-blue-600 transition-colors">
+                    <label className="bg-blue-500 rounded-md p-1.5 cursor-pointer hover:bg-blue-600 transition-colors">
                       <input 
                         type="file" 
                         className="hidden" 
                         accept="image/*"
                         onChange={handleStudentAvatarChange}
                       />
-                      <Edit className="w-4 h-4 text-white" />
+                      <Edit className="w-3 h-3 text-white" />
                     </label>
                     <button 
-                      className="bg-green-500 rounded-full p-2 cursor-pointer hover:bg-green-600 transition-colors"
+                      className="bg-green-500 rounded-md p-1.5 cursor-pointer hover:bg-green-600 transition-colors"
                       onClick={() => openAvatarOptions('student')}
                     >
-                      <User className="w-4 h-4 text-white" />
+                      <User className="w-3 h-3 text-white" />
                     </button>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500">Upload or choose avatar</p>
+                <p className="text-[10px] text-gray-500">Upload or choose avatar</p>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Full Name</label>
                   <input 
                     type="text" 
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter student's name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Roll Number</label>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Roll Number</label>
                   <input 
                     type="text" 
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter roll number"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Class</label>
-                  <select className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
+                  <select className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Select class</option>
                     <option>6A</option>
                     <option>6B</option>
@@ -1330,16 +1364,16 @@ const AdminDashboard = ({ onLogout }) => {
                 </div>
               </div>
               
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-2 mt-4">
                 <button 
                   onClick={() => setShowAddStudentModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all"
+                  className="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddStudent}
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all"
+                  className="flex-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
                 >
                   Add Student
                 </button>
@@ -1352,40 +1386,40 @@ const AdminDashboard = ({ onLogout }) => {
       {/* Avatar Options Modal */}
       {showAvatarOptions && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-96 overflow-y-auto">
-            <div className="p-6 border-b border-gray-100">
+          <div className="bg-white rounded-md w-full max-w-md max-h-80 overflow-y-auto">
+            <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-gray-900">Choose Avatar</h3>
+                <h3 className="text-sm font-bold text-gray-900">Choose Avatar</h3>
                 <button 
                   onClick={closeAvatarOptions}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all"
+                  className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>
             
-            <div className="p-6">
-              <div className="grid grid-cols-4 gap-4">
+            <div className="p-4">
+              <div className="grid grid-cols-4 gap-3">
                 {predefinedAvatars.map((avatar, index) => (
                   <button
                     key={index}
                     onClick={() => handlePredefinedAvatarSelect(avatar)}
-                    className="p-2 rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all"
+                    className="p-1.5 rounded-md border border-gray-200 hover:border-blue-500 transition-all"
                   >
                     <img 
                       src={avatar} 
                       alt={`Avatar ${index + 1}`} 
-                      className="w-16 h-16 rounded-full object-cover"
+                      className="w-14 h-14 rounded-md object-cover"
                     />
                   </button>
                 ))}
               </div>
               
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-2 mt-4">
                 <button 
                   onClick={closeAvatarOptions}
-                  className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all"
+                  className="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]"
                 >
                   Cancel
                 </button>
