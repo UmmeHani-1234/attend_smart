@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Home, FileText, Award, AlertCircle, Settings, User, LogOut, Users, CheckCircle, Clock, TrendingUp, X, BookOpen, Calculator, FlaskConical, PenTool, Globe, Music, Palette, Edit, RefreshCw, UserCheck, Calendar } from 'lucide-react';
 import UltraModernHeader from '../UltraModernHeader';
 
-const SimplifiedStudentDashboard = () => {
+const SimplifiedStudentDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
@@ -192,6 +192,7 @@ const SimplifiedStudentDashboard = () => {
             <span className="font-medium text-[11px]">Change Avatar</span>
           </button>
           <button 
+            onClick={onLogout}
             className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
           >
             <LogOut className="w-3 h-3" />
@@ -209,7 +210,7 @@ const SimplifiedStudentDashboard = () => {
             userType="Student"
             userName={studentData.name}
             userRole={`${studentData.class} • Roll #${studentData.rollNumber}`}
-            onLogout={() => console.log('Logout clicked')}
+            onLogout={onLogout}
           />
         </div>
 

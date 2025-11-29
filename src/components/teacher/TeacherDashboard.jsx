@@ -10,7 +10,7 @@ import EnhancedClassroomCard from '../EnhancedClassroomCard';
 import LanguageSelector from '../LanguageSelector';
 import ParticleBackground from '../ParticleBackground';
 
-const TeacherDashboard = () => {
+const TeacherDashboard = ({ onLogout }) => {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState('home');
   const [selectedClass, setSelectedClass] = useState('Class 10-A');
@@ -74,6 +74,13 @@ const TeacherDashboard = () => {
   const [editingMethod, setEditingMethod] = useState('');
   const [showStudentAttendanceModal, setShowStudentAttendanceModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  
+  // Alerts data
+  const [alerts] = useState([
+    { id: 1, type: 'lowAttendance', message: 'Low attendance in Class 10-A', time: '2 hours ago', severity: 'high', status: 'new' },
+    { id: 2, type: 'device', message: 'RFID reader malfunctioning', time: '5 hours ago', severity: 'medium', status: 'acknowledged' },
+    { id: 3, type: 'safety', message: 'Unauthorized access attempt', time: '1 day ago', severity: 'critical', status: 'resolved' },
+  ]);
   
   // Function to add a new student
   const addNewStudent = () => {
@@ -303,7 +310,7 @@ const TeacherDashboard = () => {
             <span className="font-medium text-xs">Change Avatar</span>
           </button>
           <button 
-            onClick={() => console.log('Logout clicked')}
+            onClick={onLogout}
             className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -321,7 +328,7 @@ const TeacherDashboard = () => {
             userType="Teacher"
             userName={teacherData.name}
             userRole={`${teacherData.subject} Teacher`}
-            onLogout={() => console.log('Logout clicked')}
+            onLogout={onLogout}
             onAlertsClick={() => setActiveTab('alerts')}
           />
         </div>
