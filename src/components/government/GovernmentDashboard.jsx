@@ -572,7 +572,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+              <div className="grid grid-cols-1 gap-8 mb-6">
                 {/* Attendance Analytics */}
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-lg border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
@@ -625,59 +625,6 @@ const GovernmentDashboard = ({ onLogout }) => {
                           ))}
                         </Bar>
                       </RechartsBarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* School Performance */}
-                <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl p-5 shadow-lg border border-green-200/30 backdrop-blur-sm relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                  
-                  <h3 className="text-sm font-bold text-white mb-4">School Performance</h3>
-                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsLineChart data={attendanceTrendData}>
-                        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
-                        <XAxis 
-                          dataKey="month" 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
-                        />
-                        <YAxis 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
-                        />
-                        <Tooltip 
-                          formatter={(value) => [`${value}`, 'Active Schools']}
-                          contentStyle={{ 
-                            backgroundColor: 'rgba(255,255,255,0.95)', 
-                            borderRadius: '10px',
-                            border: '1px solid rgba(255,255,255,0.4)',
-                            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
-                            backdropFilter: 'blur(12px)',
-                            fontSize: '11px',
-                            padding: '10px'
-                          }}
-                          labelStyle={{ color: '#047857', fontWeight: 600 }}
-                        />
-                        <Legend 
-                          wrapperStyle={{ paddingTop: '10px' }}
-                          formatter={(value) => <span className="text-white font-medium">{value}</span>}
-                        />
-                        <Line 
-                          type="monotone" 
-                          dataKey="schools" 
-                          name="Active Schools" 
-                          stroke="rgba(255,255,255,0.95)" 
-                          strokeWidth={4}
-                          dot={{ r: 8, fill: 'rgba(255,255,255,0.95)', strokeWidth: 2, stroke: '#047857' }}
-                          activeDot={{ r: 10, fill: 'rgba(255,255,255,0.95)', strokeWidth: 2, stroke: '#047857' }}
-                          animationDuration={800}
-                        />
-                      </RechartsLineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
