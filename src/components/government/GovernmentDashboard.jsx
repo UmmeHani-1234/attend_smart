@@ -421,9 +421,9 @@ const GovernmentDashboard = ({ onLogout }) => {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* School Statistics */}
-                <div className="lg:col-span-1 space-y-6">
+                <div className="space-y-6">
                   <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100">
                     <h3 className="text-sm font-bold text-gray-900 mb-4">District Statistics</h3>
                     <div className="space-y-3">
@@ -443,63 +443,6 @@ const GovernmentDashboard = ({ onLogout }) => {
                         <span className="text-[10px] text-gray-600">Schools Needing Support</span>
                         <span className="font-bold text-red-600 text-[10px]">{districtData.schoolsNeedingSupport}</span>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Performance Distribution */}
-                  <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-5 shadow-lg border border-purple-200/30 backdrop-blur-sm relative overflow-hidden">
-                    <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
-                    <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                    
-                    <h3 className="text-sm font-bold text-white mb-4">Performance Distribution</h3>
-                    <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RechartsPieChart>
-                          <Pie
-                            data={[
-                              { name: 'A+ Grade', value: 15, color: '#10B981' },
-                              { name: 'A Grade', value: 20, color: '#3B82F6' },
-                              { name: 'B Grade', value: 12, color: '#8B5CF6' },
-                              { name: 'C Grade', value: 5, color: '#F59E0B' },
-                              { name: 'Needs Improvement', value: 3, color: '#EF4444' },
-                            ]}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={50}
-                            outerRadius={70}
-                            paddingAngle={3}
-                            dataKey="value"
-                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                            labelLine={true}
-                          >
-                            {[
-                              { name: 'A+ Grade', value: 15, color: '#10B981' },
-                              { name: 'A Grade', value: 20, color: '#3B82F6' },
-                              { name: 'B Grade', value: 12, color: '#8B5CF6' },
-                              { name: 'C Grade', value: 5, color: '#F59E0B' },
-                              { name: 'Needs Improvement', value: 3, color: '#EF4444' },
-                            ].map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'rgba(255,255,255,0.95)', 
-                              borderRadius: '10px',
-                              border: '1px solid rgba(255,255,255,0.4)',
-                              boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
-                              backdropFilter: 'blur(12px)',
-                              fontSize: '11px',
-                              padding: '10px'
-                            }}
-                            formatter={(value) => [`${value} schools`, 'Count']}
-                          />
-                          <Legend 
-                            wrapperStyle={{ paddingTop: '10px' }}
-                            formatter={(value) => <span className="text-white font-medium">{value}</span>}
-                          />
-                        </RechartsPieChart>
-                      </ResponsiveContainer>
                     </div>
                   </div>
                 </div>
