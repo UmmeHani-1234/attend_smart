@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Users, School, Utensils, TrendingUp, AlertTriangle, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, Building, Activity, User, Book, Target, Award } from 'lucide-react';
+import { Users, School, Utensils, TrendingUp, AlertTriangle, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, Building, Activity, User, Book, Target, Award, Camera, Mail, Save } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import UltraModernHeader from '../UltraModernHeader';
 
 const GovernmentDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('home');
+  const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [reportPeriod, setReportPeriod] = useState('monthly'); // weekly, monthly, yearly
 
@@ -816,8 +817,9 @@ const GovernmentDashboard = ({ onLogout }) => {
                       return (
                         <button
                           key={tab.id}
+                          onClick={() => setActiveSettingsTab(tab.id)}
                           className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-all ${
-                            activeTab === tab.id
+                            activeSettingsTab === tab.id
                               ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-sm'
                               : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600 text-sm'
                           }`}
@@ -832,100 +834,307 @@ const GovernmentDashboard = ({ onLogout }) => {
                 
                 {/* Settings Content */}
                 <div className="lg:col-span-3">
-                  <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-4">
-                    <div className="mb-4 pb-3 border-b border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
-                            <User className="w-4 h-4 text-blue-500" />
-                            Profile Information
-                          </h2>
-                          <p className="text-gray-600 text-sm mt-1">Update your personal and professional details</p>
-                        </div>
-                        <div className="flex gap-1">
-                          <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
-                            <Edit className="w-4 h-4" />
-                          </button>
+                  {activeSettingsTab === 'profile' && (
+                    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-4">
+                      <div className="mb-4 pb-3 border-b border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                              <User className="w-4 h-4 text-blue-500" />
+                              Profile Information
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">Update your personal and professional details</p>
+                          </div>
+                          <div className="flex gap-1">
+                            <button className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+                              <Edit className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                      <div className="flex flex-col items-center md:col-span-2">
-                        <div className="relative mb-3 group">
-                          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md transform transition-all group-hover:scale-105">
-                            GO
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <div className="flex flex-col items-center md:col-span-2">
+                          <div className="relative mb-3 group">
+                            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md transform transition-all group-hover:scale-105">
+                              GO
+                            </div>
+                            <button className="absolute bottom-1 right-1 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-all shadow-md transform hover:scale-110 flex items-center justify-center">
+                              <Edit className="w-3 h-3" />
+                            </button>
                           </div>
-                          <button className="absolute bottom-1 right-1 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 transition-all shadow-md transform hover:scale-110 flex items-center justify-center">
-                            <Edit className="w-3 h-3" />
+                          <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-all hover:underline text-sm">
+                            <Camera className="w-3 h-3" />
+                            Change Picture
                           </button>
                         </div>
-                        <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-all hover:underline text-sm">
-                          <Camera className="w-3 h-3" />
-                          Change Picture
+                        
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-medium text-gray-700">Full Name</label>
+                          <div className="relative">
+                            <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input 
+                              type="text" 
+                              defaultValue="Government Official"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-medium text-gray-700">Email Address</label>
+                          <div className="relative">
+                            <Mail className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input 
+                              type="email" 
+                              defaultValue="official@education.gov"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-medium text-gray-700">Department</label>
+                          <div className="relative">
+                            <Building className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input 
+                              type="text" 
+                              defaultValue="Education Oversight"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-medium text-gray-700">District</label>
+                          <div className="relative">
+                            <MapPin className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input 
+                              type="text" 
+                              defaultValue="Central District"
+                              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <X className="w-3 h-3" />
+                          Cancel
+                        </button>
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <Save className="w-3 h-3" />
+                          Save
                         </button>
                       </div>
-                      
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-medium text-gray-700">Full Name</label>
-                        <div className="relative">
-                          <User className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                          <input 
-                            type="text" 
-                            defaultValue="Government Official"
-                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
-                          />
+                    </div>
+                  )}
+                  
+                  {activeSettingsTab === 'notifications' && (
+                    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-4">
+                      <div className="mb-4 pb-3 border-b border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                              <Bell className="w-4 h-4 text-blue-500" />
+                              Notification Preferences
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">Customize how and when you receive alerts and updates</p>
+                          </div>
                         </div>
                       </div>
                       
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-medium text-gray-700">Email Address</label>
-                        <div className="relative">
-                          <Mail className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                          <input 
-                            type="email" 
-                            defaultValue="official@education.gov"
-                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
-                          />
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-sm">Email Notifications</h3>
+                            <p className="text-gray-600 text-xs mt-1">Receive alerts via email</p>
+                          </div>
+                          <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
+                            <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
+                            <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-sm">Push Notifications</h3>
+                            <p className="text-gray-600 text-xs mt-1">Receive alerts on your device</p>
+                          </div>
+                          <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
+                            <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
+                            <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-sm">SMS Notifications</h3>
+                            <p className="text-gray-600 text-xs mt-1">Receive alerts via text message</p>
+                          </div>
+                          <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
+                            <input type="checkbox" className="absolute opacity-0 w-0 h-0" />
+                            <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div>
+                            <h3 className="font-medium text-gray-900 text-sm">Critical Alerts</h3>
+                            <p className="text-gray-600 text-xs mt-1">Immediate notifications for critical issues</p>
+                          </div>
+                          <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
+                            <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
+                            <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
+                          </div>
                         </div>
                       </div>
                       
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-medium text-gray-700">Department</label>
-                        <div className="relative">
-                          <Building className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                          <input 
-                            type="text" 
-                            defaultValue="Education Oversight"
-                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1.5">
-                        <label className="block text-xs font-medium text-gray-700">District</label>
-                        <div className="relative">
-                          <MapPin className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                          <input 
-                            type="text" 
-                            defaultValue="Central District"
-                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-xs hover:shadow-sm text-sm"
-                          />
-                        </div>
+                      <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 mt-4">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <X className="w-3 h-3" />
+                          Cancel
+                        </button>
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <Save className="w-3 h-3" />
+                          Save
+                        </button>
                       </div>
                     </div>
-                    
-                    <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
-                      <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
-                        <X className="w-3 h-3" />
-                        Cancel
-                      </button>
-                      <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
-                        <Save className="w-3 h-3" />
-                        Save
-                      </button>
+                  )}
+                  
+                  {activeSettingsTab === 'security' && (
+                    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-4">
+                      <div className="mb-4 pb-3 border-b border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                              <Shield className="w-4 h-4 text-blue-500" />
+                              Security Settings
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">Manage your account security and authentication preferences</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="p-3 bg-gray-50 rounded-lg">
+                          <h3 className="font-medium text-gray-900 text-sm mb-2">Password</h3>
+                          <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-xs font-medium">
+                            Change Password
+                          </button>
+                        </div>
+                        
+                        <div className="p-3 bg-gray-50 rounded-lg">
+                          <h3 className="font-medium text-gray-900 text-sm mb-2">Two-Factor Authentication</h3>
+                          <p className="text-gray-600 text-xs mb-2">Add an extra layer of security to your account</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-600">Currently disabled</span>
+                            <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-xs font-medium">
+                              Enable
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="p-3 bg-gray-50 rounded-lg">
+                          <h3 className="font-medium text-gray-900 text-sm mb-2">Login History</h3>
+                          <p className="text-gray-600 text-xs mb-2">View recent login attempts</p>
+                          <button className="px-3 py-1.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-md hover:from-gray-600 hover:to-gray-700 transition-all text-xs font-medium">
+                            View History
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 mt-4">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <X className="w-3 h-3" />
+                          Cancel
+                        </button>
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <Save className="w-3 h-3" />
+                          Save
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  
+                  {activeSettingsTab === 'appearance' && (
+                    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md border border-gray-200/30 backdrop-blur-sm p-4">
+                      <div className="mb-4 pb-3 border-b border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-1.5">
+                              <Settings className="w-4 h-4 text-blue-500" />
+                              Appearance Settings
+                            </h2>
+                            <p className="text-gray-600 text-sm mt-1">Customize the look and feel of your dashboard</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div className="p-3 bg-gray-50 rounded-lg">
+                          <h3 className="font-medium text-gray-900 text-sm mb-2">Theme</h3>
+                          <div className="grid grid-cols-3 gap-2">
+                            <button className="p-3 bg-white border-2 border-blue-500 rounded-lg flex flex-col items-center">
+                              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md mb-1"></div>
+                              <span className="text-xs font-medium">Default</span>
+                            </button>
+                            <button className="p-3 bg-white border border-gray-200 rounded-lg flex flex-col items-center hover:border-blue-300">
+                              <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-900 rounded-md mb-1"></div>
+                              <span className="text-xs font-medium">Dark</span>
+                            </button>
+                            <button className="p-3 bg-white border border-gray-200 rounded-lg flex flex-col items-center hover:border-blue-300">
+                              <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-md mb-1"></div>
+                              <span className="text-xs font-medium">Sunset</span>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="p-3 bg-gray-50 rounded-lg">
+                          <h3 className="font-medium text-gray-900 text-sm mb-2">Language</h3>
+                          <select className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                            <option>English</option>
+                            <option>Spanish</option>
+                            <option>French</option>
+                            <option>German</option>
+                          </select>
+                        </div>
+                        
+                        <div className="p-3 bg-gray-50 rounded-lg">
+                          <h3 className="font-medium text-gray-900 text-sm mb-2">Layout Preferences</h3>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-600">Compact View</span>
+                              <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
+                                <input type="checkbox" className="absolute opacity-0 w-0 h-0" />
+                                <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-600">Auto-refresh Data</span>
+                              <div className="relative inline-block w-10 h-5 rounded-full bg-gray-300">
+                                <input type="checkbox" className="absolute opacity-0 w-0 h-0" defaultChecked />
+                                <span className="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300 before:absolute before:h-4 before:w-4 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-blue-500 checked:before:transform checked:before:translate-x-5"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 mt-4">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <X className="w-3 h-3" />
+                          Cancel
+                        </button>
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                          <Save className="w-3 h-3" />
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Additional Settings Cards */}
