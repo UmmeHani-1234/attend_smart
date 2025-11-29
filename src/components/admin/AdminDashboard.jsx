@@ -262,6 +262,13 @@ const AdminDashboard = ({ onLogout }) => {
               </div>
               <p className="text-[10px] text-gray-500 truncate">Admin</p>
             </div>
+            <div className="relative">
+              <img 
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin&backgroundColor=00897b,00acc1,039be5,1e88e5,3949ab,43a047,5e35b1,7cb342,8e24aa,c0ca33,f4511e,fb8c00,fdd835,ffb300"
+                alt="Admin User Avatar"
+                className="w-8 h-8 rounded-full border-2 border-white shadow-md"
+              />
+            </div>
           </div>
         </div>
 
