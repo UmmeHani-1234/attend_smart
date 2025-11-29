@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Calendar, User, Bell, ChevronDown, Menu, X, HelpCircle } from 'lucide-react';
+import { Calendar, User, Bell, ChevronDown, Menu, X, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const UltraModernHeader = ({ 
@@ -15,9 +15,7 @@ const UltraModernHeader = ({
   showMenuButton = false
 }) => {
   const { t, i18n } = useTranslation();
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedClass, setSelectedClass] = useState('Class 10-A');
   const [particles, setParticles] = useState([]);
   const headerRef = useRef(null);
@@ -62,14 +60,6 @@ const UltraModernHeader = ({
 
   // Sample classes for dropdown
   const classes = ['Class 10-A', 'Class 11-B', 'Class 12-C', 'All Classes'];
-
-  const handleSearchFocus = () => {
-    setIsSearchFocused(true);
-  };
-
-  const handleSearchBlur = () => {
-    setIsSearchFocused(false);
-  };
 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
@@ -191,81 +181,7 @@ const UltraModernHeader = ({
                 {dashboardTitle}
               </motion.h1>
               
-              {/* Floating search bar with enhanced effects */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
-                className="relative flex-1 max-w-md"
-              >
-                <div className={`relative transition-all duration-300 ${
-                  isSearchFocused 
-                    ? 'scale-[1.02] shadow-lg shadow-blue-500/20' 
-                    : 'hover:scale-[1.01] hover:shadow-md'
-                }`}>
-                  {/* Animated background gradient */}
-                  <motion.div 
-                    className="absolute inset-0 rounded-xl opacity-70"
-                    animate={{
-                      background: [
-                        'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%)',
-                        'linear-gradient(135deg, rgba(79, 70, 229, 0.2) 0%, rgba(124, 58, 237, 0.2) 100%)',
-                        'linear-gradient(135deg, rgba(124, 58, 237, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%)',
-                        'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%)'
-                      ]
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl blur-sm"></div>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-2 z-10">
-                      <motion.div
-                        animate={isSearchFocused ? { 
-                          scale: 1.1,
-                          rotate: 360,
-                          filter: "drop-shadow(0 0 4px rgba(59, 130, 246, 0.5))"
-                        } : { 
-                          scale: 1,
-                          rotate: 0,
-                          filter: "none"
-                        }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <Search className="w-3.5 h-3.5 text-blue-500" />
-                      </motion.div>
-                    </div>
-                    <input
-                      type="text"
-                      placeholder={t('header.search_placeholder', { dashboardTitle: dashboardTitle.toLowerCase() })}
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      onFocus={handleSearchFocus}
-                      onBlur={handleSearchBlur}
-                      className="w-full pl-6 pr-1.5 py-1 bg-white/80 backdrop-blur-sm border border-white/50 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300/50 transition-all duration-300 shadow-sm placeholder:text-gray-400 text-gray-800 text-[11px] font-medium"
-                    />
-                    {/* Shimmer effect when focused */}
-                    {isSearchFocused && (
-                      <motion.div
-                        className="absolute inset-0 rounded-xl pointer-events-none"
-                        initial={{ backgroundPosition: '-100% 0' }}
-                        animate={{ backgroundPosition: '200% 0' }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "linear"
-                        }}
-                        style={{
-                          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)',
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </motion.div>
+
             </div>
             
             {/* Right side - Date, class dropdown, notifications, profile */}
@@ -333,8 +249,6 @@ const UltraModernHeader = ({
                 </motion.span>
                 <motion.div
                   className="absolute inset-0 rounded-xl bg-amber-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  initial={false}
-                  animate={{ scale: isSearchFocused ? 1.2 : 1 }}
                 />
               </motion.div>
               

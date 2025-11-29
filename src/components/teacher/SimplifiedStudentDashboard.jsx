@@ -784,7 +784,7 @@ const SimplifiedStudentDashboard = () => {
               </div>
               
               {/* Attendance Details Table */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden relative">
                 {/* Geometric background elements */}
                 <div className="absolute top-0 right-0 w-32 h-32">
                   <div className="absolute top-3 right-3 w-4 h-4 border border-indigo-500/10 rotate-45"></div>
@@ -795,17 +795,17 @@ const SimplifiedStudentDashboard = () => {
                   <div className="absolute bottom-5 left-5 w-2 h-2 bg-indigo-500/5 rounded-full"></div>
                 </div>
                 <div className="overflow-x-auto relative z-10">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full divide-y divide-gray-100">
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Day</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Date</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Day</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Time</th>
+                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Remarks</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {[
                         { date: '2024-04-01', day: 'Monday', status: 'present', time: '08:15 AM', remarks: 'On Time' },
                         { date: '2024-04-02', day: 'Tuesday', status: 'late', time: '09:30 AM', remarks: '30 mins late' },
@@ -815,7 +815,7 @@ const SimplifiedStudentDashboard = () => {
                         { date: '2024-04-06', day: 'Saturday', status: 'absent', time: '-', remarks: 'Medical Leave' },
                         { date: '2024-04-07', day: 'Sunday', status: 'holiday', time: '-', remarks: 'Weekend' }
                       ].map((record, index) => (
-                        <tr key={index} className="hover:bg-indigo-50/50">
+                        <tr key={index} className="hover:bg-indigo-50/50 transition-colors duration-150">
                           <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.date}</td>
                           <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.day}</td>
                           <td className="px-2.5 py-1.5 whitespace-nowrap">
@@ -847,10 +847,24 @@ const SimplifiedStudentDashboard = () => {
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
                 
-                <div className="relative z-10 flex items-center justify-between">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div>
                     <h2 className="text-sm font-bold text-white mb-1.5">Academic Performance</h2>
-                    <p className="text-xs text-blue-100">Track your grades and academic progress</p>
+                    <p className="text-xs text-blue-100 mb-2">Track your grades and academic progress</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">87.5% Average Score</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">5th Class Rank</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">4 Core Subjects</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="bg-white/20 rounded-md p-2">
@@ -861,52 +875,52 @@ const SimplifiedStudentDashboard = () => {
               </div>
               
               {/* Grade Status Cards in Single Row - Matched dashboard size */}
-              <div className="flex gap-4 mb-6">
-                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+              <div className="flex gap-5 mb-7">
+                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-md p-4 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-indigo-100">Behavior</p>
-                      <p className="text-base font-bold mt-2">Good</p>
+                      <p className="text-[11px] text-indigo-100">Behavior</p>
+                      <p className="text-lg font-bold mt-2.5">Good</p>
                     </div>
-                    <UserCheck className="w-6 h-6 text-indigo-200 relative z-10" />
+                    <UserCheck className="w-7 h-7 text-indigo-200 relative z-10" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-4 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-indigo-100">Average Score</p>
-                      <p className="text-base font-bold mt-2">87.5%</p>
+                      <p className="text-[11px] text-indigo-100">Average Score</p>
+                      <p className="text-lg font-bold mt-2.5">87.5%</p>
                     </div>
-                    <Award className="w-6 h-6 text-indigo-200 relative z-10" />
+                    <Award className="w-7 h-7 text-indigo-200 relative z-10" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-3 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-4 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-violet-100">Class Rank</p>
-                      <p className="text-base font-bold mt-2">5th</p>
+                      <p className="text-[11px] text-violet-100">Class Rank</p>
+                      <p className="text-lg font-bold mt-2.5">5th</p>
                     </div>
-                    <Users className="w-6 h-6 text-violet-200 relative z-10" />
+                    <Users className="w-7 h-7 text-violet-200 relative z-10" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                <div className="flex-1 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-md p-4 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-indigo-100">Total Subjects</p>
-                      <p className="text-base font-bold mt-2">4</p>
+                      <p className="text-[11px] text-indigo-100">Total Subjects</p>
+                      <p className="text-lg font-bold mt-2.5">4</p>
                     </div>
-                    <BookOpen className="w-6 h-6 text-indigo-200 relative z-10" />
+                    <BookOpen className="w-7 h-7 text-indigo-200 relative z-10" />
                   </div>
                 </div>
               </div>
@@ -1433,19 +1447,19 @@ const SimplifiedStudentDashboard = () => {
                   <div className="absolute bottom-6 left-1 w-4 h-4 border border-indigo-500/10"></div>
                 </div>
                 <h3 className="font-bold text-gray-900 text-[10px] mb-3 relative z-10">Weekly Class Schedule</h3>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <div className="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
+                  <table className="min-w-full divide-y divide-gray-100">
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th className="px-3 py-2 text-left text-[9px] font-medium text-gray-500 uppercase">Period</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-medium text-gray-500 uppercase">Monday</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-medium text-gray-500 uppercase">Tuesday</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-medium text-gray-500 uppercase">Wednesday</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-medium text-gray-500 uppercase">Thursday</th>
-                        <th className="px-3 py-2 text-left text-[9px] font-medium text-gray-500 uppercase">Friday</th>
+                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Period</th>
+                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Monday</th>
+                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Tuesday</th>
+                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Wednesday</th>
+                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Thursday</th>
+                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Friday</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {[
                         { period: '1st', mon: 'English', tue: 'Mathematics', wed: 'Science', thu: 'History', fri: 'Geography' },
                         { period: '2nd', mon: 'Mathematics', tue: 'Science', wed: 'English', thu: 'Geography', fri: 'Art' },
@@ -1454,13 +1468,13 @@ const SimplifiedStudentDashboard = () => {
                         { period: '5th', mon: 'Geography', tue: 'English', wed: 'History', thu: 'Art', fri: 'Mathematics' },
                         { period: '6th', mon: 'Art', tue: 'Art', wed: 'Geography', thu: 'Science', fri: 'Science' },
                       ].map((row, index) => (
-                        <tr key={index} className="hover:bg-gray-50">
-                          <td className="px-3 py-2 whitespace-nowrap text-[9px] font-medium text-gray-900">{row.period}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.mon}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.tue}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.wed}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.thu}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.fri}</td>
+                        <tr key={index} className="hover:bg-indigo-50/50 transition-colors duration-150">
+                          <td className="px-3 py-2 whitespace-nowrap text-[8px] font-semibold text-indigo-900">{row.period}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.mon}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.tue}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.wed}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.thu}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.fri}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1474,8 +1488,8 @@ const SimplifiedStudentDashboard = () => {
             <div>
               <div className="flex justify-between items-center mb-3">
                 <div>
-                  <h2 className="text-[9px] font-bold text-gray-900">Account Settings</h2>
-                  <p className="text-gray-600 text-[8px]">Manage your profile and account preferences</p>
+                  <h2 className="text-[10px] font-bold text-gray-900">Account Settings</h2>
+                  <p className="text-gray-600 text-[9px]">Manage your profile and account preferences</p>
                 </div>
               </div>
               
@@ -1497,11 +1511,11 @@ const SimplifiedStudentDashboard = () => {
                       </button>
                     </div>
                     <div>
-                      <h3 className="text-[10px] font-bold text-gray-900">{profileData.name}</h3>
-                      <p className="text-gray-600 text-[9px]">{profileData.class} • Roll #{profileData.rollNumber}</p>
+                      <h3 className="text-[11px] font-bold text-gray-900">{profileData.name}</h3>
+                      <p className="text-gray-600 text-[10px]">{profileData.class} • Roll #{profileData.rollNumber}</p>
                       <button 
                         onClick={() => setShowAvatarModal(true)}
-                        className="text-indigo-600 hover:text-indigo-700 text-[9px] font-medium mt-0.5"
+                        className="text-indigo-600 hover:text-indigo-700 text-[10px] font-medium mt-0.5"
                       >
                         Change Avatar
                       </button>
@@ -1510,42 +1524,42 @@ const SimplifiedStudentDashboard = () => {
                   
                   <div className="space-y-2">
                     <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Full Name</label>
+                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Full Name</label>
                       <input 
                         type="text" 
                         value={profileData.name}
                         onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Email Address</label>
+                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Email Address</label>
                       <input 
                         type="email" 
                         value={profileData.email}
                         onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Class</label>
+                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Class</label>
                       <input 
                         type="text" 
                         value={profileData.class}
                         onChange={(e) => setProfileData({...profileData, class: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Roll Number</label>
+                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Roll Number</label>
                       <input 
                         type="text" 
                         value={profileData.rollNumber}
                         onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
                       />
                     </div>
                     
@@ -1559,7 +1573,7 @@ const SimplifiedStudentDashboard = () => {
                             rollNumber: studentData.rollNumber
                           });
                         }}
-                        className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[9px]"
+                        className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[10px]"
                       >
                         Cancel
                       </button>
@@ -1573,7 +1587,7 @@ const SimplifiedStudentDashboard = () => {
                           });
                           alert('Profile updated successfully!');
                         }}
-                        className="px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[9px]"
+                        className="px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[10px]"
                       >
                         Save Changes
                       </button>
@@ -1584,16 +1598,16 @@ const SimplifiedStudentDashboard = () => {
                 {/* Settings and Actions in a single row */}
                 <div className="flex gap-3">
                   <div className="flex-1 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                    <h3 className="text-[10px] font-bold text-gray-900 mb-2">Settings</h3>
+                    <h3 className="text-[11px] font-bold text-gray-900 mb-2">Settings</h3>
                     <div className="space-y-2">
                       {/* Privacy Settings */}
                       <div>
-                        <h4 className="text-[9px] font-medium text-gray-700 mb-1">Privacy</h4>
+                        <h4 className="text-[10px] font-medium text-gray-700 mb-1">Privacy</h4>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] text-gray-600">Profile Visibility</span>
+                            <span className="text-[10px] text-gray-600">Profile Visibility</span>
                             <select 
-                              className="text-[9px] border border-gray-300 rounded px-1.5 py-0.5"
+                              className="text-[10px] border border-gray-300 rounded px-1.5 py-0.5"
                               value={settings.privacy.profileVisibility}
                               onChange={(e) => handlePrivacyChange('profileVisibility', e.target.value)}
                             >
@@ -1603,7 +1617,7 @@ const SimplifiedStudentDashboard = () => {
                             </select>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] text-gray-600">Show Activity Status</span>
+                            <span className="text-[10px] text-gray-600">Show Activity Status</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1619,12 +1633,12 @@ const SimplifiedStudentDashboard = () => {
                       
                       {/* Appearance Settings */}
                       <div>
-                        <h4 className="text-[9px] font-medium text-gray-700 mb-1">Appearance</h4>
+                        <h4 className="text-[10px] font-medium text-gray-700 mb-1">Appearance</h4>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] text-gray-600">Theme</span>
+                            <span className="text-[10px] text-gray-600">Theme</span>
                             <select 
-                              className="text-[9px] border border-gray-300 rounded px-1.5 py-0.5"
+                              className="text-[10px] border border-gray-300 rounded px-1.5 py-0.5"
                               value={settings.appearance.theme}
                               onChange={(e) => handleAppearanceChange('theme', e.target.value)}
                             >
@@ -1633,9 +1647,9 @@ const SimplifiedStudentDashboard = () => {
                             </select>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] text-gray-600">Language</span>
+                            <span className="text-[10px] text-gray-600">Language</span>
                             <select 
-                              className="text-[9px] border border-gray-300 rounded px-1.5 py-0.5"
+                              className="text-[10px] border border-gray-300 rounded px-1.5 py-0.5"
                               value={settings.appearance.language}
                               onChange={(e) => handleAppearanceChange('language', e.target.value)}
                             >
@@ -1649,13 +1663,13 @@ const SimplifiedStudentDashboard = () => {
                   </div>
                   
                   <div className="flex-1 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                    <h3 className="text-[10px] font-bold text-gray-900 mb-2">Security</h3>
+                    <h3 className="text-[11px] font-bold text-gray-900 mb-2">Security</h3>
                     <div className="space-y-2">
                       {/* Security Settings */}
                       <div>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] text-gray-600">Two-Factor Authentication</span>
+                            <span className="text-[10px] text-gray-600">Two-Factor Authentication</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1667,7 +1681,7 @@ const SimplifiedStudentDashboard = () => {
                             </label>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] text-gray-600">Login Alerts</span>
+                            <span className="text-[10px] text-gray-600">Login Alerts</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1683,25 +1697,25 @@ const SimplifiedStudentDashboard = () => {
                       
                       {/* Actions */}
                       <div>
-                        <h4 className="text-[10px] font-bold text-gray-900 mb-2">Actions</h4>
+                        <h4 className="text-[11px] font-bold text-gray-900 mb-2">Actions</h4>
                         <div className="space-y-1">
                           <button 
                             onClick={() => window.location.reload()}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[9px]"
+                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
                           >
                             <RefreshCw className="w-2 h-2" />
                             Refresh Settings
                           </button>
                           <button 
                             onClick={resetSettings}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[9px]"
+                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
                           >
                             <Settings className="w-2 h-2" />
                             Reset Settings
                           </button>
                           <button 
                             onClick={() => alert('Changes saved successfully!')}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[9px]"
+                            className="w-full flex items-center gap-1 px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[10px]"
                           >
                             <CheckCircle className="w-2 h-2" />
                             Save Changes
