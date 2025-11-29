@@ -111,7 +111,7 @@ const UltraModernHeader = ({
         transition={{ duration: 0.5 }}
         className="bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-lg shadow-blue-500/5 rounded-b-xl relative overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)',
+          background: 'linear-gradient(135deg, rgba(239, 246, 255, 0.9) 0%, rgba(224, 231, 255, 0.7) 100%)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)'
         }}
@@ -121,9 +121,9 @@ const UltraModernHeader = ({
           className="absolute top-0 left-0 w-full h-full opacity-10"
           animate={{
             background: [
-              'radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 20%)',
-              'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 20%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 0%, transparent 20%)',
-              'radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 20%)'
+              'radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.3) 0%, transparent 20%)',
+              'radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.3) 0%, transparent 20%), radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.3) 0%, transparent 20%)',
+              'radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 20%), radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.3) 0%, transparent 20%)'
             ]
           }}
           transition={{
@@ -132,7 +132,7 @@ const UltraModernHeader = ({
             repeatType: "reverse"
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-indigo-500/5"></div>
         
         {/* Floating particles */}
         {particles.map(particle => (
@@ -176,7 +176,7 @@ const UltraModernHeader = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-[13px] font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent hidden md:block relative"
+                className="text-[13px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hidden md:block relative"
               >
                 {dashboardTitle}
               </motion.h1>
@@ -224,7 +224,7 @@ const UltraModernHeader = ({
                   value={selectedClass}
                   onChange={(e) => setSelectedClass(e.target.value)}
                   whileFocus={{ scale: 1.02 }}
-                  className="bg-gradient-to-r from-purple-500 to-indigo-500 border border-white/40 rounded-md px-1.5 py-1 text-[10px] font-medium text-white placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-purple-300 shadow-sm hover:shadow transition-all duration-300 appearance-none"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 border border-white/40 rounded-md px-1.5 py-1 text-[10px] font-medium text-white placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm hover:shadow transition-all duration-300 appearance-none"
                   placeholder="Enter class name"
                 />
               </motion.div>

@@ -529,7 +529,7 @@ const TeacherDashboard = () => {
                       subtitle={classObj.name}
                       teacher={teacherData.name}
                       theme={classObj.color}
-                      onClick={() => console.log(`${classObj.name} clicked`)}
+                      onClick={() => window.open(`/class/${index}`, '_blank', 'noopener,noreferrer')}
                       onMenuClick={() => console.log(`${classObj.name} menu clicked`)}
                     />
                   </div>
@@ -543,7 +543,7 @@ const TeacherDashboard = () => {
                       subtitle={classObj.name}
                       teacher={teacherData.name}
                       theme={classObj.color}
-                      onClick={() => console.log(`${classObj.name} clicked`)}
+                      onClick={() => window.open(`/class/${index + 3}`, '_blank', 'noopener,noreferrer')}
                       onMenuClick={() => console.log(`${classObj.name} menu clicked`)}
                     />
                   </div>

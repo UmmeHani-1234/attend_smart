@@ -123,19 +123,19 @@ const ClassDetailsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-0 md:p-4">
+      <div className="max-w-full mx-auto h-screen flex flex-col">
+        {/* Back Button - Hidden in full screen mode, visible in popup */}
         <button 
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 mb-6"
+          onClick={() => window.close()}
+          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 m-4 md:m-6 self-start"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-medium">Back to Classes</span>
+          <span className="font-medium">Close Window</span>
         </button>
 
         {/* Class Header */}
-        <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-xl p-6 mb-6 shadow-lg backdrop-blur-sm border border-white/20 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-none md:rounded-xl p-6 mb-6 shadow-lg backdrop-blur-sm border border-white/20 relative overflow-hidden flex-grow-0">
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full"></div>
           <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-white/10 rounded-full"></div>
           
@@ -164,7 +164,7 @@ const ClassDetailsPage = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow px-4 md:px-0">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Class Overview */}

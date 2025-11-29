@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './i18n';
 import { ThemeProvider } from './components/ThemeContext';
+import { Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
 import SimplifiedStudentDashboard from './components/teacher/SimplifiedStudentDashboard';
 import AdminDashboard from './components/admin/AdminDashboard';
 import GovernmentDashboard from './components/government/GovernmentDashboard';
+import ClassDetailsPage from './components/ClassDetailsPage';
 import AttendSmartLogo from './components/AttendSmartLogo';
 
 export default function App() {
@@ -42,8 +44,6 @@ export default function App() {
     setIsLoggedIn(true);
     setUserType('student');
   };
-  
-
 
   return (
     <ThemeProvider>
@@ -53,7 +53,10 @@ export default function App() {
             <LoginPage onLogin={handleLogin} />
           </div>
         ) : (
-          renderDashboard()
+          <Routes>
+            <Route path="/" element={renderDashboard()} />
+            <Route path="/class/:classId" element={<ClassDetailsPage />} />
+          </Routes>
         )}
       </div>
     </ThemeProvider>

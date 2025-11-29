@@ -882,7 +882,7 @@ const AdminDashboard = ({ onLogout }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 gap-8">
                 {/* Attendance Analytics */}
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-lg border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
@@ -934,67 +934,6 @@ const AdminDashboard = ({ onLogout }) => {
                           ))}
                         </Bar>
                       </RechartsBarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Student Distribution */}
-                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-5 shadow-lg border border-purple-200/30 backdrop-blur-sm relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                  
-                  <h3 className="text-base font-bold text-white mb-5">Student Distribution</h3>
-                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsPieChart>
-                        <Pie
-                          data={[
-                            { name: '6th Grade', value: 50 },
-                            { name: '7th Grade', value: 55 },
-                            { name: '8th Grade', value: 60 },
-                            { name: '9th Grade', value: 65 },
-                            { name: '10th Grade', value: 60 },
-                            { name: '11th Grade', value: 35 },
-                            { name: '12th Grade', value: 25 },
-                          ]}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={50}
-                          outerRadius={70}
-                          paddingAngle={3}
-                          dataKey="value"
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          labelLine={true}
-                        >
-                          {[
-                            { name: '6th Grade', value: 50, color: '#3b82f6' },
-                            { name: '7th Grade', value: 55, color: '#60a5fa' },
-                            { name: '8th Grade', value: 60, color: '#93c5fd' },
-                            { name: '9th Grade', value: 65, color: '#bfdbfe' },
-                            { name: '10th Grade', value: 60, color: '#dbeafe' },
-                            { name: '11th Grade', value: 35, color: '#eff6ff' },
-                            { name: '12th Grade', value: 25, color: '#f3f4f6' },
-                          ].map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: 'rgba(255,255,255,0.95)', 
-                            borderRadius: '10px',
-                            border: '1px solid rgba(255,255,255,0.4)',
-                            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
-                            backdropFilter: 'blur(12px)',
-                            fontSize: '12px',
-                            padding: '10px'
-                          }}
-                          formatter={(value) => [`${value} students`, 'Count']}
-                        />
-                        <Legend 
-                          wrapperStyle={{ paddingTop: '10px' }}
-                          formatter={(value) => <span className="text-white font-medium">{value}</span>}
-                        />
-                      </RechartsPieChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
