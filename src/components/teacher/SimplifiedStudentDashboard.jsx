@@ -57,7 +57,7 @@ const SimplifiedStudentDashboard = () => {
   const summaryStats = [
     { label: 'Attendance', value: `${studentData.attendancePercentage}%`, icon: CheckCircle, color: 'from-blue-600 to-indigo-500', change: '+2.1%' },
     { label: 'Current Grade', value: studentData.currentGrade, icon: Award, color: 'from-indigo-500 to-purple-600', change: '+0.3' },
-    { label: 'GPA', value: studentData.gpa, icon: TrendingUp, color: 'from-violet-600 to-purple-500', change: '+0.1' },
+    { label: 'Behavior', value: 'Good', icon: UserCheck, color: 'from-indigo-500 to-blue-600', change: '+1' },
     { label: 'Assignments', value: assignments.filter(a => a.status === 'pending').length, icon: FileText, color: 'from-indigo-600 to-indigo-500', change: '-1' },
   ];
 
@@ -243,7 +243,7 @@ const SimplifiedStudentDashboard = () => {
                       {studentData.class} • Roll #{studentData.rollNumber}
                     </p>
                     <p className="text-blue-100 text-[11px]">
-                      Current GPA: {studentData.gpa} • Attendance: {studentData.attendancePercentage}%
+                      Behavior: Good • Attendance: {studentData.attendancePercentage}%
                     </p>
                   </div>
                 </div>
@@ -373,10 +373,24 @@ const SimplifiedStudentDashboard = () => {
                 <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-8 h-8 bg-white/10 rotate-45"></div>
                 
-                <div className="relative z-10 flex items-center justify-between">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div>
                     <h2 className="text-sm font-bold text-white mb-1">My Assignments</h2>
-                    <p className="text-blue-100 text-xs">Manage your tasks and track progress</p>
+                    <p className="text-blue-100 text-xs mb-2">Manage your tasks and track progress</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{assignments.length} Total</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{assignments.filter(a => a.status === 'submitted' || a.status === 'graded').length} Completed</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-amber-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{assignments.filter(a => a.status === 'pending').length} Pending</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="bg-white/20 rounded-lg p-2">
@@ -387,64 +401,64 @@ const SimplifiedStudentDashboard = () => {
               </div>
               
               {/* Assignment Status Cards in Single Row - Updated colors and geometric designs */}
-              <div className="flex gap-4 mb-6">
-                <div className="flex-1 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-md p-3 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+              <div className="flex gap-5 mb-7">
+                <div className="flex-1 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
                   {/* Geometric design elements */}
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                  <div className="absolute top-3 right-3 w-5 h-5 bg-white/20 rotate-45"></div>
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-3.5 right-3.5 w-5.5 h-5.5 bg-white/20 rotate-45"></div>
                   
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-blue-100 text-[10px]">Total Assignments</p>
-                      <p className="text-lg font-bold mt-2">{assignments.length}</p>
+                      <p className="text-blue-100 text-[11px]">Total Assignments</p>
+                      <p className="text-xl font-bold mt-2.5">{assignments.length}</p>
                     </div>
-                    <FileText className="w-6 h-6 text-blue-200" />
+                    <FileText className="w-7 h-7 text-blue-200" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-4 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
                   {/* Geometric design elements */}
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                  <div className="absolute top-3 right-3 w-5 h-5 bg-white/20 rotate-45"></div>
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-3.5 right-3.5 w-5.5 h-5.5 bg-white/20 rotate-45"></div>
                   
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-indigo-100 text-[10px]">Completed</p>
-                      <p className="text-lg font-bold mt-2">{assignments.filter(a => a.status === 'submitted' || a.status === 'graded').length}</p>
+                      <p className="text-indigo-100 text-[11px]">Completed</p>
+                      <p className="text-xl font-bold mt-2.5">{assignments.filter(a => a.status === 'submitted' || a.status === 'graded').length}</p>
                     </div>
-                    <CheckCircle className="w-6 h-6 text-indigo-200" />
+                    <CheckCircle className="w-7 h-7 text-indigo-200" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-3 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-4 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
                   {/* Geometric design elements */}
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                  <div className="absolute top-3 right-3 w-5 h-5 bg-white/20 rotate-45"></div>
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-3.5 right-3.5 w-5.5 h-5.5 bg-white/20 rotate-45"></div>
                   
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-violet-100 text-[10px]">Pending</p>
-                      <p className="text-lg font-bold mt-2">{assignments.filter(a => a.status === 'pending').length}</p>
+                      <p className="text-violet-100 text-[11px]">Pending</p>
+                      <p className="text-xl font-bold mt-2.5">{assignments.filter(a => a.status === 'pending').length}</p>
                     </div>
-                    <Clock className="w-6 h-6 text-violet-200" />
+                    <Clock className="w-7 h-7 text-violet-200" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                <div className="flex-1 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-md p-4 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
                   {/* Geometric design elements */}
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
-                  <div className="absolute top-3 right-3 w-5 h-5 bg-white/20 rotate-45"></div>
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-3.5 right-3.5 w-5.5 h-5.5 bg-white/20 rotate-45"></div>
                   
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-indigo-100 text-[10px]">High Priority</p>
-                      <p className="text-lg font-bold mt-2">{assignments.filter(a => a.priority === 'high').length}</p>
+                      <p className="text-indigo-100 text-[11px]">High Priority</p>
+                      <p className="text-xl font-bold mt-2.5">{assignments.filter(a => a.priority === 'high').length}</p>
                     </div>
-                    <AlertCircle className="w-6 h-6 text-indigo-200" />
+                    <AlertCircle className="w-7 h-7 text-indigo-200" />
                   </div>
                 </div>
               </div>
@@ -547,10 +561,24 @@ const SimplifiedStudentDashboard = () => {
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
                 
-                <div className="relative z-10 flex items-center justify-between">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div>
                     <h2 className="text-sm font-bold text-white mb-1.5">Attendance Records</h2>
-                    <p className="text-xs text-blue-100">Track your attendance and punctuality</p>
+                    <p className="text-xs text-blue-100 mb-2">Track your attendance and punctuality</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">92% Overall</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">7 Perfect Streak</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-amber-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">3 Late Entries</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="bg-white/20 rounded-md p-2">
@@ -561,47 +589,88 @@ const SimplifiedStudentDashboard = () => {
               </div>
               
               {/* Attendance Summary Cards */}
-              <div className="flex gap-4 mb-6">
-                <div className="flex-1 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-md p-3 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+              <div className="flex gap-5 mb-7">
+                <div className="flex-1 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  {/* Additional geometric elements */}
+                  <div className="absolute top-2.5 right-2.5 w-3.5 h-3.5 border border-white/20 rotate-45"></div>
+                  <div className="absolute bottom-2.5 left-2.5 w-2.5 h-2.5 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-7 left-3.5 w-4.5 h-4.5 border border-white/15"></div>
+                  <div className="absolute bottom-5.5 right-3.5 w-2.5 h-2.5 bg-white/10 rotate-45"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-blue-100">Overall Attendance</p>
-                      <p className="text-base font-bold mt-2">92%</p>
+                      <p className="text-[11px] text-blue-100">Overall Attendance</p>
+                      <p className="text-lg font-bold mt-2.5">92%</p>
                     </div>
-                    <UserCheck className="w-6 h-6 text-blue-200 relative z-10" />
+                    <UserCheck className="w-7 h-7 text-blue-200 relative z-10" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-md p-4 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  {/* Additional geometric elements */}
+                  <div className="absolute top-2.5 right-2.5 w-3.5 h-3.5 border border-white/20 rotate-45"></div>
+                  <div className="absolute bottom-2.5 left-2.5 w-2.5 h-2.5 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-7 left-3.5 w-4.5 h-4.5 border border-white/15"></div>
+                  <div className="absolute bottom-5.5 right-3.5 w-2.5 h-2.5 bg-white/10 rotate-45"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-indigo-100">This Month</p>
-                      <p className="text-base font-bold mt-2">95%</p>
+                      <p className="text-[11px] text-indigo-100">This Month</p>
+                      <p className="text-lg font-bold mt-2.5">95%</p>
                     </div>
-                    <Calendar className="w-6 h-6 text-indigo-200 relative z-10" />
+                    <Calendar className="w-7 h-7 text-indigo-200 relative z-10" />
                   </div>
                 </div>
                 
-                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-3 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
-                  <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
-                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                <div className="flex-1 bg-gradient-to-br from-violet-600 to-purple-500 rounded-md p-4 shadow-sm border border-violet-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  {/* Additional geometric elements */}
+                  <div className="absolute top-2.5 right-2.5 w-3.5 h-3.5 border border-white/20 rotate-45"></div>
+                  <div className="absolute bottom-2.5 left-2.5 w-2.5 h-2.5 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-7 left-3.5 w-4.5 h-4.5 border border-white/15"></div>
+                  <div className="absolute bottom-5.5 right-3.5 w-2.5 h-2.5 bg-white/10 rotate-45"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-violet-100">Late Entries</p>
-                      <p className="text-base font-bold mt-2">3</p>
+                      <p className="text-[11px] text-violet-100">Late Entries</p>
+                      <p className="text-lg font-bold mt-2.5">3</p>
                     </div>
-                    <Clock className="w-6 h-6 text-violet-200 relative z-10" />
+                    <Clock className="w-7 h-7 text-violet-200 relative z-10" />
+                  </div>
+                </div>
+                
+                <div className="flex-1 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md p-4 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                  <div className="absolute -top-5 -right-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-5 -left-5 w-14 h-14 bg-white/10 rounded-full"></div>
+                  {/* Additional geometric elements */}
+                  <div className="absolute top-2.5 right-2.5 w-3.5 h-3.5 border border-white/20 rotate-45"></div>
+                  <div className="absolute bottom-2.5 left-2.5 w-2.5 h-2.5 bg-white/10 rounded-full"></div>
+                  <div className="absolute top-7 left-3.5 w-4.5 h-4.5 border border-white/15"></div>
+                  <div className="absolute bottom-5.5 right-3.5 w-2.5 h-2.5 bg-white/10 rotate-45"></div>
+                  <div className="flex items-center justify-between relative z-10">
+                    <div>
+                      <p className="text-[11px] text-blue-100">Perfect Streak</p>
+                      <p className="text-lg font-bold mt-2.5">7 days</p>
+                    </div>
+                    <Award className="w-7 h-7 text-blue-200 relative z-10" />
                   </div>
                 </div>
               </div>
               
               {/* Weekly Attendance Chart - Enhanced Visualization */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 mb-6">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 mb-6 relative overflow-hidden">
+                {/* Geometric background elements */}
+                <div className="absolute top-0 right-0 w-20 h-20">
+                  <div className="absolute top-2 right-2 w-3 h-3 border border-blue-500/10 rotate-45"></div>
+                  <div className="absolute top-4 right-4 w-2 h-2 bg-indigo-500/5 rounded-full"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 w-20 h-20">
+                  <div className="absolute bottom-2 left-2 w-2 h-2 bg-blue-500/10 rounded-full"></div>
+                  <div className="absolute bottom-4 left-4 w-3 h-3 border border-indigo-500/10"></div>
+                </div>
+                <div className="flex items-center justify-between mb-4 relative z-10">
                   <h3 className="font-bold text-gray-900 text-[11px]">Weekly Attendance</h3>
                   <div className="flex gap-1">
                     <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Last 5 Days</span>
@@ -620,8 +689,8 @@ const SimplifiedStudentDashboard = () => {
                       <div 
                         className={`w-full rounded-t flex items-center justify-center ${
                           day.status === 'present' 
-                            ? 'bg-gradient-to-t from-green-500 to-green-400 h-full' 
-                            : 'bg-gradient-to-t from-red-500 to-red-400 h-3/4'
+                            ? 'bg-gradient-to-t from-blue-500 to-blue-400 h-full' 
+                            : 'bg-gradient-to-t from-indigo-500 to-indigo-400 h-3/4'
                         }`}
                       >
                         {day.status === 'present' ? (
@@ -635,19 +704,30 @@ const SimplifiedStudentDashboard = () => {
                 </div>
                 <div className="flex justify-center gap-4 mt-3">
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <span className="text-[8px] text-gray-600">Present</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
                     <span className="text-[8px] text-gray-600">Absent</span>
                   </div>
                 </div>
               </div>
               
               {/* 6-Month Attendance Trend */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 mb-6">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 mb-6 relative overflow-hidden">
+                {/* Geometric background elements */}
+                <div className="absolute top-0 right-0 w-24 h-24">
+                  <div className="absolute top-2 right-2 w-4 h-4 border border-indigo-500/10 rotate-45"></div>
+                  <div className="absolute top-4 right-4 w-2 h-2 bg-blue-500/5 rounded-full"></div>
+                  <div className="absolute top-6 right-1 w-3 h-3 border border-blue-500/10"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 w-24 h-24">
+                  <div className="absolute bottom-2 left-2 w-3 h-3 border border-indigo-500/10 rotate-45"></div>
+                  <div className="absolute bottom-4 left-4 w-2 h-2 bg-blue-500/5 rounded-full"></div>
+                  <div className="absolute bottom-6 left-1 w-4 h-4 border border-blue-500/10"></div>
+                </div>
+                <div className="flex items-center justify-between mb-4 relative z-10">
                   <h3 className="font-bold text-gray-900 text-[11px]">6-Month Attendance Trend</h3>
                   <div className="flex gap-1">
                     <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-800 text-[9px] font-medium rounded-full">Jan - Jun 2024</span>
@@ -665,19 +745,19 @@ const SimplifiedStudentDashboard = () => {
                     <div key={index} className="flex flex-col items-center flex-1">
                       <div className="text-[8px] text-gray-500 mb-1">{month.month}</div>
                       <div className="flex flex-col w-full">
-                        {/* Present days - green */}
+                        {/* Present days - blue */}
                         <div 
-                          className="w-full bg-green-600 rounded-t"
+                          className="w-full bg-blue-600 rounded-t"
                           style={{ height: `${(month.present / month.total) * 100}%` }}
                         ></div>
-                        {/* Late days - yellow */}
+                        {/* Late days - indigo */}
                         <div 
-                          className="w-full bg-yellow-500"
+                          className="w-full bg-indigo-500"
                           style={{ height: `${(month.late / month.total) * 100}%` }}
                         ></div>
-                        {/* Absent days - red */}
+                        {/* Absent days - indigo */}
                         <div 
-                          className="w-full bg-red-600 rounded-b"
+                          className="w-full bg-indigo-600 rounded-b"
                           style={{ height: `${(month.absent / month.total) * 100}%` }}
                         ></div>
                       </div>
@@ -689,23 +769,32 @@ const SimplifiedStudentDashboard = () => {
                 </div>
                 <div className="flex justify-center gap-4 mt-3">
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                     <span className="text-[8px] text-gray-600">Present</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
                     <span className="text-[8px] text-gray-600">Late</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-red-600 rounded-full"></div>
+                    <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
                     <span className="text-[8px] text-gray-600">Absent</span>
                   </div>
                 </div>
               </div>
               
               {/* Attendance Details Table */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+                {/* Geometric background elements */}
+                <div className="absolute top-0 right-0 w-32 h-32">
+                  <div className="absolute top-3 right-3 w-4 h-4 border border-indigo-500/10 rotate-45"></div>
+                  <div className="absolute top-5 right-5 w-2 h-2 bg-blue-500/5 rounded-full"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 w-32 h-32">
+                  <div className="absolute bottom-3 left-3 w-3 h-3 border border-blue-500/10"></div>
+                  <div className="absolute bottom-5 left-5 w-2 h-2 bg-indigo-500/5 rounded-full"></div>
+                </div>
+                <div className="overflow-x-auto relative z-10">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
@@ -773,15 +862,15 @@ const SimplifiedStudentDashboard = () => {
               
               {/* Grade Status Cards in Single Row - Matched dashboard size */}
               <div className="flex gap-4 mb-6">
-                <div className="flex-1 bg-gradient-to-br from-blue-600 to-indigo-500 rounded-md p-3 shadow-sm border border-blue-200/30 backdrop-blur-sm text-white relative overflow-hidden">
+                <div className="flex-1 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-md p-3 shadow-sm border border-indigo-200/30 backdrop-blur-sm text-white relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-14 h-14 bg-white/10 rounded-full"></div>
                   <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-[10px] text-blue-100">Current GPA</p>
-                      <p className="text-base font-bold mt-2">{studentData.gpa}</p>
+                      <p className="text-[10px] text-indigo-100">Behavior</p>
+                      <p className="text-base font-bold mt-2">Good</p>
                     </div>
-                    <TrendingUp className="w-6 h-6 text-blue-200 relative z-10" />
+                    <UserCheck className="w-6 h-6 text-indigo-200 relative z-10" />
                   </div>
                 </div>
                 
@@ -988,10 +1077,24 @@ const SimplifiedStudentDashboard = () => {
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
                 
-                <div className="relative z-10 flex items-center justify-between">
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div>
                     <h2 className="text-sm font-bold text-white mb-1.5">My Classes</h2>
-                    <p className="text-xs text-blue-100">View all your enrolled classes and subjects</p>
+                    <p className="text-xs text-blue-100 mb-2">View all your enrolled classes and subjects</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">3 Total Classes</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">All Active</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Math, Science, English</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="bg-white/20 rounded-md p-2">
@@ -1317,8 +1420,19 @@ const SimplifiedStudentDashboard = () => {
               </div>
               
               {/* Class Schedule Summary */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4">
-                <h3 className="font-bold text-gray-900 text-[10px] mb-3">Weekly Class Schedule</h3>
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 relative overflow-hidden">
+                {/* Subtle geometric background elements in soft blue/indigo tones */}
+                <div className="absolute top-0 right-0 w-24 h-24">
+                  <div className="absolute top-2 right-2 w-4 h-4 border border-blue-500/10 rotate-45"></div>
+                  <div className="absolute top-4 right-4 w-2 h-2 bg-indigo-500/5 rounded-full"></div>
+                  <div className="absolute top-6 right-1 w-3 h-3 border border-indigo-500/10"></div>
+                </div>
+                <div className="absolute bottom-0 left-0 w-24 h-24">
+                  <div className="absolute bottom-2 left-2 w-3 h-3 border border-blue-500/10 rotate-45"></div>
+                  <div className="absolute bottom-4 left-4 w-2 h-2 bg-indigo-500/5 rounded-full"></div>
+                  <div className="absolute bottom-6 left-1 w-4 h-4 border border-indigo-500/10"></div>
+                </div>
+                <h3 className="font-bold text-gray-900 text-[10px] mb-3 relative z-10">Weekly Class Schedule</h3>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -1383,11 +1497,11 @@ const SimplifiedStudentDashboard = () => {
                       </button>
                     </div>
                     <div>
-                      <h3 className="text-[9px] font-bold text-gray-900">{profileData.name}</h3>
-                      <p className="text-gray-600 text-[8px]">{profileData.class} • Roll #{profileData.rollNumber}</p>
+                      <h3 className="text-[10px] font-bold text-gray-900">{profileData.name}</h3>
+                      <p className="text-gray-600 text-[9px]">{profileData.class} • Roll #{profileData.rollNumber}</p>
                       <button 
                         onClick={() => setShowAvatarModal(true)}
-                        className="text-indigo-600 hover:text-indigo-700 text-[8px] font-medium mt-0.5"
+                        className="text-indigo-600 hover:text-indigo-700 text-[9px] font-medium mt-0.5"
                       >
                         Change Avatar
                       </button>
@@ -1396,42 +1510,42 @@ const SimplifiedStudentDashboard = () => {
                   
                   <div className="space-y-2">
                     <div>
-                      <label className="block text-[8px] font-medium text-gray-700 mb-0.5">Full Name</label>
+                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Full Name</label>
                       <input 
                         type="text" 
                         value={profileData.name}
                         onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[8px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-[8px] font-medium text-gray-700 mb-0.5">Email Address</label>
+                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Email Address</label>
                       <input 
                         type="email" 
                         value={profileData.email}
                         onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[8px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-[8px] font-medium text-gray-700 mb-0.5">Class</label>
+                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Class</label>
                       <input 
                         type="text" 
                         value={profileData.class}
                         onChange={(e) => setProfileData({...profileData, class: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[8px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
                       />
                     </div>
                     
                     <div>
-                      <label className="block text-[8px] font-medium text-gray-700 mb-0.5">Roll Number</label>
+                      <label className="block text-[9px] font-medium text-gray-700 mb-0.5">Roll Number</label>
                       <input 
                         type="text" 
                         value={profileData.rollNumber}
                         onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[8px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[9px]"
                       />
                     </div>
                     
@@ -1445,7 +1559,7 @@ const SimplifiedStudentDashboard = () => {
                             rollNumber: studentData.rollNumber
                           });
                         }}
-                        className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[8px]"
+                        className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[9px]"
                       >
                         Cancel
                       </button>
@@ -1459,7 +1573,7 @@ const SimplifiedStudentDashboard = () => {
                           });
                           alert('Profile updated successfully!');
                         }}
-                        className="px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[8px]"
+                        className="px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[9px]"
                       >
                         Save Changes
                       </button>
@@ -1470,16 +1584,16 @@ const SimplifiedStudentDashboard = () => {
                 {/* Settings and Actions in a single row */}
                 <div className="flex gap-3">
                   <div className="flex-1 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                    <h3 className="text-[9px] font-bold text-gray-900 mb-2">Settings</h3>
+                    <h3 className="text-[10px] font-bold text-gray-900 mb-2">Settings</h3>
                     <div className="space-y-2">
                       {/* Privacy Settings */}
                       <div>
-                        <h4 className="text-[8px] font-medium text-gray-700 mb-1">Privacy</h4>
+                        <h4 className="text-[9px] font-medium text-gray-700 mb-1">Privacy</h4>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[8px] text-gray-600">Profile Visibility</span>
+                            <span className="text-[9px] text-gray-600">Profile Visibility</span>
                             <select 
-                              className="text-[8px] border border-gray-300 rounded px-1.5 py-0.5"
+                              className="text-[9px] border border-gray-300 rounded px-1.5 py-0.5"
                               value={settings.privacy.profileVisibility}
                               onChange={(e) => handlePrivacyChange('profileVisibility', e.target.value)}
                             >
@@ -1489,7 +1603,7 @@ const SimplifiedStudentDashboard = () => {
                             </select>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[8px] text-gray-600">Show Activity Status</span>
+                            <span className="text-[9px] text-gray-600">Show Activity Status</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1505,12 +1619,12 @@ const SimplifiedStudentDashboard = () => {
                       
                       {/* Appearance Settings */}
                       <div>
-                        <h4 className="text-[8px] font-medium text-gray-700 mb-1">Appearance</h4>
+                        <h4 className="text-[9px] font-medium text-gray-700 mb-1">Appearance</h4>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[8px] text-gray-600">Theme</span>
+                            <span className="text-[9px] text-gray-600">Theme</span>
                             <select 
-                              className="text-[8px] border border-gray-300 rounded px-1.5 py-0.5"
+                              className="text-[9px] border border-gray-300 rounded px-1.5 py-0.5"
                               value={settings.appearance.theme}
                               onChange={(e) => handleAppearanceChange('theme', e.target.value)}
                             >
@@ -1519,9 +1633,9 @@ const SimplifiedStudentDashboard = () => {
                             </select>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[8px] text-gray-600">Language</span>
+                            <span className="text-[9px] text-gray-600">Language</span>
                             <select 
-                              className="text-[8px] border border-gray-300 rounded px-1.5 py-0.5"
+                              className="text-[9px] border border-gray-300 rounded px-1.5 py-0.5"
                               value={settings.appearance.language}
                               onChange={(e) => handleAppearanceChange('language', e.target.value)}
                             >
@@ -1535,13 +1649,13 @@ const SimplifiedStudentDashboard = () => {
                   </div>
                   
                   <div className="flex-1 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                    <h3 className="text-[9px] font-bold text-gray-900 mb-2">Security</h3>
+                    <h3 className="text-[10px] font-bold text-gray-900 mb-2">Security</h3>
                     <div className="space-y-2">
                       {/* Security Settings */}
                       <div>
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[8px] text-gray-600">Two-Factor Authentication</span>
+                            <span className="text-[9px] text-gray-600">Two-Factor Authentication</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1553,7 +1667,7 @@ const SimplifiedStudentDashboard = () => {
                             </label>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-[8px] text-gray-600">Login Alerts</span>
+                            <span className="text-[9px] text-gray-600">Login Alerts</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1569,25 +1683,25 @@ const SimplifiedStudentDashboard = () => {
                       
                       {/* Actions */}
                       <div>
-                        <h4 className="text-[9px] font-bold text-gray-900 mb-2">Actions</h4>
+                        <h4 className="text-[10px] font-bold text-gray-900 mb-2">Actions</h4>
                         <div className="space-y-1">
                           <button 
                             onClick={() => window.location.reload()}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[8px]"
+                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[9px]"
                           >
                             <RefreshCw className="w-2 h-2" />
                             Refresh Settings
                           </button>
                           <button 
                             onClick={resetSettings}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[8px]"
+                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[9px]"
                           >
                             <Settings className="w-2 h-2" />
                             Reset Settings
                           </button>
                           <button 
                             onClick={() => alert('Changes saved successfully!')}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[8px]"
+                            className="w-full flex items-center gap-1 px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[9px]"
                           >
                             <CheckCircle className="w-2 h-2" />
                             Save Changes
@@ -1701,55 +1815,7 @@ const SimplifiedStudentDashboard = () => {
                   </div>
                 </div>
                 
-                {/* Assignments Section */}
-                <div>
-                  <h3 className="text-[13px] font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-indigo-600" />
-                    Assignments to be Submitted
-                  </h3>
-                  
-                  <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
-                    <div className="overflow-x-auto relative z-10">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" className="px-3 py-2 text-left text-[10px] font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {/* Sample assignments - in a real app, these would be filtered by class */}
-                          {assignments
-                            .filter(assignment => assignment.subject === selectedClass.subject && assignment.status === 'pending')
-                            .map((assignment) => (
-                              <tr key={assignment.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                                <td className="px-3 py-2 whitespace-nowrap">
-                                  <div className="text-[10px] font-medium text-gray-900">{assignment.title}</div>
-                                </td>
-                                <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-900">{assignment.dueDisplay}</td>
-                                <td className="px-3 py-2 whitespace-nowrap">
-                                  <span className="px-2 py-1 text-[9px] font-medium rounded-full bg-amber-100 text-amber-800">
-                                    {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
-                                  </span>
-                                </td>
-                                <td className="px-3 py-2 whitespace-nowrap">
-                                  <button 
-                                    onClick={() => alert(`Opening assignment: ${assignment.title}`)}
-                                    className="px-2 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[9px] font-medium rounded hover:from-indigo-600 hover:to-purple-700 transition-all"
-                                  >
-                                    Open/Submit
-                                  </button>
-                                </td>
-                              </tr>
-                            ))
-                          }
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
+
               </div>
             </div>
           )}
