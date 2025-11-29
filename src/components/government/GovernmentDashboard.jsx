@@ -1013,45 +1013,45 @@ const GovernmentDashboard = ({ onLogout }) => {
                               <Shield className="w-4 h-4 text-blue-500" />
                               Security Settings
                             </h2>
-                            <p className="text-gray-600 text-sm mt-1">Manage your account security and authentication preferences</p>
+                            <p className="text-gray-600 text-xs mt-1">Manage your account security and authentication preferences</p>
                           </div>
                         </div>
                       </div>
                       
                       <div className="space-y-4">
                         <div className="p-3 bg-gray-50 rounded-lg">
-                          <h3 className="font-medium text-gray-900 text-sm mb-2">Password</h3>
-                          <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-xs font-medium">
+                          <h3 className="font-medium text-gray-900 text-xs mb-2">Password</h3>
+                          <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] font-medium">
                             Change Password
                           </button>
                         </div>
                         
                         <div className="p-3 bg-gray-50 rounded-lg">
-                          <h3 className="font-medium text-gray-900 text-sm mb-2">Two-Factor Authentication</h3>
-                          <p className="text-gray-600 text-xs mb-2">Add an extra layer of security to your account</p>
+                          <h3 className="font-medium text-gray-900 text-xs mb-2">Two-Factor Authentication</h3>
+                          <p className="text-gray-600 text-[10px] mb-2">Add an extra layer of security to your account</p>
                           <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-600">Currently disabled</span>
-                            <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-xs font-medium">
+                            <span className="text-[10px] text-gray-600">Currently disabled</span>
+                            <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] font-medium">
                               Enable
                             </button>
                           </div>
                         </div>
                         
                         <div className="p-3 bg-gray-50 rounded-lg">
-                          <h3 className="font-medium text-gray-900 text-sm mb-2">Login History</h3>
-                          <p className="text-gray-600 text-xs mb-2">View recent login attempts</p>
-                          <button className="px-3 py-1.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-md hover:from-gray-600 hover:to-gray-700 transition-all text-xs font-medium">
+                          <h3 className="font-medium text-gray-900 text-xs mb-2">Login History</h3>
+                          <p className="text-gray-600 text-[10px] mb-2">View recent login attempts</p>
+                          <button className="px-3 py-1.5 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-md hover:from-gray-600 hover:to-gray-700 transition-all text-[10px] font-medium">
                             View History
                           </button>
                         </div>
                       </div>
                       
                       <div className="flex justify-end gap-2 pt-4 border-t border-gray-200 mt-4">
-                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <button className="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-xs">
                           <X className="w-3 h-3" />
                           Cancel
                         </button>
-                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-sm">
+                        <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md font-medium flex items-center gap-1.5 text-xs">
                           <Save className="w-3 h-3" />
                           Save
                         </button>
