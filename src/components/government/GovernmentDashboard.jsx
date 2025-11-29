@@ -489,7 +489,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                               border: '1px solid rgba(255,255,255,0.4)',
                               boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                               backdropFilter: 'blur(12px)',
-                              fontSize: '13px',
+                              fontSize: '12px',
                               padding: '10px'
                             }}
                             formatter={(value) => [`${value} schools`, 'Count']}
@@ -578,7 +578,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                   <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
                   <h3 className="text-base font-bold text-white mb-5">Attendance Analytics</h3>
-                  <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
+                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart data={attendanceTrendData}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
@@ -586,12 +586,12 @@ const GovernmentDashboard = ({ onLogout }) => {
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
                           domain={[0, 100]}
                         />
                         <Tooltip 
@@ -601,7 +601,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                             border: '1px solid rgba(255,255,255,0.4)',
                             boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                             backdropFilter: 'blur(12px)',
-                            fontSize: '13px',
+                            fontSize: '11px',
                             padding: '10px'
                           }}
                           labelStyle={{ color: '#1e40af', fontWeight: 600 }}
@@ -634,7 +634,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                   <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
                   <h3 className="text-base font-bold text-white mb-5">School Performance</h3>
-                  <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
+                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart data={attendanceTrendData}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
@@ -642,12 +642,12 @@ const GovernmentDashboard = ({ onLogout }) => {
                           dataKey="month" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
                         />
                         <Tooltip 
                           formatter={(value) => [`${value}`, 'Active Schools']}
@@ -657,7 +657,7 @@ const GovernmentDashboard = ({ onLogout }) => {
                             border: '1px solid rgba(255,255,255,0.4)',
                             boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                             backdropFilter: 'blur(12px)',
-                            fontSize: '13px',
+                            fontSize: '11px',
                             padding: '10px'
                           }}
                           labelStyle={{ color: '#047857', fontWeight: 600 }}

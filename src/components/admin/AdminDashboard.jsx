@@ -432,7 +432,7 @@ const AdminDashboard = ({ onLogout }) => {
                             borderRadius: '10px',
                             border: '1px solid #e5e7eb',
                             boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
-                            fontSize: '13px',
+                            fontSize: '12px',
                             padding: '10px'
                           }} 
                           formatter={(value) => [`${value}%`, 'Attendance']}
@@ -873,7 +873,7 @@ const AdminDashboard = ({ onLogout }) => {
                   <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
                   <h3 className="text-base font-bold text-white mb-5">Attendance Analytics</h3>
-                  <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
+                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsBarChart data={classes}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
@@ -881,12 +881,12 @@ const AdminDashboard = ({ onLogout }) => {
                           dataKey="name" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 11, fontWeight: 500 }}
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
                         />
                         <Tooltip 
                           formatter={(value) => [`${value}`, 'Students']}
@@ -896,7 +896,7 @@ const AdminDashboard = ({ onLogout }) => {
                             border: '1px solid rgba(255,255,255,0.4)',
                             boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                             backdropFilter: 'blur(12px)',
-                            fontSize: '13px',
+                            fontSize: '11px',
                             padding: '10px'
                           }}
                           labelStyle={{ color: '#1e40af', fontWeight: 600 }}
@@ -928,7 +928,7 @@ const AdminDashboard = ({ onLogout }) => {
                   <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
                   <h3 className="text-base font-bold text-white mb-5">Student Distribution</h3>
-                  <div className="h-52 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
+                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsPieChart>
                         <Pie
@@ -969,7 +969,7 @@ const AdminDashboard = ({ onLogout }) => {
                             border: '1px solid rgba(255,255,255,0.4)',
                             boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
                             backdropFilter: 'blur(12px)',
-                            fontSize: '13px',
+                            fontSize: '12px',
                             padding: '10px'
                           }}
                           formatter={(value) => [`${value} students`, 'Count']}
