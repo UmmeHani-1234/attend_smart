@@ -25,6 +25,47 @@ const GovernmentDashboard = ({ onLogout }) => {
     { id: 3, type: 'resource', message: 'Budget allocation for Kendriya Vidyalaya', time: '1 hour ago', severity: 'medium', status: 'acknowledged' },
   ];
 
+  // State for notices
+  const [notices, setNotices] = useState([
+    { 
+      id: 1, 
+      title: "Budget Allocation Announcement", 
+      content: "The annual budget for the education sector has been finalized and allocated to all districts. Please review the allocation for your district and submit utilization plan within 15 days.",
+      audience: "All Districts",
+      priority: "Important",
+      sender: "Government Official",
+      date: "2024-05-15",
+      time: "09:30 AM"
+    },
+    { 
+      id: 2, 
+      title: "Policy Update on Student Assessment", 
+      content: "New guidelines for student assessment and evaluation have been released. All schools are required to implement these changes starting from the next academic year.",
+      audience: "All Schools",
+      priority: "Important",
+      sender: "Government Official",
+      date: "2024-05-10",
+      time: "14:20 PM"
+    },
+    { 
+      id: 3, 
+      title: "Mid-Day Meal Program Enhancement", 
+      content: "The mid-day meal program will be enhanced with additional nutritional supplements starting June 1st. All schools participating in the program must update their inventory.",
+      audience: "All Schools",
+      priority: "Normal",
+      sender: "Government Official",
+      date: "2024-05-05",
+      time: "11:45 AM"
+    }
+  ]);
+
+  const [newNotice, setNewNotice] = useState({
+    title: "",
+    content: "",
+    audience: "All Districts",
+    priority: "Normal"
+  });
+
   // Sample schools data - moved to the top to avoid reference error
   const [schools, setSchools] = useState([
     { id: 1, name: 'Delhi Public School', students: 1250, attendance: 94.2, performance: 'A', alerts: alerts.filter(a => a.message.includes('Delhi Public')).length },
@@ -282,6 +323,58 @@ const GovernmentDashboard = ({ onLogout }) => {
     }
   };
 
+  // Function to handle new notice form input changes
+  const handleNewNoticeChange = (e) => {
+    const { name, value } = e.target;
+    setNewNotice({ ...newNotice, [name]: value });
+  };
+  
+  // Function to add a new notice
+  const addNewNotice = () => {
+    if (newNotice.title && newNotice.content) {
+      const noticeObj = {
+        id: notices.length + 1,
+        title: newNotice.title,
+        content: newNotice.content,
+        audience: newNotice.audience,
+        priority: newNotice.priority,
+        sender: "Government Official",
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      
+      setNotices([noticeObj, ...notices]);
+      setNewNotice({
+        title: "",
+        content: "",
+        audience: "All Districts",
+        priority: "Normal"
+      });
+    }
+  };
+  
+  // Function to clear the new notice form
+  const clearNoticeForm = () => {
+    setNewNotice({
+      title: "",
+      content: "",
+      audience: "All Districts",
+      priority: "Normal"
+    });
+  };
+  
+  // Function to get priority badge class
+  const getPriorityBadgeClass = (priority) => {
+    switch (priority) {
+      case 'Urgent':
+        return 'bg-red-100 text-red-800';
+      case 'Important':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-green-100 text-green-800';
+    }
+  };
+
   const getBarColor = (value) => {
     return '#2563EB'; // slightly darker medium blue for all bars
   };
@@ -462,6 +555,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
             { id: 'schools', icon: School, label: 'Schools' },
+            { id: 'notices', icon: Bell, label: 'Notices' },
             { id: 'reports', icon: FileText, label: 'Reports' },
             { id: 'alerts', icon: Bell, label: 'Alerts' },
             { id: 'middaymeal', icon: Utensils, label: 'Mid Day Meal' },
@@ -513,7 +607,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-4 flex-grow overflow-y-auto overscroll-contain">
+        <div className="p-3 flex-grow overflow-y-auto overscroll-contain">
           {/* Home Tab */}
           {activeTab === 'home' && (
             <div>
@@ -650,7 +744,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                 </div>
 
                 {/* Recent Alerts */}
-                <div className="bg-gradient-to-br from-white to-gray-50 rounded-md p-4 shadow-sm border border-gray-200/30 backdrop-blur-sm relative overflow-hidden">
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-md p-4 shadow-sm border border-gray-200/30 backdrop-blur-sm relative overflow-hidden mb-5">
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500/10 rounded-full"></div>
                   <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-500/10 rounded-full"></div>
                   
@@ -679,6 +773,51 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                         </div>
                       </motion.div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Quick Notices Section */}
+                <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-xs font-bold text-gray-900">Recent Notices</h2>
+                    <button 
+                      onClick={() => setActiveTab('notices')}
+                      className="text-[8px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                    >
+                      View All <span className="text-[9px]">→</span>
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {notices.slice(0, 3).map((notice) => (
+                      <div key={notice.id} className="border-l-2 border-blue-500 pl-2 py-1">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-medium text-gray-900 text-[10px]">{notice.title}</h3>
+                          <span className={`text-[7px] ${getPriorityBadgeClass(notice.priority)} px-1 py-0.5 rounded-full ml-1`}>
+                            {notice.priority}
+                          </span>
+                        </div>
+                        <p className="text-gray-600 text-[9px] mt-1 line-clamp-2">{notice.content.substring(0, 80)}{notice.content.length > 80 ? '...' : ''}</p>
+                        <div className="flex justify-between items-center mt-1">
+                          <span className="text-[8px] text-gray-500">{notice.date}</span>
+                          <span className="text-[8px] text-gray-500">To: {notice.audience}</span>
+                        </div>
+                        <div className="text-[7px] text-gray-400 mt-1">
+                          From: {notice.sender}
+                        </div>
+                      </div>
+                    ))}
+                    {notices.length === 0 && (
+                      <div className="text-center py-3">
+                        <Bell className="w-5 h-5 text-gray-300 mx-auto mb-1" />
+                        <p className="text-[9px] text-gray-500">No notices posted yet</p>
+                        <button 
+                          onClick={() => setActiveTab('notices')}
+                          className="text-[8px] text-blue-600 hover:text-blue-700 font-medium mt-1"
+                        >
+                          Create your first notice
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1177,6 +1316,160 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                             </button>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Notices Tab */}
+          {activeTab === 'notices' && (
+            <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-4 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                <div className="absolute top-1/3 left-1/4 w-7 h-7 bg-white/5 rounded-full"></div>
+                <div className="absolute bottom-1/3 right-1/3 w-6 h-6 bg-white/10 rotate-12"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-[13px] font-bold text-white mb-1.5">Notice Management Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Create and manage important notices for schools and districts</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{districtData.name}</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Notice Board</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Bell className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-[12px] font-bold text-gray-900">Post New Notice</h2>
+                <div className="flex gap-3">
+                  <button 
+                    className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px] font-medium"
+                  >
+                    <Plus className="w-3 h-3" />
+                    Create Notice
+                  </button>
+                </div>
+              </div>
+              
+              {/* Notice Creation Form */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
+                <h3 className="text-[10px] font-bold text-gray-900 mb-2">Compose Notice</h3>
+                <div className="space-y-2">
+                  <div>
+                    <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Title</label>
+                    <input 
+                      type="text" 
+                      name="title"
+                      value={newNotice.title}
+                      onChange={handleNewNoticeChange}
+                      className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                      placeholder="Enter notice title"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Content</label>
+                    <textarea 
+                      name="content"
+                      value={newNotice.content}
+                      onChange={handleNewNoticeChange}
+                      className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                      placeholder="Enter notice content"
+                      rows="2"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[9px] font-medium text-gray-700 mb-1">Target Audience</label>
+                      <select 
+                        name="audience"
+                        value={newNotice.audience}
+                        onChange={handleNewNoticeChange}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                      >
+                        <option value="All Districts">All Districts</option>
+                        <option value="All Schools">All Schools</option>
+                        <option value="Specific Districts">Specific Districts</option>
+                        <option value="Specific Schools">Specific Schools</option>
+                        <option value="Administrators">Administrators</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-[9px] font-medium text-gray-700 mb-1">Priority</label>
+                      <select 
+                        name="priority"
+                        value={newNotice.priority}
+                        onChange={handleNewNoticeChange}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                      >
+                        <option value="Normal">Normal</option>
+                        <option value="Important">Important</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2 pt-1">
+                    <button 
+                      onClick={clearNoticeForm}
+                      className="px-2 py-1 border border-gray-300 text-gray-700 rounded text-[9px]"
+                    >
+                      Clear
+                    </button>
+                    <button 
+                      onClick={addNewNotice}
+                      className="px-2 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded text-[9px]"
+                    >
+                      Post Notice
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Recent Notices */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mt-[-4px]">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-[10px] font-bold text-gray-900">Recent Notices</h3>
+                  <button className="text-blue-600 hover:text-blue-800 text-[9px] font-medium">View All</button>
+                </div>
+                
+                <div className="space-y-3">
+                  {notices.map((notice) => (
+                    <div key={notice.id} className="border border-gray-200 rounded p-2 hover:bg-blue-50 transition-colors">
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="font-medium text-gray-900 text-[11px]">{notice.title}</h4>
+                        <span className={`text-[7px] ${getPriorityBadgeClass(notice.priority)} px-1 py-0.5 rounded-full`}>
+                          {notice.priority}
+                        </span>
+                      </div>
+                      <p className="text-gray-600 text-[9px] mb-1">{notice.content.substring(0, 100)}{notice.content.length > 100 ? '...' : ''}</p>
+                      <div className="flex justify-between items-center text-[9px] text-gray-500">
+                        <span>{notice.date} at {notice.time}</span>
+                        <span>To: {notice.audience}</span>
+                      </div>
+                      <div className="text-[8px] text-gray-400 mt-1">
+                        From: {notice.sender}
                       </div>
                     </div>
                   ))}
