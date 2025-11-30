@@ -56,6 +56,27 @@ const AdminDashboard = ({ onLogout }) => {
     'https://api.dicebear.com/7.x/avataaars/svg?seed=Henry'
   ];
 
+  // Handler functions for class actions
+  const handleViewClass = (classId) => {
+    console.log('View class:', classId);
+    // In a real app, this would open a modal or navigate to class details
+    alert(`Viewing details for class ID: ${classId}`);
+  };
+
+  const handleEditClass = (classId) => {
+    console.log('Edit class:', classId);
+    // In a real app, this would open an edit modal
+    alert(`Editing class ID: ${classId}`);
+  };
+
+  const handleDeleteClass = (classId) => {
+    console.log('Delete class:', classId);
+    // In a real app, this would show a confirmation and then delete
+    if (window.confirm(`Are you sure you want to delete class ID: ${classId}?`)) {
+      alert(`Deleted class ID: ${classId}`);
+    }
+  };
+
   // School-specific data
   const schoolData = {
     name: 'Saboo Siddik Degree',
@@ -141,6 +162,15 @@ const AdminDashboard = ({ onLogout }) => {
     { id: 8, name: 'Grade 8', teacher: 'Mr. Sharma', students: 80, subject: 'High School Prep' },
     { id: 9, name: 'Grade 9', teacher: 'Prof. Mehta', students: 85, subject: 'High School' },
     { id: 10, name: 'Grade 10', teacher: 'Dr. Patil', students: 90, subject: 'Senior High' },
+  ];
+
+  // Performance data for this school
+  const performanceData = [
+    { subject: 'Math', averageScore: 85 },
+    { subject: 'Science', averageScore: 78 },
+    { subject: 'English', averageScore: 82 },
+    { subject: 'History', averageScore: 76 },
+    { subject: 'Computer', averageScore: 90 },
   ];
 
   // Enhanced attendance data for different periods
@@ -1287,7 +1317,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
 
               <div className="grid grid-cols-1 gap-8">
                 {/* Attendance Analytics */}
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-lg border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-5 shadow-lg border border-blue-300/30 backdrop-blur-sm relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
                   <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
                   
@@ -1333,10 +1363,64 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                           animationDuration={800}
                         >
                           {classes.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={getBarColor(entry.students)} />
+                            <Cell key={`cell-${index}`} fill="#60a5fa" />
                           ))}
                         </Bar>
                       </RechartsBarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                
+                {/* Performance Analytics */}
+                <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-5 shadow-lg border border-blue-400/30 backdrop-blur-sm relative overflow-hidden">
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/10 rounded-full"></div>
+                  
+                  <h3 className="text-base font-bold text-white mb-5">Performance Analytics</h3>
+                  <div className="h-48 bg-white/20 rounded-lg p-4 backdrop-blur-sm border border-white/30">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RechartsLineChart data={performanceData}>
+                        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(255,255,255,0.4)" />
+                        <XAxis 
+                          dataKey="subject" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: 'rgba(255,255,255,0.9)', fontSize: 9, fontWeight: 500 }}
+                          domain={[0, 100]}
+                        />
+                        <Tooltip 
+                          formatter={(value) => [`${value}%`, 'Score']}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255,255,255,0.95)', 
+                            borderRadius: '10px',
+                            border: '1px solid rgba(255,255,255,0.4)',
+                            boxShadow: '0 12px 30px rgba(0,0,0,0.15)',
+                            backdropFilter: 'blur(12px)',
+                            fontSize: '11px',
+                            padding: '10px'
+                          }} 
+                          labelStyle={{ color: '#1e40af', fontWeight: 600 }}
+                        />
+                        <Legend 
+                          wrapperStyle={{ paddingTop: '10px' }}
+                          formatter={(value) => <span className="text-white font-medium">{value}</span>}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="averageScore" 
+                          name="Average Score" 
+                          stroke="#93c5fd" 
+                          strokeWidth={3}
+                          dot={{ r: 6, fill: '#bfdbfe', strokeWidth: 2, stroke: '#1d4ed8' }}
+                          activeDot={{ r: 8, fill: '#bfdbfe', strokeWidth: 2, stroke: '#1d4ed8' }}
+                          animationDuration={800}
+                        />
+                      </RechartsLineChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
