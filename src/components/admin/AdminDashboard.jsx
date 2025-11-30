@@ -36,6 +36,9 @@ const AdminDashboard = ({ onLogout }) => {
     grade: ''
   });
   const [reportPeriod, setReportPeriod] = useState('weekly'); // weekly, monthly, yearly
+  const [showReportFilterModal, setShowReportFilterModal] = useState(false);
+  const [reportClassFilter, setReportClassFilter] = useState('All Classes');
+  const [reportSubjectFilter, setReportSubjectFilter] = useState('All Subjects');
   const [teacherAvatarPreview, setTeacherAvatarPreview] = useState(null);
   const [studentAvatarPreview, setStudentAvatarPreview] = useState(null);
   const [showAvatarOptions, setShowAvatarOptions] = useState(false);
@@ -436,6 +439,23 @@ const AdminDashboard = ({ onLogout }) => {
     setAvatarType('');
   };
 
+  // Helper function to get initials from a string
+  const getInitials = (name) => {
+    if (!name) return '';
+    const words = name.split(' ');
+    if (words.length === 1) {
+      return words[0].substring(0, 2).toUpperCase();
+    } else {
+      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+    }
+  };
+
+  // Test the getInitials function
+  console.log('Testing getInitials function:');
+  console.log('Grade 1:', getInitials('Grade 1'));
+  console.log('Grade 10:', getInitials('Grade 10'));
+  console.log('Test:', getInitials('Test'));
+
   // Function to apply filters
   const applyFilters = () => {
     console.log('Applying filters:', selectedSchool, selectedDuration);
@@ -513,6 +533,17 @@ const AdminDashboard = ({ onLogout }) => {
   const applyClassFilters = () => {
     console.log('Applying class filters:', classSubjectFilter, classGradeFilter, classStudentsFilter);
     // Filtering logic would go here
+  };
+
+  // Function to apply report filters
+  const applyReportFilters = () => {
+    console.log('Applying report filters:', reportClassFilter, reportSubjectFilter, reportPeriod);
+    // In a real app, this would update the charts with filtered data
+    setShowReportFilterModal(false);
+  };
+
+  const closeReportFilterModal = () => {
+    setShowReportFilterModal(false);
   };
 
   // Filter classes based on filter criteria
@@ -1062,7 +1093,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                   <div className="flex items-end">
                     <button 
-                      className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                      className="w-full px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium"
                       onClick={applyTeacherFilters}
                     >
                       Apply Filters
@@ -1210,7 +1241,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                   <div className="flex items-end">
                     <button 
-                      className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                      className="w-full px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium"
                       onClick={applyStudentFilters}
                     >
                       Apply Filters
@@ -1363,7 +1394,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                   <div className="flex items-end">
                     <button 
-                      className="w-full px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                      className="w-full px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium"
                       onClick={applyClassFilters}
                     >
                       Apply Filters
@@ -1387,10 +1418,32 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                     <tbody className="bg-white divide-y divide-gray-50">
                       {getFilteredClasses().map((classItem) => (
                         <tr key={classItem.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">{classItem.name}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.subject}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.teacher}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">{classItem.students}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] font-medium text-gray-900">
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-[9px] shadow-sm">
+                                {getInitials(classItem.name)}
+                              </div>
+                              <span>{classItem.name}</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">
+                            <div className="flex items-center gap-1">
+                              <Book className="w-3 h-3 text-blue-500" />
+                              {classItem.subject}
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">
+                            <div className="flex items-center gap-1">
+                              <User className="w-3 h-3 text-indigo-500" />
+                              {classItem.teacher}
+                            </div>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[10px] text-gray-600">
+                            <div className="flex items-center gap-1">
+                              <Users className="w-3 h-3 text-purple-500" />
+                              {classItem.students}
+                            </div>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -1435,13 +1488,12 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Reports & Analytics</h2>
                 <div className="flex gap-2">
-                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]">
+                  <button 
+                    onClick={() => setShowReportFilterModal(true)}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium"
+                  >
                     <Filter className="w-3 h-3" />
                     Filter
-                  </button>
-                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md">
-                    <Download className="w-3 h-3" />
-                    Export Report
                   </button>
                 </div>
               </div>
@@ -1600,7 +1652,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                     <option>Acknowledged</option>
                     <option>Resolved</option>
                   </select>
-                  <button className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]">
+                  <button className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium">
                     <RefreshCw className="w-3 h-3" />
                     Refresh
                   </button>
@@ -2115,7 +2167,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                     </select>
                     <button 
                       onClick={applyFilters}
-                      className="px-2 py-1 text-[10px] rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+                      className="px-2 py-1 text-[10px] rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors font-medium"
                     >
                       Apply Filter
                     </button>
@@ -2144,14 +2196,14 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                   <button 
                     onClick={handleGenerateMealAnalysisReport}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-[10px] font-medium"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-[10px] font-medium"
                   >
                     <FileText className="w-3 h-3" />
                     Generate Analysis
                   </button>
                   <button 
                     onClick={handleExportMealAnalysisReport}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-[10px] font-medium"
                   >
                     <Download className="w-3 h-3" />
                     Export Analysis
@@ -2800,6 +2852,105 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   className="flex-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
                 >
                   Add Class
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Filter Modal */}
+      {showReportFilterModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-md w-full max-w-md max-h-80 overflow-y-auto">
+            <div className="p-4 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-gray-900">Filter Reports</h3>
+                <button 
+                  onClick={closeReportFilterModal}
+                  className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
+                  <select 
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={reportClassFilter}
+                    onChange={(e) => setReportClassFilter(e.target.value)}
+                  >
+                    <option value="All Classes">All Classes</option>
+                    <option value="Grade 1">Grade 1</option>
+                    <option value="Grade 2">Grade 2</option>
+                    <option value="Grade 3">Grade 3</option>
+                    <option value="Grade 4">Grade 4</option>
+                    <option value="Grade 5">Grade 5</option>
+                    <option value="Grade 6">Grade 6</option>
+                    <option value="Grade 7">Grade 7</option>
+                    <option value="Grade 8">Grade 8</option>
+                    <option value="Grade 9">Grade 9</option>
+                    <option value="Grade 10">Grade 10</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
+                  <select 
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={reportSubjectFilter}
+                    onChange={(e) => setReportSubjectFilter(e.target.value)}
+                  >
+                    <option value="All Subjects">All Subjects</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                    <option value="Computer Science">Computer Science</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Period</label>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setReportPeriod('weekly')}
+                      className={`px-2.5 py-1.5 text-[10px] rounded-md font-medium ${reportPeriod === 'weekly' ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 text-gray-700'}`}
+                    >
+                      Weekly
+                    </button>
+                    <button 
+                      onClick={() => setReportPeriod('monthly')}
+                      className={`px-2.5 py-1.5 text-[10px] rounded-md font-medium ${reportPeriod === 'monthly' ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 text-gray-700'}`}
+                    >
+                      Monthly
+                    </button>
+                    <button 
+                      onClick={() => setReportPeriod('yearly')}
+                      className={`px-2.5 py-1.5 text-[10px] rounded-md font-medium ${reportPeriod === 'yearly' ? 'bg-blue-500 text-white shadow-sm' : 'bg-gray-100 text-gray-700'}`}
+                    >
+                      Yearly
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 mt-6">
+                <button 
+                  onClick={closeReportFilterModal}
+                  className="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={applyReportFilters}
+                  className="flex-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                >
+                  Apply Filters
                 </button>
               </div>
             </div>
