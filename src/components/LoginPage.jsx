@@ -13,6 +13,7 @@ const LoginPage = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [email, setEmail] = useState('');
 
   const handleGoogleLogin = () => {
     // Simulate Google login
@@ -35,6 +36,16 @@ const LoginPage = ({ onLogin }) => {
       if (!username || !password) {
         setError(`Please enter both username and password to ${isSignUp ? 'sign up' : 'sign in'}`);
         return;
+      }
+      
+      // Additional validation for sign up
+      if (isSignUp) {
+        if (!email) {
+          setError('Please enter your email address');
+          return;
+        }
+        // Simulate account creation
+        console.log('Creating account:', { username, email, password, userType });
       }
       
       // Simulate sign in/sign up
@@ -341,7 +352,7 @@ const LoginPage = ({ onLogin }) => {
               
               <div>
                 <label htmlFor="username" className="block text-[9px] font-medium text-gray-700 mb-1">
-                  Username or Email
+                  Username
                 </label>
                 <div className="relative">
                   <input
@@ -353,13 +364,37 @@ const LoginPage = ({ onLogin }) => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="block w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[9px] transition-all duration-300 hover:bg-gray-100"
-                    placeholder="Enter your username or email"
+                    placeholder="Enter your username"
                   />
                   <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
                     <User className="h-3.5 w-3.5 text-gray-400" />
                   </div>
                 </div>
               </div>
+              
+              {isSignUp && (
+                <div>
+                  <label htmlFor="email" className="block text-[9px] font-medium text-gray-700 mb-1">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required={isSignUp}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[9px] transition-all duration-300 hover:bg-gray-100"
+                      placeholder="Enter your email address"
+                    />
+                    <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                      <Mail className="h-3.5 w-3.5 text-gray-400" />
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <div>
                 <label htmlFor="password" className="block text-[9px] font-medium text-gray-700 mb-1">
@@ -477,7 +512,13 @@ const LoginPage = ({ onLogin }) => {
               <p className="text-[8px] text-gray-600">
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <button
-                  onClick={() => setIsSignUp(!isSignUp)}
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    // Clear email when switching modes
+                    if (isSignUp) {
+                      setEmail('');
+                    }
+                  }}
                   className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none"
                 >
                   {isSignUp ? 'Sign in' : 'Sign up'}
