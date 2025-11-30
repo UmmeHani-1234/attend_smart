@@ -280,16 +280,16 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                 
                 <div className="overflow-x-auto relative z-10">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Assignment</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Assignment</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Due Date</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Priority</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-gray-100">
                       {assignments.map((assignment) => {
                         // Map subjects to icons
                         const subjectIcons = {
@@ -318,40 +318,40 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         const AssignmentIcon = assignmentTypeIcons[assignmentType] || FileText;
                         
                         return (
-                          <tr key={assignment.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                            <td className="px-3 py-2 whitespace-nowrap">
+                          <tr key={assignment.id} className="hover:bg-indigo-50/50 transition-all duration-200">
+                            <td className="px-3 py-2.5 whitespace-nowrap">
                               <div className="flex items-center">
-                                <AssignmentIcon className="w-2.5 h-2.5 text-indigo-400 mr-1" />
-                                <div className="text-[9px] font-medium text-gray-900">{assignment.title}</div>
+                                <AssignmentIcon className="w-3 h-3 text-indigo-500 mr-2" />
+                                <div className="text-[10px] font-medium text-gray-900">{assignment.title}</div>
                               </div>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap">
+                            <td className="px-3 py-2.5 whitespace-nowrap">
                               <div className="flex items-center">
-                                <SubjectIcon className="w-2.5 h-2.5 text-indigo-400 mr-1" />
-                                <div className="text-[9px] text-gray-900">{assignment.subject}</div>
+                                <SubjectIcon className="w-3 h-3 text-indigo-500 mr-2" />
+                                <div className="text-[10px] text-gray-800">{assignment.subject}</div>
                               </div>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap">
+                            <td className="px-3 py-2.5 whitespace-nowrap">
                               <div className="flex items-center">
-                                <Calendar className="w-2.5 h-2.5 text-indigo-400 mr-1" />
-                                <div className="text-[9px] text-gray-900">{assignment.dueDisplay}</div>
+                                <Calendar className="w-3 h-3 text-indigo-500 mr-2" />
+                                <div className="text-[10px] text-gray-800">{assignment.dueDisplay}</div>
                               </div>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap">
-                              <span className={`px-1.5 py-0.5 text-[8px] font-medium rounded-full ${
-                                assignment.priority === 'high' ? 'bg-red-100 text-red-800 border border-red-200' :
-                                assignment.priority === 'medium' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
-                                'bg-green-100 text-green-800 border border-green-200'
-                              }`}>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-[9px] font-semibold rounded-full inline-flex items-center ${assignment.priority === 'high' ? 'bg-red-100 text-red-800 border border-red-200' : assignment.priority === 'medium' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-green-100 text-green-800 border border-green-200'}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${assignment.priority === 'high' ? 'bg-red-500' : assignment.priority === 'medium' ? 'bg-amber-500' : 'bg-green-500'}`}></div>
                                 {assignment.priority.charAt(0).toUpperCase() + assignment.priority.slice(1)}
                               </span>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap">
-                              <span className={`px-1.5 py-0.5 text-[8px] font-medium rounded-full ${
-                                assignment.status === 'submitted' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' :
-                                assignment.status === 'graded' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
-                                'bg-amber-100 text-amber-800 border border-amber-200'
-                              }`}>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-[9px] font-semibold rounded-full inline-flex items-center ${assignment.status === 'submitted' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : assignment.status === 'graded' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
+                                {assignment.status === 'submitted' ? (
+                                  <CheckCircle className="w-3 h-3 mr-1.5" />
+                                ) : assignment.status === 'graded' ? (
+                                  <Award className="w-3 h-3 mr-1.5" />
+                                ) : (
+                                  <Clock className="w-3 h-3 mr-1.5" />
+                                )}
                                 {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
                               </span>
                             </td>
@@ -474,16 +474,16 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                 
                 <div className="overflow-x-auto relative z-10">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Assignment</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Assignment</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Due Date</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Priority</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-gray-100">
                       {assignments.map((assignment) => {
                         // Map subjects to icons
                         const subjectIcons = {
@@ -512,35 +512,35 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         const AssignmentIcon = assignmentTypeIcons[assignmentType] || FileText;
                         
                         return (
-                          <tr key={assignment.id} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                            <td className="px-3 py-2 whitespace-nowrap">
+                          <tr key={assignment.id} className="hover:bg-indigo-50/50 transition-all duration-200">
+                            <td className="px-3 py-2.5 whitespace-nowrap">
                               <div className="flex items-center">
-                                <AssignmentIcon className="w-2.5 h-2.5 text-indigo-400 mr-1" />
-                                <div className="text-[9px] font-medium text-gray-900">{assignment.title}</div>
+                                <AssignmentIcon className="w-3 h-3 text-indigo-500 mr-2" />
+                                <div className="text-[10px] font-medium text-gray-900">{assignment.title}</div>
                               </div>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap">
+                            <td className="px-3 py-2.5 whitespace-nowrap">
                               <div className="flex items-center">
-                                <SubjectIcon className="w-2.5 h-2.5 text-indigo-400 mr-1" />
-                                <div className="text-[9px] text-gray-900">{assignment.subject}</div>
+                                <SubjectIcon className="w-3 h-3 text-indigo-500 mr-2" />
+                                <div className="text-[10px] text-gray-800">{assignment.subject}</div>
                               </div>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-900">{assignment.dueDisplay}</td>
-                            <td className="px-3 py-2 whitespace-nowrap">
-                              <span className={`px-1.5 py-0.5 text-[8px] font-medium rounded-full ${
-                                assignment.priority === 'high' ? 'bg-red-100 text-red-800' :
-                                assignment.priority === 'medium' ? 'bg-amber-100 text-amber-800' :
-                                'bg-green-100 text-green-800'
-                              }`}>
+                            <td className="px-3 py-2.5 whitespace-nowrap text-[10px] text-gray-800">{assignment.dueDisplay}</td>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-[9px] font-semibold rounded-full inline-flex items-center ${assignment.priority === 'high' ? 'bg-red-100 text-red-800 border border-red-200' : assignment.priority === 'medium' ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-green-100 text-green-800 border border-green-200'}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${assignment.priority === 'high' ? 'bg-red-500' : assignment.priority === 'medium' ? 'bg-amber-500' : 'bg-green-500'}`}></div>
                                 {assignment.priority.charAt(0).toUpperCase() + assignment.priority.slice(1)}
                               </span>
                             </td>
-                            <td className="px-3 py-2 whitespace-nowrap">
-                              <span className={`px-1.5 py-0.5 text-[8px] font-medium rounded-full ${
-                                assignment.status === 'submitted' ? 'bg-indigo-100 text-indigo-800' :
-                                assignment.status === 'graded' ? 'bg-blue-100 text-blue-800' :
-                                'bg-amber-100 text-amber-800'
-                              }`}>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-[9px] font-semibold rounded-full inline-flex items-center ${assignment.status === 'submitted' ? 'bg-indigo-100 text-indigo-800 border border-indigo-200' : assignment.status === 'graded' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`}>
+                                {assignment.status === 'submitted' ? (
+                                  <CheckCircle className="w-3 h-3 mr-1.5" />
+                                ) : assignment.status === 'graded' ? (
+                                  <Award className="w-3 h-3 mr-1.5" />
+                                ) : (
+                                  <Clock className="w-3 h-3 mr-1.5" />
+                                )}
                                 {assignment.status.charAt(0).toUpperCase() + assignment.status.slice(1)}
                               </span>
                             </td>
@@ -799,11 +799,11 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                   <table className="min-w-full divide-y divide-gray-100">
                     <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Date</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Day</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Time</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Remarks</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Date</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Day</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Status</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Time</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Remarks</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-50">
@@ -816,21 +816,25 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         { date: '2024-04-06', day: 'Saturday', status: 'absent', time: '-', remarks: 'Medical Leave' },
                         { date: '2024-04-07', day: 'Sunday', status: 'holiday', time: '-', remarks: 'Weekend' }
                       ].map((record, index) => (
-                        <tr key={index} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.date}</td>
-                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.day}</td>
-                          <td className="px-2.5 py-1.5 whitespace-nowrap">
-                            <span className={`px-1 inline-flex text-[8px] leading-3 font-semibold rounded-full ${
-                              record.status === 'present' ? 'bg-green-100 text-green-800' : 
-                              record.status === 'late' ? 'bg-yellow-100 text-yellow-800' : 
-                              record.status === 'absent' ? 'bg-red-100 text-red-800' : 
-                              'bg-gray-100 text-gray-800'
-                            }`}>
+                        <tr key={index} className="hover:bg-indigo-50/50 transition-all duration-200">
+                          <td className="px-3 py-2.5 whitespace-nowrap text-[10px] font-medium text-gray-900">{record.date}</td>
+                          <td className="px-3 py-2.5 whitespace-nowrap text-[10px] text-gray-800">{record.day}</td>
+                          <td className="px-3 py-2.5 whitespace-nowrap">
+                            <span className={`px-2 py-1 text-[9px] font-semibold rounded-full inline-flex items-center ${record.status === 'present' ? 'bg-green-100 text-green-800 border border-green-200' : record.status === 'late' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' : record.status === 'absent' ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-gray-100 text-gray-800 border border-gray-200'}`}>
+                              {record.status === 'present' ? (
+                                <CheckCircle className="w-3 h-3 mr-1.5 text-green-500" />
+                              ) : record.status === 'late' ? (
+                                <Clock className="w-3 h-3 mr-1.5 text-yellow-500" />
+                              ) : record.status === 'absent' ? (
+                                <X className="w-3 h-3 mr-1.5 text-red-500" />
+                              ) : (
+                                <Calendar className="w-3 h-3 mr-1.5 text-gray-500" />
+                              )}
                               {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
                             </span>
                           </td>
-                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.time}</td>
-                          <td className="px-2.5 py-1.5 whitespace-nowrap text-[10px] text-gray-900">{record.remarks}</td>
+                          <td className="px-3 py-2.5 whitespace-nowrap text-[10px] text-gray-800">{record.time}</td>
+                          <td className="px-3 py-2.5 whitespace-nowrap text-[10px] text-gray-800">{record.remarks}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -927,19 +931,19 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
               </div>
               
               {/* Grades Table - Matched dashboard size */}
-              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden relative">
+                <div className="overflow-x-auto relative z-10">
+                  <table className="min-w-full divide-y divide-gray-100">
+                    <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Grade</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Performance</th>
-                        <th scope="col" className="px-2.5 py-1.5 text-left text-[9px] font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Subject</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Score</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Grade</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Performance</th>
+                        <th scope="col" className="px-3 py-2 text-left text-[10px] font-semibold text-indigo-700 uppercase tracking-wider">Teacher</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-white divide-y divide-gray-50">
                       {[
                         { id: 1, subject: 'Mathematics', score: 92, grade: 'A', teacher: 'Mr. Johnson' },
                         { id: 2, subject: 'Science', score: 88, grade: 'A-', teacher: 'Dr. Smith' },
@@ -962,40 +966,53 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         
                         const SubjectIcon = subjectIcons[subject.subject] || BookOpen;
                         
+                        // Determine color based on score
+                        const getScoreColor = (score) => {
+                          if (score >= 90) return 'bg-indigo-500';
+                          if (score >= 80) return 'bg-blue-500';
+                          if (score >= 70) return 'bg-green-500';
+                          if (score >= 60) return 'bg-yellow-500';
+                          return 'bg-red-500';
+                        };
+                        
+                        // Determine grade color
+                        const getGradeColor = (grade) => {
+                          if (grade.startsWith('A')) return 'bg-indigo-100 text-indigo-800 border border-indigo-200';
+                          if (grade.startsWith('B')) return 'bg-blue-100 text-blue-800 border border-blue-200';
+                          if (grade.startsWith('C')) return 'bg-green-100 text-green-800 border border-green-200';
+                          if (grade.startsWith('D')) return 'bg-yellow-100 text-yellow-800 border border-yellow-200';
+                          return 'bg-red-100 text-red-800 border border-red-200';
+                        };
+                        
                         return (
-                          <tr key={subject.id} className="hover:bg-indigo-50/50">
-                            <td className="px-2.5 py-1.5 whitespace-nowrap">
+                          <tr key={subject.id} className="hover:bg-indigo-50/50 transition-all duration-200">
+                            <td className="px-3 py-2.5 whitespace-nowrap">
                               <div className="flex items-center text-[10px] font-medium text-gray-900">
-                                <SubjectIcon className="w-2.5 h-2.5 mr-1 text-indigo-400" />
+                                <SubjectIcon className="w-3 h-3 mr-2 text-indigo-500" />
                                 {subject.subject}
                               </div>
                             </td>
-                            <td className="px-2.5 py-1.5 whitespace-nowrap">
-                              <div className="text-[10px] text-gray-500">{subject.score}%</div>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <div className="text-[10px] font-semibold text-gray-900">{subject.score}%</div>
                             </td>
-                            <td className="px-2.5 py-1.5 whitespace-nowrap">
-                              <span className={`px-1 inline-flex text-[8px] leading-3 font-semibold rounded-full ${
-                                subject.grade.startsWith('A') ? 'bg-indigo-100 text-indigo-800' : 
-                                subject.grade.startsWith('B') ? 'bg-blue-100 text-blue-800' : 
-                                'bg-purple-100 text-purple-800'
-                              }`}>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <span className={`px-2 py-1 text-[9px] font-semibold rounded-full ${getGradeColor(subject.grade)}`}>
                                 {subject.grade}
                               </span>
                             </td>
-                            <td className="px-2.5 py-1.5 whitespace-nowrap">
-                              <div className="w-16 bg-gray-200 rounded-full h-1">
-                                <div 
-                                  className={`h-1 rounded-full ${
-                                    subject.score >= 90 ? 'bg-indigo-500' : 
-                                    subject.score >= 80 ? 'bg-blue-500' : 
-                                    'bg-purple-500'
-                                  }`} 
-                                  style={{ width: `${subject.score}%` }}
-                                ></div>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <div className="flex items-center">
+                                <div className="w-20 bg-gray-200 rounded-full h-2 mr-2">
+                                  <div 
+                                    className={`h-2 rounded-full ${getScoreColor(subject.score)}`}
+                                    style={{ width: `${subject.score}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-[10px] font-medium text-gray-700">{subject.score}%</span>
                               </div>
                             </td>
-                            <td className="px-2.5 py-1.5 whitespace-nowrap">
-                              <div className="text-[10px] text-gray-500">{subject.teacher}</div>
+                            <td className="px-3 py-2.5 whitespace-nowrap">
+                              <div className="text-[10px] text-gray-800">{subject.teacher}</div>
                             </td>
                           </tr>
                         );
@@ -1009,76 +1026,180 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
 
           {activeTab === 'notices' && (
             <div>
-              <h2 className="text-[11px] font-bold text-gray-900 mb-3">Important Notices</h2>
-              <div className="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Science Fair Registration</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Registration for the annual Science Fair is now open. All students from grades 9-12 are encouraged to participate.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Science Department • Mar 15, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Event</span>
-                      <span className="px-1 py-0.5 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Science</span>
+              {/* Banner for Notices Section */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-white mb-1.5">Important Notices</h2>
+                    <p className="text-xs text-blue-100 mb-2">Stay updated with the latest announcements and events</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">6 Active Notices</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">2 New This Week</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Event, Meeting, Workshop</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <AlertCircle className="w-5 h-5 text-white" />
                     </div>
                   </div>
                 </div>
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Library Closure Notice</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">The school library will be closed for maintenance from April 18th to April 20th. We apologize for any inconvenience.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Library Staff • Mar 12, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-yellow-100 text-yellow-800 text-[9px] font-medium rounded-full">Maintenance</span>
-                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Library</span>
+              </div>
+              
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-sm font-bold text-gray-900">Notice Board</h2>
+                  <p className="text-gray-600 text-[10px]">All important announcements and updates</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      placeholder="Search notices..." 
+                      className="pl-2 pr-4 py-1.5 text-[10px] border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-32"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* Notice Card 1 */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-gray-900 text-[11px]">Science Fair Registration</h3>
+                      <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[8px] font-medium rounded-full whitespace-nowrap">New</span>
+                    </div>
+                    <p className="text-gray-600 text-[10px] mb-3 line-clamp-2">Registration for the annual Science Fair is now open. All students from grades 9-12 are encouraged to participate.</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Event</span>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Science</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-[9px]">Science Department</span>
+                      <span className="text-gray-500 text-[9px]">Mar 15, 2024</span>
                     </div>
                   </div>
                 </div>
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Art Exhibition Inauguration</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Join us for the inauguration of our annual student art exhibition on April 22nd at 3 PM in the school gallery.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Art Department • Apr 11, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-pink-100 text-pink-800 text-[9px] font-medium rounded-full">Event</span>
-                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Art</span>
+                
+                {/* Notice Card 2 */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-gray-900 text-[11px]">Library Closure Notice</h3>
+                      <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[8px] font-medium rounded-full whitespace-nowrap">Important</span>
+                    </div>
+                    <p className="text-gray-600 text-[10px] mb-3 line-clamp-2">The school library will be closed for maintenance from April 18th to April 20th. We apologize for any inconvenience.</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-[9px] font-medium rounded-full">Maintenance</span>
+                      <span className="px-2 py-1 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Library</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-[9px]">Library Staff</span>
+                      <span className="text-gray-500 text-[9px]">Mar 12, 2024</span>
                     </div>
                   </div>
                 </div>
-                {/* New Notice 1 */}
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Sports Day Announcement</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Annual Sports Day will be held on May 5th. All students are required to wear their sports uniform. Registration closes April 30th.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Physical Education Department • Apr 15, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Event</span>
-                      <span className="px-1 py-0.5 bg-orange-100 text-orange-800 text-[9px] font-medium rounded-full">Sports</span>
+                
+                {/* Notice Card 3 */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-rose-500"></div>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-gray-900 text-[11px]">Art Exhibition Inauguration</h3>
+                      <span className="px-1.5 py-0.5 bg-pink-100 text-pink-800 text-[8px] font-medium rounded-full whitespace-nowrap">Event</span>
+                    </div>
+                    <p className="text-gray-600 text-[10px] mb-3 line-clamp-2">Join us for the inauguration of our annual student art exhibition on April 22nd at 3 PM in the school gallery.</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      <span className="px-2 py-1 bg-pink-100 text-pink-800 text-[9px] font-medium rounded-full">Event</span>
+                      <span className="px-2 py-1 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Art</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-[9px]">Art Department</span>
+                      <span className="text-gray-500 text-[9px]">Apr 11, 2024</span>
                     </div>
                   </div>
                 </div>
-                {/* New Notice 2 */}
-                <div className="p-2 border-b border-gray-100">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Parent-Teacher Meeting</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">Parent-Teacher meetings will be held on April 28th from 2 PM to 5 PM. Please book your slot through the parent portal.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Administration Office • Apr 10, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Meeting</span>
-                      <span className="px-1 py-0.5 bg-indigo-100 text-indigo-800 text-[9px] font-medium rounded-full">Parents</span>
+                
+                {/* Notice Card 4 */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-gray-900 text-[11px]">Sports Day Announcement</h3>
+                      <span className="px-1.5 py-0.5 bg-green-100 text-green-800 text-[8px] font-medium rounded-full whitespace-nowrap">Upcoming</span>
+                    </div>
+                    <p className="text-gray-600 text-[10px] mb-3 line-clamp-2">Annual Sports Day will be held on May 5th. All students are required to wear their sports uniform. Registration closes April 30th.</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-[9px] font-medium rounded-full">Event</span>
+                      <span className="px-2 py-1 bg-orange-100 text-orange-800 text-[9px] font-medium rounded-full">Sports</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-[9px]">Physical Education</span>
+                      <span className="text-gray-500 text-[9px]">Apr 15, 2024</span>
                     </div>
                   </div>
                 </div>
-                {/* New Notice 3 */}
-                <div className="p-2">
-                  <h3 className="font-bold text-gray-900 text-[10px] mb-1">Mathematics Workshop</h3>
-                  <p className="text-gray-600 text-[9px] mb-1">A special mathematics workshop for grade 10 students will be conducted on April 25th during the 4th period in Room 204.</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-[9px]">Mathematics Department • Apr 18, 2024</span>
-                    <div className="flex gap-1">
-                      <span className="px-1 py-0.5 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Workshop</span>
-                      <span className="px-1 py-0.5 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Mathematics</span>
+                
+                {/* Notice Card 5 */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-gray-900 text-[11px]">Parent-Teacher Meeting</h3>
+                      <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-800 text-[8px] font-medium rounded-full whitespace-nowrap">Meeting</span>
+                    </div>
+                    <p className="text-gray-600 text-[10px] mb-3 line-clamp-2">Parent-Teacher meetings will be held on April 28th from 2 PM to 5 PM. Please book your slot through the parent portal.</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Meeting</span>
+                      <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-[9px] font-medium rounded-full">Parents</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-[9px]">Administration</span>
+                      <span className="text-gray-500 text-[9px]">Apr 10, 2024</span>
                     </div>
                   </div>
+                </div>
+                
+                {/* Notice Card 6 */}
+                <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 relative">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-violet-500"></div>
+                  <div className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-bold text-gray-900 text-[11px]">Mathematics Workshop</h3>
+                      <span className="px-1.5 py-0.5 bg-purple-100 text-purple-800 text-[8px] font-medium rounded-full whitespace-nowrap">Workshop</span>
+                    </div>
+                    <p className="text-gray-600 text-[10px] mb-3 line-clamp-2">A special mathematics workshop for grade 10 students will be conducted on April 25th during the 4th period in Room 204.</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      <span className="px-2 py-1 bg-purple-100 text-purple-800 text-[9px] font-medium rounded-full">Workshop</span>
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-[9px] font-medium rounded-full">Mathematics</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500 text-[9px]">Mathematics Dept</span>
+                      <span className="text-gray-500 text-[9px]">Apr 18, 2024</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-5 flex items-center justify-between">
+                <div className="text-[10px] text-gray-500">
+                  Showing 6 of 6 notices
                 </div>
               </div>
             </div>
@@ -1120,7 +1241,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
               </div>
               
               {/* Classes Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-6">
                 {/* Mathematics Class Card */}
                 <div className="bg-white rounded-md shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow duration-300 relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-blue-500/10 rounded-full"></div>
@@ -1447,17 +1568,17 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                   <div className="absolute bottom-4 left-4 w-2 h-2 bg-indigo-500/5 rounded-full"></div>
                   <div className="absolute bottom-6 left-1 w-4 h-4 border border-indigo-500/10"></div>
                 </div>
-                <h3 className="font-bold text-gray-900 text-[10px] mb-3 relative z-10">Weekly Class Schedule</h3>
+                <h3 className="font-bold text-gray-900 text-[11px] mb-3 relative z-10">Weekly Class Schedule</h3>
                 <div className="overflow-x-auto rounded-lg border border-gray-100 shadow-sm">
                   <table className="min-w-full divide-y divide-gray-100">
                     <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
                       <tr>
-                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Period</th>
-                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Monday</th>
-                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Tuesday</th>
-                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Wednesday</th>
-                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Thursday</th>
-                        <th className="px-3 py-2 text-left text-[8px] font-semibold text-indigo-700 uppercase tracking-wider">Friday</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Period</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Monday</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Tuesday</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Wednesday</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Thursday</th>
+                        <th className="px-3 py-2 text-left text-[9px] font-semibold text-indigo-700 uppercase tracking-wider">Friday</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-50">
@@ -1470,12 +1591,12 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         { period: '6th', mon: 'Art', tue: 'Art', wed: 'Geography', thu: 'Science', fri: 'Science' },
                       ].map((row, index) => (
                         <tr key={index} className="hover:bg-indigo-50/50 transition-colors duration-150">
-                          <td className="px-3 py-2 whitespace-nowrap text-[8px] font-semibold text-indigo-900">{row.period}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.mon}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.tue}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.wed}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.thu}</td>
-                          <td className="px-3 py-2 whitespace-nowrap text-[8px] text-gray-700">{row.fri}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[9px] font-semibold text-indigo-900">{row.period}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.mon}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.tue}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.wed}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.thu}</td>
+                          <td className="px-3 py-2 whitespace-nowrap text-[9px] text-gray-700">{row.fri}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1735,7 +1856,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-2xl p-5 max-w-4xl w-full max-h-[90vh] overflow-auto">
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-[12px] font-bold text-gray-900">{selectedClass.name} - Class Details</h3>
+                  <h3 className="text-[9px] font-bold text-gray-900">{selectedClass.name} - Class Details</h3>
                   <button 
                     onClick={() => setSelectedClass(null)}
                     className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
@@ -1752,9 +1873,9 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                   
                   <div className="relative z-10 flex items-center gap-4">
                     <div className="flex-1">
-                      <h2 className="text-xs font-bold text-white mb-2">{selectedClass.name}</h2>
+                      <h2 className="text-[7px] font-bold text-white mb-2">{selectedClass.name}</h2>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="text-[9px] text-blue-100">
+                        <div className="text-[6px] text-blue-100">
                           <span className="font-medium">Teacher:</span> {selectedClass.teacher}
                         </div>
                         <div className="text-xs text-blue-100">
@@ -1763,7 +1884,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         <div className="text-xs text-blue-100">
                           <span className="font-medium">Period:</span> {selectedClass.period}
                         </div>
-                        <div className="text-xs text-blue-100">
+                        <div className="text-[7px] text-blue-100">
                           <span className="font-medium">Room:</span> {selectedClass.room}
                         </div>
                       </div>
@@ -1773,7 +1894,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                 
                 {/* Study Resources Section */}
                 <div className="mb-8">
-                  <h3 className="text-[10px] font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-[7px] font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-indigo-600" />
                     Study Resources
                   </h3>
@@ -1786,11 +1907,11 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         <div className="flex items-start gap-2 mb-3">
                           <FileText className="w-5 h-5 text-indigo-600 mt-0.5" />
                           <div>
-                            <h4 className="font-bold text-gray-900 text-[8px]">Chapter 5 Notes</h4>
-                            <p className="text-gray-600 text-[7px]">PDF Document</p>
+                            <h4 className="font-bold text-gray-900 text-[5px]">Chapter 5 Notes</h4>
+                            <p className="text-gray-600 text-[4px]">PDF Document</p>
                           </div>
                         </div>
-                        <button className="w-full py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[7px] font-medium rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all">
+                        <button className="w-full py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-[4px] font-medium rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all">
                           View/Download
                         </button>
                       </div>
@@ -1802,11 +1923,11 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         <div className="flex items-start gap-2 mb-3">
                           <Globe className="w-5 h-5 text-green-600 mt-0.5" />
                           <div>
-                            <h4 className="font-bold text-gray-900 text-[8px]">Interactive Learning</h4>
-                            <p className="text-gray-600 text-[7px]">Online Resource</p>
+                            <h4 className="font-bold text-gray-900 text-[5px]">Interactive Learning</h4>
+                            <p className="text-gray-600 text-[4px]">Online Resource</p>
                           </div>
                         </div>
-                        <button className="w-full py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[7px] font-medium rounded-md hover:from-green-600 hover:to-emerald-700 transition-all">
+                        <button className="w-full py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[4px] font-medium rounded-md hover:from-green-600 hover:to-emerald-700 transition-all">
                           View/Download
                         </button>
                       </div>
@@ -1818,11 +1939,11 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                         <div className="flex items-start gap-2 mb-3">
                           <Palette className="w-5 h-5 text-purple-600 mt-0.5" />
                           <div>
-                            <h4 className="font-bold text-gray-900 text-[8px]">Presentation Slides</h4>
-                            <p className="text-gray-600 text-[7px]">PPT Document</p>
+                            <h4 className="font-bold text-gray-900 text-[5px]">Presentation Slides</h4>
+                            <p className="text-gray-600 text-[4px]">PPT Document</p>
                           </div>
                         </div>
-                        <button className="w-full py-1.5 bg-gradient-to-r from-purple-500 to-violet-600 text-white text-[7px] font-medium rounded-md hover:from-purple-600 hover:to-violet-700 transition-all">
+                        <button className="w-full py-1.5 bg-gradient-to-r from-purple-500 to-violet-600 text-white text-[4px] font-medium rounded-md hover:from-purple-600 hover:to-violet-700 transition-all">
                           View/Download
                         </button>
                       </div>
