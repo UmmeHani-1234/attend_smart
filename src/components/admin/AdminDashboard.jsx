@@ -54,9 +54,27 @@ const AdminDashboard = ({ onLogout }) => {
   const [selectedSchool, setSelectedSchool] = useState('All Schools');
   const [selectedDuration, setSelectedDuration] = useState('weekly'); // weekly, monthly
   
+  // State for notices
+  const [notices, setNotices] = useState([
+    { id: 1, title: 'Summer Holidays Announcement', content: 'School will remain closed from June 15th to July 15th for summer holidays.', date: '2023-06-01', priority: 'High', audience: 'All' },
+    { id: 2, title: 'Parent-Teacher Meeting', content: 'PTM scheduled for June 10th, 2023. Please confirm your availability.', date: '2023-06-05', priority: 'Medium', audience: 'Grade 9, Grade 10' },
+    { id: 3, title: 'Annual Sports Day', content: 'Sports day event will be held on June 20th, 2023. All students are encouraged to participate.', date: '2023-06-08', priority: 'Low', audience: 'All' }
+  ]);
+  
   // State for applied filters
   const [appliedSchool, setAppliedSchool] = useState('All Schools');
   const [appliedDuration, setAppliedDuration] = useState('weekly');
+  
+  // State for new notice form
+  const [newNotice, setNewNotice] = useState({
+    title: '',
+    content: '',
+    audience: 'All',
+    priority: 'Medium'
+  });
+  
+  // State for showing add notice modal
+  const [showAddNoticeModal, setShowAddNoticeModal] = useState(false);
 
   // Filter states for Teachers tab
   const [teacherSubjectFilter, setTeacherSubjectFilter] = useState('All Subjects');
@@ -528,6 +546,39 @@ const AdminDashboard = ({ onLogout }) => {
   const closeReportFilterModal = () => {
     setShowReportFilterModal(false);
   };
+  
+  // Function to handle new notice form input changes
+  const handleNewNoticeChange = (e) => {
+    const { name, value } = e.target;
+    setNewNotice({ ...newNotice, [name]: value });
+  };
+  
+  // Function to add a new notice
+  const addNewNotice = () => {
+    if (newNotice.title && newNotice.content) {
+      const noticeObj = {
+        id: notices.length + 1,
+        title: newNotice.title,
+        content: newNotice.content,
+        audience: newNotice.audience,
+        priority: newNotice.priority,
+        date: new Date().toISOString().split('T')[0]
+      };
+      
+      // Add the new notice to the notices array
+      setNotices([noticeObj, ...notices]);
+      
+      // Reset the form and close the modal
+      setNewNotice({ title: '', content: '', audience: 'All', priority: 'Medium' });
+      setShowAddNoticeModal(false);
+    }
+  };
+  
+  // Function to close the add notice modal
+  const closeAddNoticeModal = () => {
+    setShowAddNoticeModal(false);
+    setNewNotice({ title: '', content: '', audience: 'All', priority: 'Medium' });
+  };
 
   // Filter classes based on filter criteria
   const getFilteredClasses = () => {
@@ -725,6 +776,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
             { id: 'teachers', icon: User, label: 'Teachers' },
             { id: 'students', icon: Users, label: 'Students' },
             { id: 'classes', icon: BookOpen, label: 'Classes' },
+            { id: 'notices', icon: Bell, label: 'Notices' },
             { id: 'reports', icon: FileText, label: 'Reports' },
             { id: 'alerts', icon: Bell, label: 'Alerts' },
             { id: 'middaymeal', icon: Utensils, label: 'Mid Day Meal' },
@@ -1433,6 +1485,94 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                             <span className="inline-flex px-2 py-0.5 text-[9px] font-semibold leading-tight rounded-full bg-green-100 text-green-800 shadow-sm">
                               Active
                             </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Notices Tab */}
+          {activeTab === 'notices' && (
+            <div>
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-white mb-1.5">Notices & Announcements</h2>
+                    <p className="text-[8px] text-blue-100 mb-2">Create and manage important notices for students, teachers, and parents</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[8px] text-white font-medium">{schoolData.name}</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[8px] text-white font-medium">{notices.length} Notices</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Bell className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-[10px] font-bold text-gray-900">Notice Management</h2>
+                <button 
+                  onClick={() => setShowAddNoticeModal(true)}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[8px] shadow-sm hover:shadow-md"
+                >
+                  <Plus className="w-3 h-3" />
+                  Add Notice
+                </button>
+              </div>
+
+              {/* Notices List */}
+              <div className="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Notice</th>
+                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Audience</th>
+                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Priority</th>
+                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-100">
+                      {notices.map((notice) => (
+                        <tr key={notice.id} className="hover:bg-blue-50/50 transition-all duration-200 group">
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div>
+                              <div className="text-[10px] font-bold text-gray-900">{notice.title}</div>
+                              <div className="text-[8px] text-gray-600 mt-1 max-w-md truncate">{notice.content}</div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="text-[9px] text-gray-700">{notice.audience}</div>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <span className={`inline-flex px-2.5 py-1 text-[8px] font-semibold leading-tight rounded-full shadow-sm ${{
+                              'High': 'bg-red-100 text-red-800',
+                              'Medium': 'bg-yellow-100 text-yellow-800',
+                              'Low': 'bg-green-100 text-green-800'
+                            }[notice.priority]}`}>
+                              {notice.priority}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="text-[9px] text-gray-700">{notice.date}</div>
                           </td>
                         </tr>
                       ))}
@@ -2987,6 +3127,97 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   className="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[10px]"
                 >
                   Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Notice Modal */}
+      {showAddNoticeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-md w-full max-w-md max-h-80 overflow-y-auto">
+            <div className="p-4 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-bold text-gray-900">Add New Notice</h3>
+                <button 
+                  onClick={closeAddNoticeModal}
+                  className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[8px] font-medium text-gray-700 mb-1.5">Title</label>
+                  <input 
+                    type="text" 
+                    name="title"
+                    value={newNotice.title}
+                    onChange={handleNewNoticeChange}
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[8px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter notice title"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[8px] font-medium text-gray-700 mb-1.5">Content</label>
+                  <textarea 
+                    name="content"
+                    value={newNotice.content}
+                    onChange={handleNewNoticeChange}
+                    rows="3"
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[8px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter notice content"
+                  ></textarea>
+                </div>
+                <div>
+                  <label className="block text-[8px] font-medium text-gray-700 mb-1.5">Audience</label>
+                  <select 
+                    name="audience"
+                    value={newNotice.audience}
+                    onChange={handleNewNoticeChange}
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[8px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="All">All</option>
+                    <option value="Students">Students</option>
+                    <option value="Teachers">Teachers</option>
+                    <option value="Parents">Parents</option>
+                    <option value="Grade 9, Grade 10">Grade 9, Grade 10</option>
+                    <option value="Grade 1-5">Grade 1-5</option>
+                    <option value="Grade 6-8">Grade 6-8</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[8px] font-medium text-gray-700 mb-1.5">Priority</label>
+                  <select 
+                    name="priority"
+                    value={newNotice.priority}
+                    onChange={handleNewNoticeChange}
+                    className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[8px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 mt-4">
+                <button 
+                  onClick={closeAddNoticeModal}
+                  className="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-all text-[8px]"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={addNewNotice}
+                  className="flex-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[8px] shadow-sm hover:shadow-md"
+                >
+                  Add Notice
                 </button>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, School, Utensils, TrendingUp, AlertTriangle, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, Building, Activity, User, Book, Target, Award, Camera, Mail, Save, GraduationCap, Minus, Monitor } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,6 +9,7 @@ const GovernmentDashboard = ({ onLogout }) => {
   const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [reportPeriod, setReportPeriod] = useState('monthly'); // weekly, monthly, yearly
+
 
   // State for Add School form
   const [showAddSchoolForm, setShowAddSchoolForm] = useState(false);
@@ -523,15 +524,15 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-52 bg-white shadow-lg flex flex-col h-full"
+        className="w-56 bg-white shadow-lg flex flex-col h-full"
       >
-        <div className="p-2.5 border-b border-gray-100">
+        <div className="p-3 border-b border-gray-100">
           <div className="flex items-center gap-1.5">
             <div className="relative">
-              <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-[11px] shadow-md">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-md flex items-center justify-center text-white font-bold text-[11px] shadow-md">
                 GD
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></div>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1">
@@ -539,19 +540,12 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   Smart Attendance
                 </span>
               </div>
-              <p className="text-[10px] text-gray-500 truncate">Government</p>
-            </div>
-            <div className="relative">
-              <img 
-                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Official&backgroundColor=00897b,00acc1,039be5,1e88e5,3949ab,43a047,5e35b1,7cb342,8e24aa,c0ca33,f4511e,fb8c00,fdd835,ffb300"
-                alt="Government Official Avatar"
-                className="w-8 h-8 rounded-full border-2 border-white shadow-md"
-              />
+              <p className="text-[11px] text-gray-500 truncate">Government</p>
             </div>
           </div>
         </div>
 
-        <nav className="flex-1 p-2 pt-0 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 p-2.5 pt-0 space-y-0.5 overflow-y-auto">
           {[
             { id: 'home', icon: Home, label: 'Dashboard Home' },
             { id: 'schools', icon: School, label: 'Schools' },
@@ -564,16 +558,16 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all ${
+              className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
                   : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
               }`}
             >
-              <tab.icon className="w-3 h-3" />
+              <tab.icon className="w-3.5 h-3.5" />
               <span className="font-medium text-[11px]">{tab.label}</span>
               {tab.id === 'alerts' && (
-                <span className="ml-auto bg-red-500 text-white text-[8px] font-bold rounded-full w-3 h-3 flex items-center justify-center">
+                <span className="ml-auto bg-red-500 text-white text-[11px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
                   {alerts.filter(a => a.status === 'new').length}
                 </span>
               )}
@@ -581,19 +575,21 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           ))}
         </nav>
 
-        <div className="p-2 border-t border-gray-100 space-y-1">
+        <div className="p-2.5 border-t border-gray-100 space-y-1">
           <button 
             onClick={onLogout}
-            className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
+            className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
           >
-            <LogOut className="w-3 h-3" />
+            <LogOut className="w-3.5 h-3.5" />
             <span className="font-medium text-[11px]">Logout</span>
           </button>
         </div>
       </motion.div>
 
+
+
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-full lg:ml-0">
         {/* Ultra Modern Header */}
         <div className="flex-shrink-0">
           <UltraModernHeader 
