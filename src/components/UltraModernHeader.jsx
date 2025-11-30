@@ -158,14 +158,14 @@ const UltraModernHeader = ({
           />
         ))}
         <div className="px-5 py-3.5">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3.5">
+          <div className="flex flex-row items-center justify-between gap-3.5">
             {/* Left side - Dashboard title and search */}
             <div className="flex items-center gap-3.5 flex-1">
               {/* Menu button for mobile */}
               {showMenuButton && (
                 <button 
                   onClick={onMenuToggle}
-                  className="md:hidden p-1.5 rounded-lg bg-white/50 backdrop-blur-sm border border-white/30 text-gray-700 hover:bg-white/70 transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="lg:hidden p-1.5 rounded-lg bg-white/50 backdrop-blur-sm border border-white/30 text-gray-700 hover:bg-white/70 transition-all duration-300 shadow-sm hover:shadow-md"
                 >
                   {isMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
                 </button>
@@ -176,7 +176,7 @@ const UltraModernHeader = ({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-[13px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hidden md:block relative"
+                className="text-[13px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative"
               >
                 {dashboardTitle}
               </motion.h1>
@@ -195,7 +195,7 @@ const UltraModernHeader = ({
               <motion.div 
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
-                className="hidden md:flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md px-1.5 py-1 border border-white/40 shadow-sm hover:shadow transition-all duration-300 cursor-pointer group"
+                className="hidden lg:flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md px-1.5 py-1 border border-white/40 shadow-sm hover:shadow transition-all duration-300 cursor-pointer group"
               >
                 <motion.div
                   animate={{ 
