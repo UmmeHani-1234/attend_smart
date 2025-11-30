@@ -730,39 +730,39 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               {showAddSchoolForm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                   <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-                    <div className="p-4 border-b border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900">Add New School</h3>
+                    <div className="p-3 border-b border-gray-200">
+                      <h3 className="text-base font-semibold text-gray-900">Add New School</h3>
                     </div>
-                    <div className="p-4 space-y-4">
+                    <div className="p-3 space-y-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">School Name</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">School Name</label>
                         <input
                           type="text"
                           name="name"
                           value={newSchool.name}
                           onChange={handleNewSchoolChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
                           placeholder="Enter school name"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Number of Students</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Number of Students</label>
                         <input
                           type="number"
                           name="students"
                           value={newSchool.students}
                           onChange={handleNewSchoolChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
                           placeholder="Enter number of students"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Performance Grade</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Performance Grade</label>
                         <select
                           name="performance"
                           value={newSchool.performance}
                           onChange={handleNewSchoolChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
                         >
                           <option value="A+">A+</option>
                           <option value="A">A</option>
@@ -772,16 +772,16 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                         </select>
                       </div>
                     </div>
-                    <div className="p-4 border-t border-gray-200 flex justify-end gap-2">
+                    <div className="p-3 border-t border-gray-200 flex justify-end gap-2">
                       <button
                         onClick={() => setShowAddSchoolForm(false)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={addNewSchool}
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                        className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
                       >
                         Add School
                       </button>
@@ -830,6 +830,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                       </div>
                     </div>
                   </div>
+
                 </div>
 
                 {/* Schools List */}
