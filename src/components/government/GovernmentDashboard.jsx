@@ -10,8 +10,16 @@ const GovernmentDashboard = ({ onLogout }) => {
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [reportPeriod, setReportPeriod] = useState('monthly'); // weekly, monthly, yearly
 
+  // State for Add School form
+  const [showAddSchoolForm, setShowAddSchoolForm] = useState(false);
+  const [newSchool, setNewSchool] = useState({
+    name: '',
+    students: '',
+    performance: 'B'
+  });
+
   // Sample data for the dashboard
-  const districtData = {
+  const [districtData, setDistrictData] = useState({
     name: "Central District",
     totalStudents: 7420,
     totalSchools: 6,
@@ -20,7 +28,7 @@ const GovernmentDashboard = ({ onLogout }) => {
     attendanceRate: 92.5,
     schoolsNeedingSupport: 8,
     averageClassSize: 30
-  };
+  });
 
   // State for report generation
   const [generatingReport, setGeneratingReport] = useState(null);
@@ -200,14 +208,14 @@ const GovernmentDashboard = ({ onLogout }) => {
   ];
 
   // Sample schools data
-  const schools = [
+  const [schools, setSchools] = useState([
     { id: 1, name: 'Delhi Public School', students: 1250, attendance: 94.2, performance: 'A', alerts: alerts.filter(a => a.message.includes('Delhi Public')).length },
     { id: 2, name: 'St. Marys Convent School', students: 850, attendance: 96.8, performance: 'A+', alerts: alerts.filter(a => a.message.includes('St. Mary')).length },
     { id: 3, name: 'Kendriya Vidyalaya', students: 920, attendance: 89.5, performance: 'B', alerts: alerts.filter(a => a.message.includes('Kendriya')).length },
     { id: 4, name: 'DAV Public School', students: 1100, attendance: 91.7, performance: 'B+', alerts: 0 },
     { id: 5, name: 'Saboo Siddik Degree', students: 1500, attendance: 88.5, performance: 'B', alerts: 0 },
     { id: 6, name: 'Saboo Siddik Polytechnic', students: 1800, attendance: 90.2, performance: 'B+', alerts: 0 },
-  ];
+  ]);
 
   const getSeverityColor = (severity) => {
     switch (severity) {
@@ -227,6 +235,41 @@ const GovernmentDashboard = ({ onLogout }) => {
       case 'positive': return 'bg-green-500 text-white';
       default: return 'bg-gray-500 text-white';
     }
+  };
+
+  // Function to add a new school
+  const addNewSchool = () => {
+    if (newSchool.name && newSchool.students) {
+      const schoolObj = {
+        id: schools.length + 1,
+        name: newSchool.name,
+        students: parseInt(newSchool.students),
+        attendance: 90, // Default attendance
+        performance: newSchool.performance,
+        alerts: 0
+      };
+      
+      setSchools([...schools, schoolObj]);
+      setNewSchool({
+        name: '',
+        students: '',
+        performance: 'B'
+      });
+      setShowAddSchoolForm(false);
+      
+      // Update district data
+      setDistrictData({
+        ...districtData,
+        totalSchools: districtData.totalSchools + 1,
+        totalStudents: districtData.totalStudents + parseInt(newSchool.students)
+      });
+    }
+  };
+
+  // Function to handle new school form input changes
+  const handleNewSchoolChange = (e) => {
+    const { name, value } = e.target;
+    setNewSchool({ ...newSchool, [name]: value });
   };
 
   const getAlertIcon = (type) => {
@@ -674,11 +717,78 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
 
               <div className="flex justify-between items-center mb-4">
                 <div></div>
-                <button className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium">
+                <button 
+                  onClick={() => setShowAddSchoolForm(true)}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium"
+                >
                   <Plus className="w-3 h-3" />
                   Add School
                 </button>
               </div>
+
+              {/* Add School Form Modal */}
+              {showAddSchoolForm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+                    <div className="p-4 border-b border-gray-200">
+                      <h3 className="text-lg font-semibold text-gray-900">Add New School</h3>
+                    </div>
+                    <div className="p-4 space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">School Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={newSchool.name}
+                          onChange={handleNewSchoolChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter school name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Number of Students</label>
+                        <input
+                          type="number"
+                          name="students"
+                          value={newSchool.students}
+                          onChange={handleNewSchoolChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter number of students"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Performance Grade</label>
+                        <select
+                          name="performance"
+                          value={newSchool.performance}
+                          onChange={handleNewSchoolChange}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="A+">A+</option>
+                          <option value="A">A</option>
+                          <option value="B">B</option>
+                          <option value="C">C</option>
+                          <option value="D">D</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="p-4 border-t border-gray-200 flex justify-end gap-2">
+                      <button
+                        onClick={() => setShowAddSchoolForm(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={addNewSchool}
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                      >
+                        Add School
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* School Statistics */}
