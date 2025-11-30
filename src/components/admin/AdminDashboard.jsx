@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Users, UserCheck, UserX, BookOpen, TrendingUp, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, AlertTriangle, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, School, Activity, User, Book, Utensils, GraduationCap, Minus } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,68 +16,6 @@ const AdminDashboard = ({ onLogout }) => {
     subject: '',
     teacher: '',
     students: ''
-  });
-
-  // Close sidebar on window resize to desktop size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 800) { // LG breakpoint
-        setSidebarOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  // State for notices
-  const [notices, setNotices] = useState([
-    { 
-      id: 1, 
-      title: "Annual Sports Day Event", 
-      content: "Annual sports day will be held on April 25th, 2024. All students are requested to participate...",
-      audience: "All Classes",
-      priority: "Important",
-      sender: "Admin",
-      date: "2024-04-15",
-      time: "10:30 AM"
-    },
-    { 
-      id: 2, 
-      title: "Parent-Teacher Meeting", 
-      content: "Parent-teacher meeting scheduled for April 30th, 2024 from 3:00 PM to 5:00 PM in the school auditorium.",
-      audience: "All Classes",
-      priority: "Normal",
-      sender: "Admin",
-      date: "2024-04-14",
-      time: "2:15 PM"
-    },
-    { 
-      id: 3, 
-      title: "Library Closure Notice", 
-      content: "The school library will be closed for maintenance from May 1st to May 3rd, 2024. We apologize for any inconvenience.",
-      audience: "All Students",
-      priority: "Urgent",
-      sender: "Admin",
-      date: "2024-04-13",
-      time: "9:45 AM"
-    },
-    { 
-      id: 4, 
-      title: "Budget Allocation Announcement", 
-      content: "The annual budget for the education sector has been finalized and allocated to all districts. Please review the allocation for your district and submit utilization plan within 15 days.",
-      audience: "All Schools",
-      priority: "Important",
-      sender: "Government Official",
-      date: "2024-05-15",
-      time: "09:30 AM"
-    }
-  ]);
-  const [newNotice, setNewNotice] = useState({
-    title: "",
-    content: "",
-    audience: "All Classes",
-    priority: "Normal"
   });
   
   // State for Add Teacher form
@@ -105,8 +43,6 @@ const AdminDashboard = ({ onLogout }) => {
   const [studentAvatarPreview, setStudentAvatarPreview] = useState(null);
   const [showAvatarOptions, setShowAvatarOptions] = useState(false);
   const [avatarType, setAvatarType] = useState(''); // 'teacher' or 'student'
-  const [sidebarOpen, setSidebarOpen] = useState(false); // For mobile responsiveness
-  const [isLargeScreen, setIsLargeScreen] = useState(typeof window !== 'undefined' ? window.innerWidth >= 800 : true); // For 800px breakpoint
   const [mealPeriod, setMealPeriod] = useState('daily'); // daily, weekly, monthly
   const [mealFilter, setMealFilter] = useState('daily'); // daily, weekly, monthly
   
@@ -121,23 +57,6 @@ const AdminDashboard = ({ onLogout }) => {
   // State for applied filters
   const [appliedSchool, setAppliedSchool] = useState('All Schools');
   const [appliedDuration, setAppliedDuration] = useState('weekly');
-  
-  // Handle window resize to detect screen size changes
-  useEffect(() => {
-    const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 800);
-      // Close sidebar on small screens
-      if (window.innerWidth < 800) {
-        setSidebarOpen(false);
-      }
-    };
-
-    // Set initial state
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Filter states for Teachers tab
   const [teacherSubjectFilter, setTeacherSubjectFilter] = useState('All Subjects');
@@ -519,58 +438,6 @@ const AdminDashboard = ({ onLogout }) => {
     setShowAvatarOptions(false);
     setAvatarType('');
   };
-  
-  // Function to handle new notice form input changes
-  const handleNewNoticeChange = (e) => {
-    const { name, value } = e.target;
-    setNewNotice({ ...newNotice, [name]: value });
-  };
-  
-  // Function to add a new notice
-  const addNewNotice = () => {
-    if (newNotice.title && newNotice.content) {
-      const noticeObj = {
-        id: notices.length + 1,
-        title: newNotice.title,
-        content: newNotice.content,
-        audience: newNotice.audience,
-        priority: newNotice.priority,
-        sender: "Admin",
-        date: new Date().toISOString().split('T')[0],
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      
-      setNotices([noticeObj, ...notices]);
-      setNewNotice({
-        title: "",
-        content: "",
-        audience: "All Classes",
-        priority: "Normal"
-      });
-    }
-  };
-  
-  // Function to clear the new notice form
-  const clearNoticeForm = () => {
-    setNewNotice({
-      title: "",
-      content: "",
-      audience: "All Classes",
-      priority: "Normal"
-    });
-  };
-  
-  // Function to get priority badge class
-  const getPriorityBadgeClass = (priority) => {
-    switch (priority) {
-      case 'Urgent':
-        return 'bg-red-100 text-red-800';
-      case 'Important':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-green-100 text-green-800';
-    }
-  };
 
   // Function to apply filters
   const applyFilters = () => {
@@ -824,7 +691,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className={`w-52 bg-white shadow-lg flex flex-col h-full fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen || isLargeScreen ? 'translate-x-0 block' : '-translate-x-full hidden'}`}
+        className="w-52 bg-white shadow-lg flex flex-col h-full"
       >
         <div className="p-2.5 border-b border-gray-100">
           <div className="flex items-center gap-1.5">
@@ -858,7 +725,6 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
             { id: 'teachers', icon: User, label: 'Teachers' },
             { id: 'students', icon: Users, label: 'Students' },
             { id: 'classes', icon: BookOpen, label: 'Classes' },
-            { id: 'notices', icon: Bell, label: 'Notices' },
             { id: 'reports', icon: FileText, label: 'Reports' },
             { id: 'alerts', icon: Bell, label: 'Alerts' },
             { id: 'middaymeal', icon: Utensils, label: 'Mid Day Meal' },
@@ -866,12 +732,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => {
-                setActiveTab(tab.id);
-                if (window.innerWidth < 800) { // Custom 800px breakpoint
-                  setSidebarOpen(false);
-                }
-              }}
+              onClick={() => setActiveTab(tab.id)}
               className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
@@ -891,12 +752,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
 
         <div className="p-2 border-t border-gray-100 space-y-1">
           <button 
-            onClick={() => {
-              onLogout();
-              if (window.innerWidth < 800) { // Custom 800px breakpoint
-                setSidebarOpen(false);
-              }
-            }}
+            onClick={onLogout}
             className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all"
           >
             <LogOut className="w-3 h-3" />
@@ -905,16 +761,8 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
         </div>
       </motion.div>
 
-      {/* Mobile overlay */}
-      {sidebarOpen && !isLargeScreen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setSidebarOpen(false)}
-        ></div>
-      )}
-
       {/* Main Content */}
-      <div className={`flex-1 overflow-y-auto overscroll-contain flex flex-col h-full ${isLargeScreen ? 'ml-52' : ''}`}>
+      <div className="flex-1 overflow-y-auto overscroll-contain flex flex-col h-full">
         {/* Ultra Modern Header */}
         <div className="flex-shrink-0">
           <UltraModernHeader 
@@ -923,19 +771,16 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
             userName="Admin User"
             userRole="School Administrator"
             onLogout={onLogout}
-            showMenuButton={true}
-            isMenuOpen={sidebarOpen}
-            onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           />
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-2 sm:p-3 flex-grow overflow-y-auto">
+        <div className="p-4 flex-grow overflow-y-auto">
           {/* Home Tab */}
           {activeTab === 'home' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-4 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -973,13 +818,13 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               {/* Summary Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="flex gap-4 mb-6">
                 {summaryStats.map((stat, index) => {
                   const IconComponent = stat.icon;
                   return (
                     <div 
                       key={index}
-                      className={`bg-gradient-to-br ${stat.color} rounded-md p-4 shadow-sm border border-white/20 backdrop-blur-sm relative overflow-hidden`}
+                      className={`flex-grow bg-gradient-to-br ${stat.color} rounded-md p-4 shadow-sm border border-white/20 backdrop-blur-sm relative overflow-hidden`}
                     >
                       <div className="absolute -top-2 -right-2 w-10 h-10 bg-white/10 rounded-full"></div>
                       <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-white/10 rounded-full"></div>
@@ -1000,7 +845,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               {/* Charts and Recent Activity */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {/* Attendance Trends Chart */}
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 shadow-lg border border-blue-200/30 backdrop-blur-sm relative overflow-hidden">
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full"></div>
@@ -1029,7 +874,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                       </button>
                     </div>
                   </div>
-                  <div className="h-48 bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                  <div className="h-52 bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
                     <ResponsiveContainer width="100%" height="100%">
                       <RechartsLineChart data={getCurrentAttendanceData()}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="rgba(229, 231, 235, 1)" />
@@ -1106,8 +951,8 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               {/* School Info */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-4">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <h2 className="text-sm font-bold text-gray-900">{schoolData.name}</h2>
                     <p className="text-[10px] text-gray-600 mt-1">{schoolData.location}</p>
@@ -1134,51 +979,6 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                 </div>
               </div>
-
-              {/* Quick Notices Section */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-xs font-bold text-gray-900">Recent Notices</h2>
-                  <button 
-                    onClick={() => setActiveTab('notices')}
-                    className="text-[8px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-                  >
-                    View All <span className="text-[9px]">→</span>
-                  </button>
-                </div>
-                <div className="space-y-2">
-                  {notices.slice(0, 3).map((notice) => (
-                    <div key={notice.id} className="border-l-2 border-blue-500 pl-2 py-1">
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-medium text-gray-900 text-[10px]">{notice.title}</h3>
-                        <span className={`text-[7px] ${getPriorityBadgeClass(notice.priority)} px-1 py-0.5 rounded-full ml-1`}>
-                          {notice.priority}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 text-[9px] mt-1 line-clamp-2">{notice.content.substring(0, 80)}{notice.content.length > 80 ? '...' : ''}</p>
-                      <div className="flex justify-between items-center mt-1">
-                        <span className="text-[8px] text-gray-500">{notice.date}</span>
-                        <span className="text-[8px] text-gray-500">To: {notice.audience}</span>
-                      </div>
-                      <div className="text-[7px] text-gray-400 mt-1">
-                        From: {notice.sender}
-                      </div>
-                    </div>
-                  ))}
-                  {notices.length === 0 && (
-                    <div className="text-center py-3">
-                      <Bell className="w-5 h-5 text-gray-300 mx-auto mb-1" />
-                      <p className="text-[9px] text-gray-500">No notices posted yet</p>
-                      <button 
-                        onClick={() => setActiveTab('notices')}
-                        className="text-[8px] text-blue-600 hover:text-blue-700 font-medium mt-1"
-                      >
-                        Create your first notice
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           )}
 
@@ -1186,7 +986,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'teachers' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1226,8 +1026,8 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               {/* Teachers Filters */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
                     <select 
@@ -1331,7 +1131,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'students' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1371,8 +1171,8 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               {/* Students Filters */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
                     <select 
@@ -1485,7 +1285,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'classes' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1525,8 +1325,8 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               {/* Classes Filters */}
-              <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                   <div>
                     <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Subject</label>
                     <select 
@@ -1592,19 +1392,19 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
                       <tr>
-                        <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Class</th>
-                        <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Subject</th>
-                        <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Teacher</th>
-                        <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Students</th>
-                        <th className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wider">Status</th>
+                        <th className="px-2 py-2 text-left text-[9px] font-bold uppercase tracking-wider">Class</th>
+                        <th className="px-2 py-2 text-left text-[9px] font-bold uppercase tracking-wider">Subject</th>
+                        <th className="px-2 py-2 text-left text-[9px] font-bold uppercase tracking-wider">Teacher</th>
+                        <th className="px-2 py-2 text-left text-[9px] font-bold uppercase tracking-wider">Students</th>
+                        <th className="px-2 py-2 text-left text-[9px] font-bold uppercase tracking-wider">Status</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-100">
                       {getFilteredClasses().map((classItem) => (
                         <tr key={classItem.id} className="hover:bg-blue-50/50 transition-all duration-200 group">
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="flex items-center gap-3">
-                              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[11px] font-bold shadow-sm">
+                          <td className="px-2 py-2 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[10px] font-bold shadow-sm">
                                 {classItem.name.charAt(0)}
                               </div>
                               <div>
@@ -1615,22 +1415,22 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-2 py-2 whitespace-nowrap">
                             <div className="text-[10px] font-medium text-gray-900">{classItem.subject}</div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td className="px-2 py-2 whitespace-nowrap">
                             <div className="text-[10px] text-gray-700">{classItem.teacher}</div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600">
-                                <Users className="w-3 h-3" />
+                          <td className="px-2 py-2 whitespace-nowrap">
+                            <div className="flex items-center gap-1">
+                              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-600">
+                                <Users className="w-2.5 h-2.5" />
                               </div>
                               <span className="text-[10px] font-semibold text-gray-900">{classItem.students}</span>
                             </div>
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
-                            <span className="inline-flex px-2.5 py-1 text-[9px] font-semibold leading-tight rounded-full bg-green-100 text-green-800 shadow-sm">
+                          <td className="px-2 py-2 whitespace-nowrap">
+                            <span className="inline-flex px-2 py-0.5 text-[9px] font-semibold leading-tight rounded-full bg-green-100 text-green-800 shadow-sm">
                               Active
                             </span>
                           </td>
@@ -1647,7 +1447,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'reports' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1805,7 +1605,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'alerts' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1836,6 +1636,12 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-sm font-bold text-gray-900">Alert Management</h2>
                 <div className="flex gap-2">
+                  <select className="px-3 py-1.5 bg-white border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Statuses</option>
+                    <option>New</option>
+                    <option>Acknowledged</option>
+                    <option>Resolved</option>
+                  </select>
                   <button className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium">
                     <RefreshCw className="w-3 h-3" />
                     Refresh
@@ -1933,7 +1739,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'settings' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -2292,7 +2098,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           {activeTab === 'middaymeal' && (
             <div>
               {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -2358,6 +2164,26 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                 </div>
                 <div className="flex gap-3">
+                  <div className="flex gap-1">
+                    <button 
+                      onClick={() => setMealPeriod('daily')}
+                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'daily' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Daily
+                    </button>
+                    <button 
+                      onClick={() => setMealPeriod('weekly')}
+                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'weekly' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Weekly
+                    </button>
+                    <button 
+                      onClick={() => setMealPeriod('monthly')}
+                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'monthly' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Monthly
+                    </button>
+                  </div>
                   <button 
                     onClick={handleGenerateMealAnalysisReport}
                     className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-[10px] font-medium"
@@ -2677,161 +2503,6 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                       </tbody>
                     </table>
                   </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Notices Tab */}
-          {activeTab === 'notices' && (
-            <div>
-              {/* Welcome Banner */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-3 sm:p-4 mb-4 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
-                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
-                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
-                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
-                <div className="absolute top-1/3 left-1/4 w-7 h-7 bg-white/5 rounded-full"></div>
-                <div className="absolute bottom-1/3 right-1/3 w-6 h-6 bg-white/10 rotate-12"></div>
-                
-                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                  <div>
-                    <h2 className="text-[13px] font-bold text-white mb-1.5">Notice Management Dashboard</h2>
-                    <p className="text-[10px] text-blue-100 mb-2">Create and manage important notices for students and staff</p>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
-                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
-                        <span className="text-[10px] text-white font-medium">{schoolData.name}</span>
-                      </div>
-                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
-                        <span className="text-[10px] text-white font-medium">Notice Board</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="bg-white/20 rounded-md p-2">
-                      <Bell className="w-5 h-5 text-white" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-[12px] font-bold text-gray-900">Post New Notice</h2>
-                <div className="flex gap-3">
-                  <button 
-                    onClick={addNewNotice}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px] font-medium"
-                  >
-                    <Plus className="w-3 h-3" />
-                    Create Notice
-                  </button>
-                </div>
-              </div>
-              
-              {/* Notice Creation Form */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
-                <h3 className="text-[10px] font-bold text-gray-900 mb-2">Compose Notice</h3>
-                <div className="space-y-2">
-                  <div>
-                    <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Title</label>
-                    <input 
-                      type="text" 
-                      name="title"
-                      value={newNotice.title}
-                      onChange={handleNewNoticeChange}
-                      className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
-                      placeholder="Enter notice title"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Content</label>
-                    <textarea 
-                      name="content"
-                      value={newNotice.content}
-                      onChange={handleNewNoticeChange}
-                      className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
-                      placeholder="Enter notice content"
-                      rows="2"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-1">Target Audience</label>
-                      <select 
-                        name="audience"
-                        value={newNotice.audience}
-                        onChange={handleNewNoticeChange}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
-                      >
-                        <option value="All Classes">All Classes</option>
-                        <option value="All Students">All Students</option>
-                        <option value="All Teachers">All Teachers</option>
-                        <option value="Staff Only">Staff Only</option>
-                        <option value="Parents">Parents</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-1">Priority</label>
-                      <select 
-                        name="priority"
-                        value={newNotice.priority}
-                        onChange={handleNewNoticeChange}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
-                      >
-                        <option value="Normal">Normal</option>
-                        <option value="Important">Important</option>
-                        <option value="Urgent">Urgent</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-2 pt-1">
-                    <button 
-                      onClick={clearNoticeForm}
-                      className="px-2 py-1 border border-gray-300 text-gray-700 rounded text-[9px]"
-                    >
-                      Clear
-                    </button>
-                    <button 
-                      onClick={addNewNotice}
-                      className="px-2 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded text-[9px]"
-                    >
-                      Post Notice
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Recent Notices */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mt-2">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-[10px] font-bold text-gray-900">Recent Notices</h3>
-                  <button className="text-blue-600 hover:text-blue-800 text-[9px] font-medium">View All</button>
-                </div>
-                
-                <div className="space-y-3">
-                  {notices.map((notice) => (
-                    <div key={notice.id} className="border border-gray-200 rounded p-2 hover:bg-blue-50 transition-colors">
-                      <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-medium text-gray-900 text-[11px]">{notice.title}</h4>
-                        <span className={`text-[7px] ${getPriorityBadgeClass(notice.priority)} px-1 py-0.5 rounded-full`}>
-                          {notice.priority}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 text-[9px] mb-1">{notice.content.substring(0, 100)}{notice.content.length > 100 ? '...' : ''}</p>
-                      <div className="flex justify-between items-center text-[9px] text-gray-500">
-                        <span>{notice.date} at {notice.time}</span>
-                        <span>To: {notice.audience}</span>
-                      </div>
-                      <div className="text-[8px] text-gray-400 mt-1">
-                        From: {notice.sender}
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
