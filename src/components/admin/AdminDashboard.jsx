@@ -2267,19 +2267,36 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                 </div>
               </div>
 
-              <div className="mb-4">
-                <h2 className="text-sm font-bold text-blue-700">Meal Program Overview</h2>
-                <p className="text-[10px] text-gray-600 mt-1">Total meals to be served today: {selectedSchoolData.reduce((total, school) => total + school.presentToday, 0).toLocaleString()}</p>
-              </div>
-              
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  {/* Filter Controls */}
-                  <div className="flex gap-2 items-center bg-white rounded-lg border border-gray-200 p-1.5">
+                  <h2 className="text-sm font-bold text-blue-700">Meal Program Overview</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Total meals to be served today: {selectedSchoolData.reduce((total, school) => total + school.presentToday, 0).toLocaleString()}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={handleGenerateMealAnalysisReport}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                  >
+                    <FileText className="w-3 h-3" />
+                    Generate Analysis
+                  </button>
+                  <button 
+                    onClick={handleExportMealAnalysisReport}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
+                  >
+                    <Download className="w-3 h-3" />
+                    Export Analysis
+                  </button>
+                </div>
+              </div>
+              <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">School</label>
                     <select 
                       value={selectedSchool}
                       onChange={(e) => setSelectedSchool(e.target.value)}
-                      className="px-2 py-1 text-[10px] rounded-md bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="All Schools">All Schools</option>
                       {mealAttendanceData.map((school) => (
@@ -2288,37 +2305,26 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                         </option>
                       ))}
                     </select>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Duration</label>
                     <select 
                       value={selectedDuration}
                       onChange={(e) => setSelectedDuration(e.target.value)}
-                      className="px-2 py-1 text-[10px] rounded-md bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="weekly">Weekly</option>
                       <option value="monthly">Monthly</option>
                     </select>
+                  </div>
+                  <div className="flex items-end">
                     <button 
                       onClick={applyFilters}
-                      className="px-2 py-1 text-[10px] rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors font-medium"
+                      className="w-full px-3 py-1.5 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all text-[10px] font-medium"
                     >
-                      Apply Filter
+                      Apply Filters
                     </button>
                   </div>
-                </div>
-                <div className="flex gap-3">
-                  <button 
-                    onClick={handleGenerateMealAnalysisReport}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-[10px] font-medium"
-                  >
-                    <FileText className="w-3 h-3" />
-                    Generate Analysis
-                  </button>
-                  <button 
-                    onClick={handleExportMealAnalysisReport}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-[10px] font-medium"
-                  >
-                    <Download className="w-3 h-3" />
-                    Export Analysis
-                  </button>
                 </div>
               </div>
 
