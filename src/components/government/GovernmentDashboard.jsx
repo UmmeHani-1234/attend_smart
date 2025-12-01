@@ -776,7 +776,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                 {/* Quick Notices Section */}
                 <div className="bg-white rounded-md p-3 shadow-sm border border-gray-100 mb-5">
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-xs font-bold text-gray-900">Recent Notices</h2>
+                    <h2 className="text-xs font-bold text-blue-700">Recent Notices</h2>
                     <button 
                       onClick={() => setActiveTab('notices')}
                       className="text-[8px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
@@ -936,7 +936,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
                     <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
                     <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-purple-500/10 rounded-full"></div>
-                    <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative z-10">District Statistics</h3>
+                    <h3 className="text-sm font-bold text-blue-700 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative z-10">District Statistics</h3>
                     <div className="space-y-3 relative z-10">
                       <div className="flex justify-between items-center p-3 bg-gradient-to-r from-blue-50/50 via-indigo-50/50 to-purple-50/50 rounded-md border border-blue-100/50">
                         <div className="flex items-center gap-2">
@@ -977,7 +977,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
                   <div className="absolute -top-2 -right-2 w-10 h-10 bg-indigo-500/10 rounded-full"></div>
                   <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-purple-500/10 rounded-full"></div>
-                  <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative z-10">All Schools</h3>
+                  <h3 className="text-sm font-bold text-blue-700 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent relative z-10">All Schools</h3>
                   <div className="overflow-x-auto relative z-10">
                     <table className="w-full">
                       <thead>
@@ -1160,7 +1160,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
 
               {/* Detailed Reports */}
               <div className="mt-6 bg-white rounded-md p-4 shadow-sm border border-gray-100">
-                <h3 className="text-sm font-bold text-gray-900 mb-4">Detailed Reports</h3>
+                <h3 className="text-sm font-bold text-blue-700 mb-4">Detailed Reports</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                   {[
                     { title: 'Monthly Attendance Report', description: 'Comprehensive attendance analysis', icon: FileText },
@@ -1356,7 +1356,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-[12px] font-bold text-gray-900">Post New Notice</h2>
+                <h2 className="text-[12px] font-bold text-blue-700">Post New Notice</h2>
                 <div className="flex gap-3">
                   <button 
                     className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px] font-medium"
@@ -1369,7 +1369,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               
               {/* Notice Creation Form */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
-                <h3 className="text-[10px] font-bold text-gray-900 mb-2">Compose Notice</h3>
+                <h3 className="text-[10px] font-bold text-blue-700 mb-2">Compose Notice</h3>
                 <div className="space-y-2">
                   <div>
                     <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Title</label>
@@ -1447,7 +1447,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               {/* Recent Notices */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mt-[-4px]">
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-[10px] font-bold text-gray-900">Recent Notices</h3>
+                  <h3 className="text-[10px] font-bold text-blue-700">Recent Notices</h3>
                   <button className="text-blue-600 hover:text-blue-800 text-[9px] font-medium">View All</button>
                 </div>
                 

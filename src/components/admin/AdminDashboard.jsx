@@ -1068,7 +1068,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-gray-900">Teacher Management</h2>
+                <h2 className="text-sm font-bold text-blue-700">Teacher Management</h2>
                 <button 
                   onClick={() => setShowAddTeacherModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
@@ -1213,7 +1213,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-gray-900">Student Management</h2>
+                <h2 className="text-sm font-bold text-blue-700">Student Management</h2>
                 <button 
                   onClick={() => setShowAddStudentModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
@@ -1367,7 +1367,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-gray-900">Class Management</h2>
+                <h2 className="text-sm font-bold text-blue-700">Class Management</h2>
                 <button 
                   onClick={() => setShowAddClassModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
@@ -1529,7 +1529,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-[10px] font-bold text-gray-900">Notice Management</h2>
+                <h2 className="text-[10px] font-bold text-blue-700">Notice Management</h2>
                 <button 
                   onClick={() => setShowAddNoticeModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[8px] shadow-sm hover:shadow-md"
@@ -1617,7 +1617,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-gray-900">Reports & Analytics</h2>
+                <h2 className="text-sm font-bold text-blue-700">Reports & Analytics</h2>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setShowReportFilterModal(true)}
@@ -1775,7 +1775,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-gray-900">Alert Management</h2>
+                <h2 className="text-sm font-bold text-blue-700">Alert Management</h2>
                 <div className="flex gap-2">
                   <select className="px-3 py-1.5 bg-white border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>All Statuses</option>
@@ -1910,7 +1910,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
 
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <h2 className="text-sm font-bold text-gray-900">System Settings</h2>
+                  <h2 className="text-sm font-bold text-blue-700">System Settings</h2>
                   <p className="text-gray-600 text-[10px] mt-1">Manage your account preferences and system settings</p>
                 </div>
               </div>
@@ -1950,7 +1950,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   {activeSettingsTab === 'profile' && (
                     <div className="bg-white rounded-md shadow-sm border border-gray-100 p-3">
                       <div className="mb-3">
-                        <h2 className="text-sm font-bold text-gray-900 mb-1">Profile Information</h2>
+                        <h2 className="text-sm font-bold text-blue-700 mb-1">Profile Information</h2>
                         <p className="text-gray-600 text-[10px]">Update your personal and professional details</p>
                       </div>
                       
@@ -2018,7 +2018,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   {activeSettingsTab === 'notifications' && (
                     <div className="bg-white rounded-md shadow-sm border border-gray-100 p-3">
                       <div className="mb-3">
-                        <h2 className="text-sm font-bold text-gray-900 mb-1">Notification Preferences</h2>
+                        <h2 className="text-sm font-bold text-blue-700 mb-1">Notification Preferences</h2>
                         <p className="text-gray-600 text-[10px]">Manage how and when you receive notifications</p>
                       </div>
                       
@@ -2080,7 +2080,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   {activeSettingsTab === 'security' && (
                     <div className="bg-white rounded-md shadow-sm border border-gray-100 p-3">
                       <div className="mb-3">
-                        <h2 className="text-sm font-bold text-gray-900 mb-1">Security Settings</h2>
+                        <h2 className="text-sm font-bold text-blue-700 mb-1">Security Settings</h2>
                         <p className="text-gray-600 text-[10px]">Manage your account security and authentication</p>
                       </div>
                       
@@ -2160,7 +2160,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   {activeSettingsTab === 'appearance' && (
                     <div className="bg-white rounded-md shadow-sm border border-gray-100 p-3">
                       <div className="mb-3">
-                        <h2 className="text-sm font-bold text-gray-900 mb-1">Appearance Settings</h2>
+                        <h2 className="text-sm font-bold text-blue-700 mb-1">Appearance Settings</h2>
                         <p className="text-gray-600 text-[10px]">Customize the look and feel of your dashboard</p>
                       </div>
                       
