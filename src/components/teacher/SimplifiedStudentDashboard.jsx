@@ -295,7 +295,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           {activeTab === 'home' && (
             <div>
               {/* Welcome Banner - Matching teacher dashboard style with image avatar */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
                 {/* Geometric background elements */}
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
@@ -452,7 +452,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           {activeTab === 'assignments' && (
             <div>
               {/* Banner for Assignments Section */}
-              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg p-4 mb-5 shadow-md backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 rounded-lg p-4 mb-5 shadow-md backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
                 <div className="absolute -top-6 -right-6 w-24 h-24 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-8 h-8 bg-white/10 rotate-45"></div>
@@ -640,7 +640,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           {activeTab === 'attendance' && (
             <div>
               {/* Banner for Attendance Section */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1009,7 +1009,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           {activeTab === 'grades' && (
             <div>
               {/* Banner for Grades Section - Matched dashboard size */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1189,7 +1189,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           {activeTab === 'notices' && (
             <div>
               {/* Banner for Notices Section */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
@@ -1274,7 +1274,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           {activeTab === 'classes' && (
             <div>
               {/* Banner for Classes Section */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-5 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
                 <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
                 <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
                 <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>

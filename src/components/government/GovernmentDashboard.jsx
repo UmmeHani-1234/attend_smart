@@ -854,7 +854,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-4">
-                <div></div>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">School Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">View and manage all schools in your district</p>
+                </div>
                 <button 
                   onClick={() => setShowAddSchoolForm(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow-md text-[10px] font-medium"
@@ -1081,7 +1084,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-sm font-bold text-blue-700">Reports & Analytics</h2>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">Reports & Analytics</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Generate and export comprehensive educational reports</p>
+                </div>
                 <div className="flex gap-3">
                   <button 
                     onClick={handleFilterReports}
@@ -1226,7 +1232,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-base font-bold text-blue-700">Alert Management</h2>
+                <div>
+                  <h2 className="text-base font-bold text-blue-700">Alert Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Monitor and respond to system alerts and notifications</p>
+                </div>
                 <div className="flex gap-3">
                   <button className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all text-[10px] font-medium">
                     <RefreshCw className="w-3 h-3" />
@@ -1356,7 +1365,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-[12px] font-bold text-blue-700">Post New Notice</h2>
+                <div>
+                  <h2 className="text-[13px] font-bold text-blue-700">Post New Notice</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Create and manage important notices for schools and districts</p>
+                </div>
                 <div className="flex gap-3">
                   <button 
                     className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px] font-medium"
@@ -1369,27 +1381,27 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               
               {/* Notice Creation Form */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-3">
-                <h3 className="text-[10px] font-bold text-blue-700 mb-2">Compose Notice</h3>
+                <h3 className="text-[11px] font-bold text-blue-700 mb-2">Compose Notice</h3>
                 <div className="space-y-2">
                   <div>
-                    <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Title</label>
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1">Notice Title</label>
                     <input 
                       type="text" 
                       name="title"
                       value={newNotice.title}
                       onChange={handleNewNoticeChange}
-                      className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                      className="w-full px-2 py-1 border border-gray-300 rounded text-[10px]"
                       placeholder="Enter notice title"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-[9px] font-medium text-gray-700 mb-1">Notice Content</label>
+                    <label className="block text-[10px] font-medium text-gray-700 mb-1">Notice Content</label>
                     <textarea 
                       name="content"
                       value={newNotice.content}
                       onChange={handleNewNoticeChange}
-                      className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                      className="w-full px-2 py-1 border border-gray-300 rounded text-[10px]"
                       placeholder="Enter notice content"
                       rows="2"
                     />
@@ -1397,12 +1409,12 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-1">Target Audience</label>
+                      <label className="block text-[10px] font-medium text-gray-700 mb-1">Target Audience</label>
                       <select 
                         name="audience"
                         value={newNotice.audience}
                         onChange={handleNewNoticeChange}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-[10px]"
                       >
                         <option value="All Districts">All Districts</option>
                         <option value="All Schools">All Schools</option>
@@ -1413,12 +1425,12 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                     </div>
                     
                     <div>
-                      <label className="block text-[9px] font-medium text-gray-700 mb-1">Priority</label>
+                      <label className="block text-[10px] font-medium text-gray-700 mb-1">Priority</label>
                       <select 
                         name="priority"
                         value={newNotice.priority}
                         onChange={handleNewNoticeChange}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-[9px]"
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-[10px]"
                       >
                         <option value="Normal">Normal</option>
                         <option value="Important">Important</option>
@@ -1430,13 +1442,13 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   <div className="flex gap-2 pt-1">
                     <button 
                       onClick={clearNoticeForm}
-                      className="px-2 py-1 border border-gray-300 text-gray-700 rounded text-[9px]"
+                      className="px-2 py-1 border border-gray-300 text-gray-700 rounded text-[10px]"
                     >
                       Clear
                     </button>
                     <button 
                       onClick={addNewNotice}
-                      className="px-2 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded text-[9px]"
+                      className="px-2 py-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded text-[10px]"
                     >
                       Post Notice
                     </button>
@@ -1447,25 +1459,25 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               {/* Recent Notices */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mt-[-4px]">
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-[10px] font-bold text-blue-700">Recent Notices</h3>
-                  <button className="text-blue-600 hover:text-blue-800 text-[9px] font-medium">View All</button>
+                  <h3 className="text-[11px] font-bold text-blue-700">Recent Notices</h3>
+                  <button className="text-blue-600 hover:text-blue-800 text-[10px] font-medium">View All</button>
                 </div>
                 
                 <div className="space-y-3">
                   {notices.map((notice) => (
                     <div key={notice.id} className="border border-gray-200 rounded p-2 hover:bg-blue-50 transition-colors">
                       <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-medium text-gray-900 text-[11px]">{notice.title}</h4>
+                        <h4 className="font-medium text-gray-900 text-[12px]">{notice.title}</h4>
                         <span className={`text-[7px] ${getPriorityBadgeClass(notice.priority)} px-1 py-0.5 rounded-full`}>
                           {notice.priority}
                         </span>
                       </div>
-                      <p className="text-gray-600 text-[9px] mb-1">{notice.content.substring(0, 100)}{notice.content.length > 100 ? '...' : ''}</p>
-                      <div className="flex justify-between items-center text-[9px] text-gray-500">
+                      <p className="text-gray-600 text-[10px] mb-1">{notice.content.substring(0, 100)}{notice.content.length > 100 ? '...' : ''}</p>
+                      <div className="flex justify-between items-center text-[10px] text-gray-500">
                         <span>{notice.date} at {notice.time}</span>
                         <span>To: {notice.audience}</span>
                       </div>
-                      <div className="text-[8px] text-gray-400 mt-1">
+                      <div className="text-[9px] text-gray-400 mt-1">
                         From: {notice.sender}
                       </div>
                     </div>
@@ -1510,6 +1522,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h2 className="text-sm font-bold text-blue-700">Meal Program Overview</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Monitor and manage the mid day meal program across schools</p>
                   <p className="text-[10px] text-gray-600 mt-1">Total meals to be served today: {selectedSchoolData.reduce((total, school) => total + school.presentToday, 0).toLocaleString()}</p>
                 </div>
                 <div className="flex gap-2">

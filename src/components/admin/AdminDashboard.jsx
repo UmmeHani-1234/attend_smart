@@ -1068,7 +1068,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-blue-700">Teacher Management</h2>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">Teacher Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Manage and organize all teaching staff members</p>
+                </div>
                 <button 
                   onClick={() => setShowAddTeacherModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
@@ -1213,7 +1216,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-blue-700">Student Management</h2>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">Student Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Manage and track all student information and records</p>
+                </div>
                 <button 
                   onClick={() => setShowAddStudentModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
@@ -1367,7 +1373,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-blue-700">Class Management</h2>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">Class Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Organize and manage all school classes and divisions</p>
+                </div>
                 <button 
                   onClick={() => setShowAddClassModal(true)}
                   className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
@@ -1507,8 +1516,8 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                 
                 <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div>
-                    <h2 className="text-sm font-bold text-white mb-1.5">Notices & Announcements</h2>
-                    <p className="text-[8px] text-blue-100 mb-2">Create and manage important notices for students, teachers, and parents</p>
+                    <h2 className="text-[16px] font-bold text-white mb-1.5">Notices & Announcements</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Create and manage important notices for students, teachers, and parents</p>
                     <div className="flex flex-wrap gap-2 mt-2">
                       <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
                         <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
@@ -1529,10 +1538,13 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-[10px] font-bold text-blue-700">Notice Management</h2>
+                <div>
+                  <h2 className="text-[13px] font-bold text-blue-700">Notice Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Create and manage important notices for students, teachers, and parents</p>
+                </div>
                 <button 
                   onClick={() => setShowAddNoticeModal(true)}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[8px] shadow-sm hover:shadow-md"
+                  className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-md hover:from-blue-600 hover:to-indigo-700 transition-all text-[10px] shadow-sm hover:shadow-md"
                 >
                   <Plus className="w-3 h-3" />
                   Add Notice
@@ -1545,10 +1557,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   <table className="w-full">
                     <thead className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
                       <tr>
-                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Notice</th>
-                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Audience</th>
-                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Priority</th>
-                        <th className="px-4 py-3 text-left text-[8px] font-bold uppercase tracking-wider">Date</th>
+                        <th className="px-4 py-3 text-left text-[9px] font-bold uppercase tracking-wider">Notice</th>
+                        <th className="px-4 py-3 text-left text-[9px] font-bold uppercase tracking-wider">Audience</th>
+                        <th className="px-4 py-3 text-left text-[9px] font-bold uppercase tracking-wider">Priority</th>
+                        <th className="px-4 py-3 text-left text-[9px] font-bold uppercase tracking-wider">Date</th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-100">
@@ -1556,15 +1568,15 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                         <tr key={notice.id} className="hover:bg-blue-50/50 transition-all duration-200 group">
                           <td className="px-4 py-3 whitespace-nowrap">
                             <div>
-                              <div className="text-[10px] font-bold text-gray-900">{notice.title}</div>
-                              <div className="text-[8px] text-gray-600 mt-1 max-w-md truncate">{notice.content}</div>
+                              <div className="text-[11px] font-bold text-gray-900">{notice.title}</div>
+                              <div className="text-[9px] text-gray-600 mt-1 max-w-md truncate">{notice.content}</div>
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-[9px] text-gray-700">{notice.audience}</div>
+                            <div className="text-[10px] text-gray-700">{notice.audience}</div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <span className={`inline-flex px-2.5 py-1 text-[8px] font-semibold leading-tight rounded-full shadow-sm ${{
+                            <span className={`inline-flex px-2.5 py-1 text-[9px] font-semibold leading-tight rounded-full shadow-sm ${{
                               'High': 'bg-red-100 text-red-800',
                               'Medium': 'bg-yellow-100 text-yellow-800',
                               'Low': 'bg-green-100 text-green-800'
@@ -1573,7 +1585,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                             </span>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <div className="text-[9px] text-gray-700">{notice.date}</div>
+                            <div className="text-[10px] text-gray-700">{notice.date}</div>
                           </td>
                         </tr>
                       ))}
@@ -1617,7 +1629,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-blue-700">Reports & Analytics</h2>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">Reports & Analytics</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Comprehensive analytics and reporting for school performance</p>
+                </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setShowReportFilterModal(true)}
@@ -1775,7 +1790,10 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
 
               <div className="flex justify-between items-center mb-5">
-                <h2 className="text-sm font-bold text-blue-700">Alert Management</h2>
+                <div>
+                  <h2 className="text-sm font-bold text-blue-700">Alert Management</h2>
+                  <p className="text-[10px] text-gray-600 mt-1">Monitor and manage all system alerts and notifications</p>
+                </div>
                 <div className="flex gap-2">
                   <select className="px-3 py-1.5 bg-white border border-gray-200 rounded-md text-[10px] focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>All Statuses</option>
