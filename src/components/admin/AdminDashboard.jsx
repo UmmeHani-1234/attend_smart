@@ -44,7 +44,6 @@ const AdminDashboard = ({ onLogout }) => {
   const [studentAvatarPreview, setStudentAvatarPreview] = useState(null);
   const [showAvatarOptions, setShowAvatarOptions] = useState(false);
   const [avatarType, setAvatarType] = useState(''); // 'teacher' or 'student'
-  const [mealPeriod, setMealPeriod] = useState('daily'); // daily, weekly, monthly
   const [mealFilter, setMealFilter] = useState('daily'); // daily, weekly, monthly
   
   // State for report generation
@@ -2306,26 +2305,6 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="flex gap-1">
-                    <button 
-                      onClick={() => setMealPeriod('daily')}
-                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'daily' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                    >
-                      Daily
-                    </button>
-                    <button 
-                      onClick={() => setMealPeriod('weekly')}
-                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'weekly' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                    >
-                      Weekly
-                    </button>
-                    <button 
-                      onClick={() => setMealPeriod('monthly')}
-                      className={`px-2 py-1 text-[10px] rounded-md ${mealPeriod === 'monthly' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                    >
-                      Monthly
-                    </button>
-                  </div>
                   <button 
                     onClick={handleGenerateMealAnalysisReport}
                     className="flex items-center gap-1 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all text-[10px] font-medium"
@@ -2417,12 +2396,12 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
                   <div className="bg-white rounded-md p-4 shadow-sm border border-gray-100 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-red-500"></div>
                     <div className="absolute -top-2 -right-2 w-10 h-10 bg-orange-500/10 rounded-full"></div>
-                    <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent relative z-10">Meal Distribution Trends (Daily)</h3>
+                    <h3 className="text-sm font-bold text-gray-900 mb-4 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent relative z-10">Meal Distribution Trends</h3>
                     <div className="h-48 bg-gradient-to-br from-amber-50 to-orange-50 rounded-md p-3 border border-amber-100 relative z-10">
                       <div className="flex items-center justify-center h-full text-gray-500 text-[10px]">
                         <div className="text-center">
                           <Utensils className="w-8 h-8 mx-auto mb-2 text-amber-400" />
-                          <p>Meal distribution chart for {mealPeriod} period</p>
+                          <p>Meal distribution chart</p>
                           <p className="mt-1 text-[9px]">Data visualization will be displayed here</p>
                           <div className="flex justify-center gap-2 mt-3">
                             <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-md flex items-center justify-center border border-amber-200 overflow-hidden">
