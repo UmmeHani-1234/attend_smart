@@ -31,10 +31,10 @@ export default function App() {
             <Routes>
               <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
               <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-              <Route path="/teacher" element={<TeacherDashboard onLogout={handleLogout} />} />
-              <Route path="/student" element={<SimplifiedStudentDashboard onLogout={handleLogout} />} />
-              <Route path="/admin" element={<AdminDashboard onLogout={handleLogout} />} />
-              <Route path="/government" element={<GovernmentDashboard onLogout={handleLogout} />} />
+              <Route path="/teacher/*" element={<TeacherDashboard onLogout={handleLogout} />} />
+              <Route path="/student/*" element={<SimplifiedStudentDashboard onLogout={handleLogout} />} />
+              <Route path="/admin/*" element={<AdminDashboard onLogout={handleLogout} />} />
+              <Route path="/government/*" element={<GovernmentDashboard onLogout={handleLogout} />} />
               <Route path="/class/:classId" element={<ClassDetailsPage />} />
             </Routes>
           </div>

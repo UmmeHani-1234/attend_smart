@@ -1,11 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Home, FileText, Award, AlertCircle, Settings, User, LogOut, Users, CheckCircle, Clock, TrendingUp, X, BookOpen, Calculator, FlaskConical, PenTool, Globe, Music, Palette, Edit, RefreshCw, UserCheck, Calendar } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { useNavigate, useLocation } from 'react-router-dom';
 import UltraModernHeader from '../UltraModernHeader';
 import ParticleBackground from '../ParticleBackground';
 
 const SimplifiedStudentDashboard = ({ onLogout }) => {
-  const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Set active tab based on current route
+  const getActiveTabFromRoute = () => {
+    const path = location.pathname;
+    if (path.includes('/classes')) return 'classes';
+    if (path.includes('/attendance')) return 'attendance';
+    if (path.includes('/assignments')) return 'assignments';
+    if (path.includes('/grades')) return 'grades';
+    if (path.includes('/notices')) return 'notices';
+    if (path.includes('/settings')) return 'settings';
+    return 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState(getActiveTabFromRoute());
+  
+  // Update active tab when route changes
+  useEffect(() => {
+    setActiveTab(getActiveTabFromRoute());
+  }, [location]);
+
+  // Handle tab navigation
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(`/student/${tab}`);
+  };
+  
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
   const [studentAvatar, setStudentAvatar] = useState('https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah&backgroundColor=ffffff&radius=50');
@@ -245,7 +273,7 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'

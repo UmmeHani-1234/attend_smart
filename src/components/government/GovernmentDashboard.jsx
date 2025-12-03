@@ -2,11 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { Users, School, Utensils, TrendingUp, AlertTriangle, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, Building, Activity, User, Book, Target, Award, Camera, Mail, Save, GraduationCap, Minus, Monitor } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 import UltraModernHeader from '../UltraModernHeader';
 import ParticleBackground from '../ParticleBackground';
 
 const GovernmentDashboard = ({ onLogout }) => {
-  const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Set active tab based on current route
+  const getActiveTabFromRoute = () => {
+    const path = location.pathname;
+    if (path.includes('/schools')) return 'schools';
+    if (path.includes('/districts')) return 'districts';
+    if (path.includes('/reports')) return 'reports';
+    if (path.includes('/notices')) return 'notices';
+    if (path.includes('/settings')) return 'settings';
+    return 'home';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getActiveTabFromRoute());
+  
+  // Update active tab when route changes
+  useEffect(() => {
+    setActiveTab(getActiveTabFromRoute());
+  }, [location]);
+  
+  // Handle tab navigation
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(`/government/${tab}`);
+  };
   const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [reportPeriod, setReportPeriod] = useState('monthly'); // weekly, monthly, yearly
@@ -558,7 +584,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
@@ -599,7 +625,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
             userName="Government Official"
             userRole="Education Oversight"
             onLogout={onLogout}
-            onAlertsClick={() => setActiveTab('alerts')}
+            onAlertsClick={() => handleTabChange('alerts')}
           />
         </div>
 

@@ -1,12 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, UserCheck, UserX, BookOpen, TrendingUp, FileText, Settings, LogOut, Home, Search, Filter, Download, Plus, Eye, Edit, Trash2, Printer, BarChart, PieChart, LineChart, Calendar, Clock, Shield, MapPin, AlertTriangle, CheckCircle, XCircle, RefreshCw, Bell, Menu, X, School, Activity, User, Book, Utensils, GraduationCap, Minus } from 'lucide-react';
 import { BarChart as RechartsBarChart, Bar, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 import UltraModernHeader from '../UltraModernHeader';
 import ParticleBackground from '../ParticleBackground';
 
 const AdminDashboard = ({ onLogout }) => {
-  const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Set active tab based on current route
+  const getActiveTabFromRoute = () => {
+    const path = location.pathname;
+    if (path.includes('/schools')) return 'schools';
+    if (path.includes('/teachers')) return 'teachers';
+    if (path.includes('/students')) return 'students';
+    if (path.includes('/classes')) return 'classes';
+    if (path.includes('/reports')) return 'reports';
+    if (path.includes('/notices')) return 'notices';
+    if (path.includes('/settings')) return 'settings';
+    return 'home';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getActiveTabFromRoute());
+  
+  // Update active tab when route changes
+  useEffect(() => {
+    setActiveTab(getActiveTabFromRoute());
+  }, [location]);
+  
+  // Handle tab navigation
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(`/admin/${tab}`);
+  };
   const [activeSettingsTab, setActiveSettingsTab] = useState('profile');
   const [selectedClass, setSelectedClass] = useState('All Classes');
   const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
@@ -785,7 +813,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
@@ -824,6 +852,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
             userName="Admin User"
             userRole="School Administrator"
             onLogout={onLogout}
+            onAlertsClick={() => handleTabChange('alerts')}
           />
         </div>
 
@@ -1182,6 +1211,7 @@ Attendance Rate: ${analysisData.attendanceRate}%`);
               </div>
             </div>
           )}
+
 
           {/* Students Tab */}
           {activeTab === 'students' && (

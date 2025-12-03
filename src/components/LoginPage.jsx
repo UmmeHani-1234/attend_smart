@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, User, Lock, School, Mail, Key, ArrowRight, BookOpen, GraduationCap, Users } from 'lucide-react';
 import AttendSmartLogo from './AttendSmartLogo';
@@ -8,6 +9,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 
 const LoginPage = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +34,8 @@ const LoginPage = ({ onLogin }) => {
         console.log('Google user info:', userInfo.data);
         // Pass the user type to the onLogin function
         onLogin(userType);
+        // Navigate to the appropriate dashboard
+        navigate(`/${userType}`);
       } catch (error) {
         console.error('Error fetching user info:', error);
         setError('Failed to authenticate with Google');
@@ -71,6 +75,8 @@ const LoginPage = ({ onLogin }) => {
       
       // Simulate sign in/sign up
       onLogin(userType);
+      // Navigate to the appropriate dashboard
+      navigate(`/${userType}`);
     }, 1000);
   };
 

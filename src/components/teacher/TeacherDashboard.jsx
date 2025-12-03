@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, User, UserCheck, UserX, Bell, AlertTriangle, Download, Calendar, Clock, Activity, Shield, MapPin, TrendingUp, FileText, Settings, LogOut, Menu, X, Home, BookOpen, ClipboardList, MessageSquare, Search, Eye, Edit, Printer, Filter, Plus, Save, RefreshCw } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, PieChart as RechartsPieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AttendSmartLogo from '../AttendSmartLogo';
 import UltraModernHeader from '../UltraModernHeader';
 import ClassroomCard from '../ClassroomCard';
@@ -246,7 +247,34 @@ const TeacherDashboard = ({ onLogout }) => {
       </g>
     </svg>
   );
-  const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Set active tab based on current route
+  const getActiveTabFromRoute = () => {
+    const path = location.pathname;
+    if (path.includes('/classes')) return 'classes';
+    if (path.includes('/attendance')) return 'attendance';
+    if (path.includes('/assignments')) return 'assignments';
+    if (path.includes('/notices')) return 'notices';
+    if (path.includes('/reports')) return 'reports';
+    if (path.includes('/alerts')) return 'alerts';
+    if (path.includes('/settings')) return 'settings';
+    return 'home';
+  };
+  
+  const [activeTab, setActiveTab] = useState(getActiveTabFromRoute());
+  
+  // Update active tab when route changes
+  useEffect(() => {
+    setActiveTab(getActiveTabFromRoute());
+  }, [location]);
+  
+  // Handle tab navigation
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    navigate(`/teacher/${tab}`);
+  };
   const [selectedClass, setSelectedClass] = useState('Class 10-A');
   
   // Teacher-specific data
@@ -1066,7 +1094,7 @@ const TeacherDashboard = ({ onLogout }) => {
   ];
 
   return (
-    <div className="flex min-h-screen h-screen overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="flex min-h-screen h-screen w-full overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50">
       <ParticleBackground />
       
       {/* Sidebar */}
@@ -1110,7 +1138,7 @@ const TeacherDashboard = ({ onLogout }) => {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-md transition-all ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/20'
@@ -1156,7 +1184,7 @@ const TeacherDashboard = ({ onLogout }) => {
             userName={teacherData.name}
             userRole={`${teacherData.subject} Teacher`}
             onLogout={onLogout}
-            onAlertsClick={() => setActiveTab('alerts')}
+            onAlertsClick={() => handleTabChange('alerts')}
           />
         </div>
 
