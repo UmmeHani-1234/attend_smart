@@ -306,14 +306,13 @@ const TeacherDashboard = ({ onLogout }) => {
   
   // State for managing attendance data
   const [studentAttendanceData, setStudentAttendanceData] = useState([
-    { id: 1, name: 'Rahul Sharma', class: '10A', roll: 15, status: { present: true, absent: false, late: false }, method: 'RFID', lastUpdated: '2024-04-15 09:15:22' },
-    { id: 2, name: 'Priya Patel', class: '10A', roll: 22, status: { present: true, absent: false, late: false }, method: 'Face Recognition', lastUpdated: '2024-04-15 09:14:45' },
-    { id: 3, name: 'Amit Kumar', class: '10A', roll: 5, status: { present: false, absent: true, late: false }, method: 'Pending', lastUpdated: 'N/A' },
-    { id: 4, name: 'Sneha Gupta', class: '10A', roll: 18, status: { present: false, absent: false, late: true }, method: 'QR Code', lastUpdated: '2024-04-15 09:25:30' },
-    { id: 5, name: 'Vikram Singh', class: '10A', roll: 12, status: { present: true, absent: false, late: false }, method: 'RFID', lastUpdated: '2024-04-15 09:10:15' },
+    { id: 1, name: 'Rahul Sharma', class: '10A', roll: 15, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
+    { id: 2, name: 'Priya Patel', class: '10A', roll: 22, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
+    { id: 3, name: 'Amit Kumar', class: '10A', roll: 5, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
+    { id: 5, name: 'Vikram Singh', class: '10A', roll: 12, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
     { id: 6, name: 'Anjali Mehta', class: '10A', roll: 8, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
-    { id: 7, name: 'Rohit Verma', class: '10A', roll: 25, status: { present: true, absent: false, late: false }, method: 'Face Recognition', lastUpdated: '2024-04-15 09:05:40' },
-    { id: 8, name: 'Pooja Desai', class: '10A', roll: 30, status: { present: false, absent: false, late: true }, method: 'RFID', lastUpdated: '2024-04-15 09:20:10' },
+    { id: 7, name: 'Rohit Verma', class: '10A', roll: 25, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
+    { id: 8, name: 'Pooja Desai', class: '10A', roll: 30, status: { present: false, absent: true, late: false }, method: 'Manual', lastUpdated: 'N/A' },
   ]);
   
   // State for new student form
@@ -474,6 +473,13 @@ const TeacherDashboard = ({ onLogout }) => {
     dateRange: "last7days"
   });
   
+  // State for attendance filtering
+  const [showAttendanceFilter, setShowAttendanceFilter] = useState(false);
+  const [attendanceFilter, setAttendanceFilter] = useState({
+    class: "",
+    status: "all"
+  });
+  
   // Function to add a new student
   const addNewStudent = () => {
     if (newStudent.name && newStudent.roll) {
@@ -482,8 +488,8 @@ const TeacherDashboard = ({ onLogout }) => {
         name: newStudent.name,
         class: newStudent.class,
         roll: parseInt(newStudent.roll),
-        status: { present: false, absent: false, late: false },
-        method: newStudent.method,
+        status: { present: false, absent: true, late: false },
+        method: 'Manual',
         lastUpdated: 'N/A'
       };
       
@@ -529,6 +535,7 @@ const TeacherDashboard = ({ onLogout }) => {
         return { 
           ...student, 
           status: updatedStatus,
+          method: 'Manual',
           lastUpdated: new Date().toLocaleString()
         };
       }
@@ -587,7 +594,8 @@ const TeacherDashboard = ({ onLogout }) => {
   const resetAttendance = () => {
     setStudentAttendanceData(studentAttendanceData.map(student => ({
       ...student,
-      status: { present: false, absent: false, late: false },
+      status: { present: false, absent: true, late: false },
+      method: 'Manual',
       lastUpdated: 'N/A'
     })));
   };
@@ -651,11 +659,70 @@ const TeacherDashboard = ({ onLogout }) => {
     return [...new Set(classes)];
   };
   
+  // Get unique classes for attendance filter
+  const getUniqueClassesForAttendance = () => {
+    const classes = studentAttendanceData.map(student => student.class);
+    return [...new Set(classes)];
+  };
+  
+  // Function to handle attendance filter changes
+  const handleAttendanceFilterChange = (e) => {
+    const { name, value } = e.target;
+    setAttendanceFilter({ ...attendanceFilter, [name]: value });
+  };
+  
+  // Function to apply attendance filters
+  const applyAttendanceFilters = () => {
+    // In a real application, this would filter the data
+    // For now, we'll just close the modal
+    setShowAttendanceFilter(false);
+    console.log('Attendance filters applied:', attendanceFilter);
+  };
+  
+  // Function to reset attendance filters
+  const resetAttendanceFilters = () => {
+    setAttendanceFilter({
+      class: "",
+      status: "all"
+    });
+  };
+  
+  // Function to get filtered student data based on attendance filter
+  const getFilteredStudentData = () => {
+    return studentAttendanceData.filter(student => {
+      // If no filters are applied, return all students
+      if (!attendanceFilter.class && attendanceFilter.status === "all") {
+        return true;
+      }
+      
+      // Filter by class if selected
+      if (attendanceFilter.class && student.class !== attendanceFilter.class) {
+        return false;
+      }
+      
+      // Filter by status if selected
+      if (attendanceFilter.status !== "all") {
+        if (attendanceFilter.status === "present" && !student.status.present) {
+          return false;
+        }
+        if (attendanceFilter.status === "absent" && !student.status.absent) {
+          return false;
+        }
+        if (attendanceFilter.status === "late" && !student.status.late) {
+          return false;
+        }
+      }
+      
+      return true;
+    });
+  };
+  
   // Function to mark all present
   const markAllPresent = () => {
     setStudentAttendanceData(studentAttendanceData.map(student => ({
       ...student,
       status: { present: true, absent: false, late: false },
+      method: 'Manual',
       lastUpdated: new Date().toLocaleString()
     })));
   };
@@ -1513,11 +1580,17 @@ const TeacherDashboard = ({ onLogout }) => {
                     <Plus className="w-2.5 h-2.5" />
                     Add Student
                   </button>
-                  <button className="flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-200 text-gray-700 rounded hover:from-gray-200 hover:to-gray-300 transition-all shadow-sm hover:shadow text-xs">
+                  <button 
+                    onClick={() => setShowAttendanceFilter(true)}
+                    className="flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-gray-100 to-gray-200 border border-gray-200 text-gray-700 rounded hover:from-gray-200 hover:to-gray-300 transition-all shadow-sm hover:shadow text-xs"
+                  >
                     <Filter className="w-2.5 h-2.5" />
                     Filter
                   </button>
-                  <button className="flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded hover:from-purple-600 hover:to-pink-700 transition-all shadow-sm hover:shadow text-xs">
+                  <button 
+                    onClick={exportAttendanceReport}
+                    className="flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded hover:from-purple-600 hover:to-pink-700 transition-all shadow-sm hover:shadow text-xs"
+                  >
                     <Download className="w-2.5 h-2.5" />
                     Export Report
                   </button>
@@ -1554,7 +1627,7 @@ const TeacherDashboard = ({ onLogout }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {studentAttendanceData.map((student) => (
+                      {getFilteredStudentData().map((student) => (
                         <tr key={student.id} className="border-b border-gray-100 hover:bg-blue-50 transition-colors duration-150">
                           <td className="py-1 px-1.5">
                             <div className="flex items-center gap-1">
@@ -2874,7 +2947,6 @@ const TeacherDashboard = ({ onLogout }) => {
                   <option value="Manual">Manual</option>
                   <option value="RFID">RFID</option>
                   <option value="Face Recognition">Face Recognition</option>
-                  <option value="QR Code">QR Code</option>
                   <option value="Biometric">Biometric</option>
                 </select>
               </div>
@@ -2980,7 +3052,7 @@ const TeacherDashboard = ({ onLogout }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-base font-bold text-gray-900">Weekly Attendance for {selectedStudent.name}</h3>
+              <h3 className="text-xs font-bold text-gray-900">Weekly Attendance for {selectedStudent.name}</h3>
               <button 
                 onClick={() => setShowStudentAttendanceModal(false)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -2996,19 +3068,19 @@ const TeacherDashboard = ({ onLogout }) => {
                 className="w-12 h-12 rounded-full object-cover shadow-sm border-2 border-indigo-200"
               />
               <div>
-                <h4 className="font-bold text-gray-900 text-sm">{selectedStudent.name}</h4>
-                <p className="text-gray-600 text-xs">{selectedStudent.class} • Roll #{selectedStudent.roll}</p>
+                <h4 className="font-bold text-gray-900 text-xs">{selectedStudent.name}</h4>
+                <p className="text-gray-600 text-[10px]">{selectedStudent.class} • Roll #{selectedStudent.roll}</p>
               </div>
             </div>
             
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-lg p-4">
-                <h5 className="font-medium text-gray-900 text-sm mb-3">This Week's Attendance</h5>
+                <h5 className="font-medium text-gray-900 text-xs mb-3">This Week's Attendance</h5>
                 <div className="grid grid-cols-5 gap-2">
                   {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, index) => (
                     <div key={day} className="text-center">
-                      <div className="text-[10px] text-gray-500 mb-1">{day}</div>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mx-auto text-[10px] font-medium ${index === 0 ? 'bg-green-100 text-green-800' : index === 1 ? 'bg-green-100 text-green-800' : index === 2 ? 'bg-yellow-100 text-yellow-800' : index === 3 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      <div className="text-[8px] text-gray-500 mb-1">{day}</div>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mx-auto text-[8px] font-medium ${index === 0 ? 'bg-green-100 text-green-800' : index === 1 ? 'bg-green-100 text-green-800' : index === 2 ? 'bg-yellow-100 text-yellow-800' : index === 3 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         {index === 0 ? 'P' : index === 1 ? 'P' : index === 2 ? 'L' : index === 3 ? 'P' : 'A'}
                       </div>
                     </div>
@@ -3018,17 +3090,17 @@ const TeacherDashboard = ({ onLogout }) => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <div className="text-blue-600 text-xs mb-1">Attendance Rate</div>
+                  <div className="text-blue-600 text-[10px] mb-1">Attendance Rate</div>
                   <div className="text-xl font-bold text-blue-800">80%</div>
                 </div>
                 <div className="bg-green-50 rounded-lg p-4">
-                  <div className="text-green-600 text-xs mb-1">Present Days</div>
+                  <div className="text-green-600 text-[10px] mb-1">Present Days</div>
                   <div className="text-xl font-bold text-green-800">4</div>
                 </div>
               </div>
               
               <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <h5 className="font-medium text-gray-900 text-sm mb-3">Attendance History</h5>
+                <h5 className="font-medium text-gray-900 text-xs mb-3">Attendance History</h5>
                 <div className="space-y-3">
                   {[
                     { date: 'Apr 10, 2024', status: 'Present', time: '09:15 AM' },
@@ -3039,10 +3111,10 @@ const TeacherDashboard = ({ onLogout }) => {
                   ].map((record, index) => (
                     <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                       <div>
-                        <div className="font-medium text-gray-900 text-xs">{record.date}</div>
-                        <div className="text-gray-500 text-[10px]">{record.time}</div>
+                        <div className="font-medium text-gray-900 text-[10px]">{record.date}</div>
+                        <div className="text-gray-500 text-[8px]">{record.time}</div>
                       </div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium 
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-medium 
                         ${record.status === 'Present' ? 'bg-green-100 text-green-800' : 
                           record.status === 'Late' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
                         {record.status}
@@ -3597,6 +3669,70 @@ const TeacherDashboard = ({ onLogout }) => {
                     Upload Files
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Attendance Filter Modal */}
+      {showAttendanceFilter && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-gray-900">Filter Attendance</h3>
+              <button 
+                onClick={() => setShowAttendanceFilter(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Filter by Class</label>
+                <select 
+                  name="class"
+                  value={attendanceFilter.class}
+                  onChange={handleAttendanceFilterChange}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
+                >
+                  <option value="">All Classes</option>
+                  {getUniqueClassesForAttendance().map((className, index) => (
+                    <option key={index} value={className}>{className}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1.5">Filter by Status</label>
+                <select 
+                  name="status"
+                  value={attendanceFilter.status}
+                  onChange={handleAttendanceFilterChange}
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="present">Present</option>
+                  <option value="absent">Absent</option>
+                  <option value="late">Late</option>
+                </select>
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <button 
+                  onClick={resetAttendanceFilters}
+                  className="flex-1 px-3 py-1.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-xs"
+                >
+                  Reset Filters
+                </button>
+                <button 
+                  onClick={applyAttendanceFilters}
+                  className="flex-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-xs"
+                >
+                  Apply Filters
+                </button>
               </div>
             </div>
           </div>

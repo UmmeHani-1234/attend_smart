@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './i18n';
 import { ThemeProvider } from './components/ThemeContext';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import TeacherDashboard from './components/teacher/TeacherDashboard';
 import SimplifiedStudentDashboard from './components/teacher/SimplifiedStudentDashboard';
@@ -11,6 +11,31 @@ import ClassDetailsPage from './components/ClassDetailsPage';
 import AttendSmartLogo from './components/AttendSmartLogo';
 // Import Google OAuth provider
 import { GoogleOAuthProvider } from '@react-oauth/google';
+
+const DashboardRouter = ({ userType, onLogout }) => {
+  const navigate = useNavigate();
+  
+  // Redirect to login page if user is not logged in
+  if (!userType) {
+    navigate('/');
+    return null;
+  }
+  
+  // Render the appropriate dashboard based on user type
+  switch (userType) {
+    case 'teacher':
+      return <TeacherDashboard onLogout={onLogout} />;
+    case 'student':
+      return <SimplifiedStudentDashboard onLogout={onLogout} />;
+    case 'admin':
+      return <AdminDashboard onLogout={onLogout} />;
+    case 'government':
+      return <GovernmentDashboard onLogout={onLogout} />;
+    default:
+      navigate('/');
+      return null;
+  }
+};
 
 export default function App() {
   const [userType, setUserType] = useState('');
@@ -31,10 +56,10 @@ export default function App() {
             <Routes>
               <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
               <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-              <Route path="/teacher/*" element={<TeacherDashboard onLogout={handleLogout} />} />
-              <Route path="/student/*" element={<SimplifiedStudentDashboard onLogout={handleLogout} />} />
-              <Route path="/admin/*" element={<AdminDashboard onLogout={handleLogout} />} />
-              <Route path="/government/*" element={<GovernmentDashboard onLogout={handleLogout} />} />
+              <Route path="/teacher/*" element={<DashboardRouter userType={userType} onLogout={handleLogout} />} />
+              <Route path="/student/*" element={<DashboardRouter userType={userType} onLogout={handleLogout} />} />
+              <Route path="/admin/*" element={<DashboardRouter userType={userType} onLogout={handleLogout} />} />
+              <Route path="/government/*" element={<DashboardRouter userType={userType} onLogout={handleLogout} />} />
               <Route path="/class/:classId" element={<ClassDetailsPage />} />
             </Routes>
           </div>
@@ -42,4 +67,4 @@ export default function App() {
       </GoogleOAuthProvider>
     </Router>
   );
-}
+};

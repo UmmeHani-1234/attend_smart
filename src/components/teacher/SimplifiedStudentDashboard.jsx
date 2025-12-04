@@ -57,6 +57,9 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
       loginAlerts: true
     }
   });
+  
+  // Settings tab state
+  const [settingsTab, setSettingsTab] = useState('profile');
 
   // Sample data for classes - in a real app, this would come from an API or context
   const classData = [
@@ -213,11 +216,6 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
   // Reset settings to default
   const resetSettings = () => {
     setSettings({
-      notifications: {
-        email: true,
-        push: true,
-        sms: false
-      },
       privacy: {
         profileVisibility: 'friends',
         activityStatus: true
@@ -1251,14 +1249,14 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
               
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-sm font-bold text-gray-900">Notice Board</h2>
-                  <p className="text-gray-600 text-[10px]">All important announcements and updates</p>
+                  <h2 className="text-sm font-bold text-blue-700">Notice Board</h2>
+                  <p className="text-blue-600 text-[10px]">Latest school announcements and events</p>
                 </div>
               </div>
               
               <div className="space-y-3">
                 {/* Notice Card 1 */}
-                <div className="bg-white rounded border border-gray-200 p-3">
+                <div className="bg-white rounded border border-blue-200 p-3 hover:bg-blue-50 transition-colors duration-200">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-bold text-gray-900 text-[11px]">Science Fair Registration</h3>
                     <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[8px] font-medium rounded-full whitespace-nowrap">New</span>
@@ -1271,10 +1269,10 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                 </div>
                 
                 {/* Notice Card 2 */}
-                <div className="bg-white rounded border border-gray-200 p-3">
+                <div className="bg-white rounded border border-blue-200 p-3 hover:bg-blue-50 transition-colors duration-200">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-bold text-gray-900 text-[11px]">Library Closure Notice</h3>
-                    <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[8px] font-medium rounded-full whitespace-nowrap">Important</span>
+                    <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[8px] font-medium rounded-full whitespace-nowrap">Important</span>
                   </div>
                   <p className="text-gray-600 text-[10px] mb-2">The school library will be closed for maintenance from April 18th to April 20th. We apologize for any inconvenience.</p>
                   <div className="flex items-center justify-between text-[9px] text-gray-500">
@@ -1284,10 +1282,10 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                 </div>
                 
                 {/* Notice Card 3 */}
-                <div className="bg-white rounded border border-gray-200 p-3">
+                <div className="bg-white rounded border border-blue-200 p-3 hover:bg-blue-50 transition-colors duration-200">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-bold text-gray-900 text-[11px]">Art Exhibition Inauguration</h3>
-                    <span className="px-1.5 py-0.5 bg-pink-100 text-pink-800 text-[8px] font-medium rounded-full whitespace-nowrap">Event</span>
+                    <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 text-[8px] font-medium rounded-full whitespace-nowrap">Event</span>
                   </div>
                   <p className="text-gray-600 text-[10px] mb-2">Join us for the inauguration of our annual student art exhibition on April 22nd at 3 PM in the school gallery.</p>
                   <div className="flex items-center justify-between text-[9px] text-gray-500">
@@ -1666,84 +1664,363 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
 
           {activeTab === 'settings' && (
             <div>
-              <div className="flex justify-between items-center mb-3">
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-blue-600 via-indigo-500 to-indigo-600 rounded-md p-4 mb-4 shadow-sm backdrop-blur-sm border border-white/20 relative overflow-hidden -mt-5">
+                <div className="absolute -top-5 -right-5 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -bottom-5 -left-5 w-16 h-16 bg-white/10 rounded-full"></div>
+                <div className="absolute top-4 right-4 w-7 h-7 bg-white/10 rotate-45"></div>
+                <div className="absolute top-1/3 left-1/4 w-7 h-7 bg-white/5 rounded-full"></div>
+                <div className="absolute bottom-1/3 right-1/3 w-6 h-6 bg-white/10 rotate-12"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-base font-bold text-white mb-1.5">System Settings Dashboard</h2>
+                    <p className="text-[10px] text-blue-100 mb-2">Configure and customize your account preferences</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">{profileData.class}</span>
+                      </div>
+                      <div className="flex items-center bg-white/10 rounded-full px-2.5 py-1">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-1.5"></div>
+                        <span className="text-[10px] text-white font-medium">Account Management</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white/20 rounded-md p-2">
+                      <Settings className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center mb-5">
                 <div>
-                  <h2 className="text-[10px] font-bold text-gray-900">Account Settings</h2>
-                  <p className="text-gray-600 text-[9px]">Manage your profile and account preferences</p>
+                  <h2 className="text-xs font-bold text-blue-700">Account Settings</h2>
+                  <p className="text-gray-600 text-[10px]">Configure and customize your account preferences</p>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-                {/* Profile Card - More compact */}
-                <div className="lg:col-span-2 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="relative">
-                      <img 
-                        src={studentAvatar} 
-                        alt="Student Avatar" 
-                        className="w-10 h-10 rounded-lg object-cover shadow-md border-2 border-indigo-100"
-                      />
-                      <button 
-                        onClick={() => setShowAvatarModal(true)}
-                        className="absolute bottom-0 right-0 bg-indigo-500 text-white p-1 rounded-full hover:bg-indigo-600 transition-all shadow-md"
-                      >
-                        <Edit className="w-2 h-2" />
-                      </button>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                {/* Profile Card */}
+                <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+                  {settingsTab === 'profile' && (
+                    <>
+                      <div className="flex items-center gap-3 mb-5">
+                        <div className="relative">
+                          <img 
+                            src={studentAvatar} 
+                            alt="Student Avatar" 
+                            className="w-14 h-14 rounded-lg object-cover shadow-md border-3 border-blue-100"
+                          />
+                          <button 
+                            onClick={() => setShowAvatarModal(true)}
+                            className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full hover:bg-blue-600 transition-all shadow-md"
+                          >
+                            <Edit className="w-2.5 h-2.5" />
+                          </button>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-gray-900">{profileData.name}</h3>
+                          <p className="text-gray-600 text-[10px]">{profileData.class} • Roll #{profileData.rollNumber}</p>
+                          <button 
+                            onClick={() => setShowAvatarModal(true)}
+                            className="text-blue-600 hover:text-blue-700 text-[10px] font-medium mt-1"
+                          >
+                            Change Avatar
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Full Name</label>
+                          <input 
+                            type="text" 
+                            value={profileData.name}
+                            onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Email Address</label>
+                          <input 
+                            type="email" 
+                            value={profileData.email}
+                            onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Class</label>
+                          <input 
+                            type="text" 
+                            value={profileData.class}
+                            onChange={(e) => setProfileData({...profileData, class: e.target.value})}
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-[10px] font-medium text-gray-700 mb-1.5">Roll Number</label>
+                          <input 
+                            type="text" 
+                            value={profileData.rollNumber}
+                            onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-[10px]"
+                          />
+                        </div>
+                        
+                        <div className="flex gap-2 pt-3">
+                          <button 
+                            onClick={() => {
+                              setProfileData({
+                                name: studentData.name,
+                                email: 'sarah.johnson@example.com',
+                                class: studentData.class,
+                                rollNumber: studentData.rollNumber
+                              });
+                            }}
+                            className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[10px]"
+                          >
+                            Cancel
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setStudentData({
+                                ...studentData,
+                                name: profileData.name,
+                                class: profileData.class,
+                                rollNumber: profileData.rollNumber
+                              });
+                              alert('Profile updated successfully!');
+                            }}
+                            className="px-1.5 py-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px]"
+                          >
+                            Save Changes
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
+                  {settingsTab === 'security' && (
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-sm font-bold text-gray-900 mb-3">Security Settings</h3>
+                        <p className="text-gray-600 text-[10px] mb-4">Manage your account security preferences</p>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">Two-Factor Authentication</h4>
+                            <p className="text-[9px] text-gray-600">Add an extra layer of security to your account</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" checked={settings.security.twoFactorAuth} onChange={() => handleSecurityChange('twoFactorAuth')} />
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">Login Alerts</h4>
+                            <p className="text-[9px] text-gray-600">Receive notifications for new sign-in attempts</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" checked={settings.security.loginAlerts} onChange={() => handleSecurityChange('loginAlerts')} />
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">Session Timeout</h4>
+                            <p className="text-[9px] text-gray-600">Automatically log out after inactivity</p>
+                          </div>
+                          <select className="text-[10px] border border-gray-300 rounded-md px-2 py-1">
+                            <option>15 minutes</option>
+                            <option>30 minutes</option>
+                            <option selected>1 hour</option>
+                            <option>2 hours</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div className="pt-3">
+                        <button className="px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded hover:from-red-600 hover:to-red-700 transition-all shadow-sm hover:shadow text-[10px]">
+                          Change Password
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-[11px] font-bold text-gray-900">{profileData.name}</h3>
-                      <p className="text-gray-600 text-[10px]">{profileData.class} • Roll #{profileData.rollNumber}</p>
+                  )}
+                  
+                  {settingsTab === 'notifications' && (
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-sm font-bold text-gray-900 mb-3">Notification Preferences</h3>
+                        <p className="text-gray-600 text-[10px] mb-4">Choose how you want to be notified</p>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">Email Notifications</h4>
+                            <p className="text-[9px] text-gray-600">Receive updates via email</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" defaultChecked />
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">Push Notifications</h4>
+                            <p className="text-[9px] text-gray-600">Receive notifications on your device</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" defaultChecked />
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">SMS Notifications</h4>
+                            <p className="text-[9px] text-gray-600">Receive text messages for important updates</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" />
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div className="pt-3">
+                        <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px]">
+                          Save Notification Settings
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {settingsTab === 'appearance' && (
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-sm font-bold text-gray-900 mb-3">Appearance Settings</h3>
+                        <p className="text-gray-600 text-[10px] mb-4">Customize the look and feel of your dashboard</p>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <h4 className="text-[10px] font-medium text-gray-900 mb-2">Theme</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            <button className="p-2 border-2 border-blue-500 rounded-md bg-blue-50">
+                              <div className="w-full h-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded mb-1"></div>
+                              <p className="text-[9px] font-medium text-gray-900">Default</p>
+                            </button>
+                            <button className="p-2 border border-gray-200 rounded-md hover:border-gray-300">
+                              <div className="w-full h-6 bg-gradient-to-r from-gray-700 to-gray-900 rounded mb-1"></div>
+                              <p className="text-[9px] font-medium text-gray-900">Dark</p>
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-[10px] font-medium text-gray-900 mb-2">Language</h4>
+                          <select className="w-full text-[10px] border border-gray-300 rounded-md px-3 py-1.5">
+                            <option>English</option>
+                            <option>Hindi</option>
+                            <option>Spanish</option>
+                            <option>French</option>
+                            <option>Punjabi</option>
+                          </select>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                          <div>
+                            <h4 className="text-[10px] font-medium text-gray-900">Compact View</h4>
+                            <p className="text-[9px] text-gray-600">Enable compact layout for more content</p>
+                          </div>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" className="sr-only peer" />
+                            <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div className="pt-3">
+                        <button className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded hover:from-blue-600 hover:to-indigo-700 transition-all shadow-sm hover:shadow text-[10px]">
+                          Save Appearance Settings
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Settings Navigation */}
+                <div className="space-y-3">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+                    <h3 className="text-xs font-bold text-gray-900 mb-3">Settings</h3>
+                    <div className="space-y-1.5">
                       <button 
-                        onClick={() => setShowAvatarModal(true)}
-                        className="text-indigo-600 hover:text-indigo-700 text-[10px] font-medium mt-0.5"
+                        onClick={() => setSettingsTab('profile')}
+                        className={`w-full text-left px-1.5 py-0.5 rounded font-medium text-[10px] ${
+                          settingsTab === 'profile' 
+                            ? 'bg-blue-50 text-blue-600' 
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
                       >
-                        Change Avatar
+                        Account
+                      </button>
+                      <button 
+                        onClick={() => setSettingsTab('security')}
+                        className={`w-full text-left px-1.5 py-0.5 rounded font-medium text-[10px] ${
+                          settingsTab === 'security' 
+                            ? 'bg-blue-50 text-blue-600' 
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        Security
+                      </button>
+                      <button 
+                        onClick={() => setSettingsTab('notifications')}
+                        className={`w-full text-left px-1.5 py-0.5 rounded font-medium text-[10px] ${
+                          settingsTab === 'notifications' 
+                            ? 'bg-blue-50 text-blue-600' 
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        Notifications
+                      </button>
+                      <button 
+                        onClick={() => setSettingsTab('appearance')}
+                        className={`w-full text-left px-1.5 py-0.5 rounded font-medium text-[10px] ${
+                          settingsTab === 'appearance' 
+                            ? 'bg-blue-50 text-blue-600' 
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        Appearance
                       </button>
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Full Name</label>
-                      <input 
-                        type="text" 
-                        value={profileData.name}
-                        onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Email Address</label>
-                      <input 
-                        type="email" 
-                        value={profileData.email}
-                        onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Class</label>
-                      <input 
-                        type="text" 
-                        value={profileData.class}
-                        onChange={(e) => setProfileData({...profileData, class: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-700 mb-0.5">Roll Number</label>
-                      <input 
-                        type="text" 
-                        value={profileData.rollNumber}
-                        onChange={(e) => setProfileData({...profileData, rollNumber: e.target.value})}
-                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-300 text-[10px]"
-                      />
-                    </div>
-                    
-                    <div className="flex gap-1 pt-2">
+                  <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5">
+                    <h3 className="text-xs font-bold text-gray-900 mb-3">Actions</h3>
+                    <div className="space-y-2">
+                      <button 
+                        onClick={() => window.location.reload()}
+                        className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
+                      >
+                        <RefreshCw className="w-2 h-2" />
+                        Refresh Settings
+                      </button>
                       <button 
                         onClick={() => {
                           setProfileData({
@@ -1752,156 +2029,18 @@ const SimplifiedStudentDashboard = ({ onLogout }) => {
                             class: studentData.class,
                             rollNumber: studentData.rollNumber
                           });
-                        }}
-                        className="px-1.5 py-0.5 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-all text-[10px]"
-                      >
-                        Cancel
-                      </button>
-                      <button 
-                        onClick={() => {
                           setStudentData({
                             ...studentData,
-                            name: profileData.name,
-                            class: profileData.class,
-                            rollNumber: profileData.rollNumber
+                            name: studentData.name,
+                            class: studentData.class,
+                            rollNumber: studentData.rollNumber
                           });
-                          alert('Profile updated successfully!');
                         }}
-                        className="px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[10px]"
+                        className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
                       >
-                        Save Changes
+                        <Settings className="w-2 h-2" />
+                        Reset Settings
                       </button>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Settings and Actions in a single row */}
-                <div className="flex gap-3">
-                  <div className="flex-1 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                    <h3 className="text-[11px] font-bold text-gray-900 mb-2">Settings</h3>
-                    <div className="space-y-2">
-                      {/* Privacy Settings */}
-                      <div>
-                        <h4 className="text-[10px] font-medium text-gray-700 mb-1">Privacy</h4>
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-gray-600">Profile Visibility</span>
-                            <select 
-                              className="text-[10px] border border-gray-300 rounded px-1.5 py-0.5"
-                              value={settings.privacy.profileVisibility}
-                              onChange={(e) => handlePrivacyChange('profileVisibility', e.target.value)}
-                            >
-                              <option value="public">Public</option>
-                              <option value="friends">Friends</option>
-                              <option value="private">Private</option>
-                            </select>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-gray-600">Show Activity Status</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                className="sr-only peer" 
-                                checked={settings.privacy.activityStatus}
-                                onChange={() => handlePrivacyChange('activityStatus', !settings.privacy.activityStatus)}
-                              />
-                              <div className="w-6 h-3 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2 after:w-2 after:transition-all peer-checked:bg-indigo-600"></div>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Appearance Settings */}
-                      <div>
-                        <h4 className="text-[10px] font-medium text-gray-700 mb-1">Appearance</h4>
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-gray-600">Theme</span>
-                            <select 
-                              className="text-[10px] border border-gray-300 rounded px-1.5 py-0.5"
-                              value={settings.appearance.theme}
-                              onChange={(e) => handleAppearanceChange('theme', e.target.value)}
-                            >
-                              <option value="light">Light</option>
-                              <option value="dark">Dark</option>
-                            </select>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-gray-600">Language</span>
-                            <select 
-                              className="text-[10px] border border-gray-300 rounded px-1.5 py-0.5"
-                              value={settings.appearance.language}
-                              onChange={(e) => handleAppearanceChange('language', e.target.value)}
-                            >
-                              <option value="en">English</option>
-                              <option value="pa">Punjabi</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex-1 bg-white rounded-md shadow-sm border border-gray-100 p-3">
-                    <h3 className="text-[11px] font-bold text-gray-900 mb-2">Security</h3>
-                    <div className="space-y-2">
-                      {/* Security Settings */}
-                      <div>
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-gray-600">Two-Factor Authentication</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                className="sr-only peer" 
-                                checked={settings.security.twoFactorAuth}
-                                onChange={() => handleSecurityChange('twoFactorAuth')}
-                              />
-                              <div className="w-6 h-3 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2 after:w-2 after:transition-all peer-checked:bg-indigo-600"></div>
-                            </label>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] text-gray-600">Login Alerts</span>
-                            <label className="relative inline-flex items-center cursor-pointer">
-                              <input 
-                                type="checkbox" 
-                                className="sr-only peer" 
-                                checked={settings.security.loginAlerts}
-                                onChange={() => handleSecurityChange('loginAlerts')}
-                              />
-                              <div className="w-6 h-3 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2 after:w-2 after:transition-all peer-checked:bg-indigo-600"></div>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Actions */}
-                      <div>
-                        <h4 className="text-[11px] font-bold text-gray-900 mb-2">Actions</h4>
-                        <div className="space-y-1">
-                          <button 
-                            onClick={() => window.location.reload()}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                          >
-                            <RefreshCw className="w-2 h-2" />
-                            Refresh Settings
-                          </button>
-                          <button 
-                            onClick={resetSettings}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 text-gray-600 hover:bg-gray-50 rounded text-[10px]"
-                          >
-                            <Settings className="w-2 h-2" />
-                            Reset Settings
-                          </button>
-                          <button 
-                            onClick={() => alert('Changes saved successfully!')}
-                            className="w-full flex items-center gap-1 px-1.5 py-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow text-[10px]"
-                          >
-                            <CheckCircle className="w-2 h-2" />
-                            Save Changes
-                          </button>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
